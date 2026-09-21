@@ -1,0 +1,434 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://elec-garage.local/contracts/apport.schema.json",
+  "title": "Apport d'une fonctionnalité électrique",
+  "description": "Contrat que remplit une fonctionnalité électrique pour verser ses composants et ses étapes au socle. Un fichier par fonctionnalité, dans data/apports/. Le socle n'a pas à être modifié pour en accepter un nouveau.",
+  "type": "object",
+  "required": [
+    "fonctionnalite",
+    "provenance",
+    "circuits",
+    "composants",
+    "cheminements",
+    "traversees",
+    "etapes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "fonctionnalite": {
+      "type": "string",
+      "pattern": "^[0-9]{3}-[a-z0-9-]+$",
+      "description": "Doit correspondre au nom du fichier, par exemple 002-prises-de-courant"
+    },
+    "provenance": {
+      "type": "object",
+      "description": "Documents normatifs dont ce fichier dérive (FR-009). La maquette n'est pas la source normative : en cas de divergence, ces documents l'emportent.",
+      "required": [
+        "schemaUnifilaire",
+        "noteDeCalcul"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schemaUnifilaire": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Version ou date du schéma unifilaire. null tant qu'il n'existe pas."
+        },
+        "noteDeCalcul": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Version ou date de la note de calcul. null tant qu'elle n'existe pas."
+        },
+        "releve": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Date du relevé géométrique dont proviennent les cotes."
+        }
+      }
+    },
+    "circuits": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/circuit"
+      }
+    },
+    "composants": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/composant"
+      }
+    },
+    "cheminements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cheminement"
+      },
+      "description": "Parcours des conduits posés en apparent. Tableau obligatoire, éventuellement vide : une fonctionnalité qui n'apporte aucun cheminement le déclare explicitement plutôt que d'omettre le champ."
+    },
+    "traversees": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/traversee"
+      },
+      "description": "Passages de conduit à travers les 0,20 m de béton. Tableau obligatoire, éventuellement vide."
+    },
+    "etapes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/etape"
+      }
+    }
+  },
+  "$defs": {
+    "circuit": {
+      "type": "object",
+      "required": [
+        "id",
+        "libelle"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "libelle": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repérage tel qu'il figure au tableau"
+        },
+        "couleur": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Facultatif. À défaut, le socle en attribue une de façon déterministe."
+        }
+      }
+    },
+    "composant": {
+      "type": "object",
+      "required": [
+        "id",
+        "reference",
+        "type",
+        "paroi",
+        "face",
+        "position",
+        "hauteurAxe",
+        "indiceProtection",
+        "circuit"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repère du dossier, par exemple PC-01"
+        },
+        "type": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Identifiant d'un type déclaré dans data/types-composants.json, qui porte son gabarit et son libellé."
+        },
+        "paroi": {
+          "enum": [
+            "sud",
+            "nord",
+            "est",
+            "ouest",
+            "plafond"
+          ]
+        },
+        "face": {
+          "enum": [
+            "interieur",
+            "exterieur"
+          ]
+        },
+        "position": {
+          "type": "object",
+          "required": [
+            "x",
+            "y",
+            "z"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "z": {
+              "type": "number"
+            }
+          }
+        },
+        "hauteurAxe": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "null = inconnu. Sera affiché comme inconnu, jamais remplacé par une valeur plausible."
+        },
+        "indiceProtection": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "null = inconnu, typiquement tant que la note de calcul n'est pas établie."
+        },
+        "circuit": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Identifiant d'un circuit déclaré, ou null si le rattachement n'est pas arrêté."
+        }
+      }
+    },
+    "etape": {
+      "type": "object",
+      "required": [
+        "id",
+        "phase",
+        "instruction",
+        "nature",
+        "composants",
+        "cheminements",
+        "traversees",
+        "materiel",
+        "dependances",
+        "sousTension"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phase": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Identifiant d'une phase déclarée dans data/chantier.json. La liste n'est PAS recopiée ici : elle n'existe qu'à un seul endroit (FR-021), et le contrôle se fait à l'exécution contre le catalogue."
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Non vide. Une étape muette est un défaut de cohérence bloquant."
+        },
+        "nature": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Identifiant d'une nature déclarée dans data/chantier.json."
+        },
+        "verification": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Obligatoire pour une étape de nature « verification ». Identifiant déclaré dans data/chantier.json. La règle V10 contrôle que les six vérifications exigées par le Principe V sont présentes."
+        },
+        "composants": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Composants mis en place par cette étape. Vide pour une consignation ou une vérification."
+        },
+        "cheminements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Cheminements posés par cette étape. Un conduit est un objet posable comme un socle : il apparaît à une étape et suit les trois registres visuels (FR-040)."
+        },
+        "traversees": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Traversées réalisées par cette étape."
+        },
+        "materiel": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Matériel et outillage nécessaires, pour que l'installateur n'ouvre aucun autre document."
+        },
+        "dependances": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Étapes devant précéder celle-ci. Le graphe doit rester acyclique."
+        },
+        "sousTension": {
+          "type": "boolean",
+          "description": "true si l'étape s'exécute sur une installation sous tension. Toute étape true doit être ordonnée après la levée de consignation."
+        },
+        "justificationSousTension": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Exigée lorsqu'une étape sousTension: false se situe après la levée de consignation."
+        }
+      }
+    },
+    "point": {
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        }
+      }
+    },
+    "face": {
+      "enum": [
+        "sud",
+        "nord",
+        "est",
+        "ouest",
+        "plafond"
+      ],
+      "description": "Face sur laquelle le conduit est fixé. Le rattachement à une face n'est pas décoratif : il rend l'orthogonalité vérifiable et permet de dessiner le conduit en saillie du bon côté du nu."
+    },
+    "segment": {
+      "type": "object",
+      "required": [
+        "face",
+        "de",
+        "a"
+      ],
+      "additionalProperties": false,
+      "description": "Portion rectiligne d'un cheminement. L'orthogonalité n'est PAS déclarée, elle est vérifiée : sur une face verticale, un segment conforme fait varier soit l'abscisse le long de la paroi, soit l'altitude, jamais les deux ; sur le plafond, soit x, soit y.",
+      "properties": {
+        "face": {
+          "$ref": "#/$defs/face"
+        },
+        "de": {
+          "$ref": "#/$defs/point"
+        },
+        "a": {
+          "$ref": "#/$defs/point"
+        }
+      }
+    },
+    "cheminement": {
+      "type": "object",
+      "required": [
+        "id",
+        "reference",
+        "circuits",
+        "segments",
+        "diametre"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repère du dossier, par exemple CH-01."
+        },
+        "circuits": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Circuits portés par ce conduit. Plusieurs circuits dans un même conduit constituent un groupement, dont le facteur de correction conditionne le courant admissible retenu par la note de calcul (Principe III). C'est pourquoi l'information appartient au cheminement et non au circuit."
+        },
+        "segments": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/segment"
+          }
+        },
+        "diametre": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0,
+          "description": "Diamètre extérieur du conduit en mètres, ou null tant que la note de calcul ne l'a pas arrêté — il dépend du taux de remplissage, donc du nombre de conducteurs. null s'affiche comme inconnu."
+        }
+      }
+    },
+    "traversee": {
+      "type": "object",
+      "required": [
+        "id",
+        "reference",
+        "paroi",
+        "position",
+        "sens",
+        "penteVersExterieur"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "paroi": {
+          "enum": [
+            "sud",
+            "nord",
+            "est",
+            "ouest"
+          ]
+        },
+        "position": {
+          "$ref": "#/$defs/point",
+          "description": "Point de percement, au nu intérieur de la paroi."
+        },
+        "sens": {
+          "enum": [
+            "interieur-vers-exterieur",
+            "exterieur-vers-interieur"
+          ]
+        },
+        "penteVersExterieur": {
+          "type": "boolean",
+          "description": "La constitution exige une pente vers l'extérieur, afin qu'aucune eau ne chemine vers l'intérieur. Déclaré pour être contrôlable : une traversée desservant l'extérieur sans pente est un défaut."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+# Artefacts de construction
+dist/
+
+# Node
+node_modules/
+*.log
+.env*
+
+# Environnements de développement
+.idea/
+.vscode/
+
+# Systèmes de fichiers
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp

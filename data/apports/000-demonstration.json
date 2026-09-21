@@ -1,0 +1,769 @@
+{
+  "fonctionnalite": "000-demonstration",
+  "provenance": {
+    "schemaUnifilaire": null,
+    "noteDeCalcul": null,
+    "releve": "2026-09-21"
+  },
+  "circuits": [
+    {
+      "id": "c-demo",
+      "libelle": "Démonstration — prises garage",
+      "couleur": "#1f77b4"
+    }
+  ],
+  "composants": [
+    {
+      "id": "tableau",
+      "reference": "TD-01",
+      "type": "tableau",
+      "paroi": "est",
+      "face": "interieur",
+      "position": {
+        "x": 5.6,
+        "y": 0.6,
+        "z": 1.5
+      },
+      "hauteurAxe": 1.5,
+      "indiceProtection": null,
+      "circuit": null
+    },
+    {
+      "id": "pc-01",
+      "reference": "PC-01",
+      "type": "socle-double",
+      "paroi": "est",
+      "face": "interieur",
+      "position": {
+        "x": 5.6,
+        "y": 2.9,
+        "z": 1.2
+      },
+      "hauteurAxe": 1.2,
+      "indiceProtection": null,
+      "circuit": "c-demo"
+    },
+    {
+      "id": "pc-02",
+      "reference": "PC-02",
+      "type": "socle-double",
+      "paroi": "est",
+      "face": "exterieur",
+      "position": {
+        "x": 5.8,
+        "y": 2.9,
+        "z": 1.2
+      },
+      "hauteurAxe": 1.2,
+      "indiceProtection": null,
+      "circuit": "c-demo"
+    },
+    {
+      "id": "pc-03",
+      "reference": "PC-03",
+      "type": "socle-simple",
+      "paroi": "est",
+      "face": "interieur",
+      "position": {
+        "x": 5.6,
+        "y": 5.4,
+        "z": 1.2
+      },
+      "hauteurAxe": 1.2,
+      "indiceProtection": null,
+      "circuit": "c-demo"
+    },
+    {
+      "id": "pc-04",
+      "reference": "PC-04",
+      "type": "socle-double",
+      "paroi": "est",
+      "face": "exterieur",
+      "position": {
+        "x": 5.8,
+        "y": 5.4,
+        "z": 1.2
+      },
+      "hauteurAxe": 1.2,
+      "indiceProtection": null,
+      "circuit": "c-demo"
+    },
+    {
+      "id": "pc-05",
+      "reference": "PC-05",
+      "type": "socle-simple",
+      "paroi": "plafond",
+      "face": "interieur",
+      "position": {
+        "x": 2.8,
+        "y": 2.8,
+        "z": 2.75
+      },
+      "hauteurAxe": null,
+      "indiceProtection": null,
+      "circuit": "c-demo"
+    },
+    {
+      "id": "bd-01",
+      "reference": "BD-01",
+      "type": "boite-derivation",
+      "paroi": "est",
+      "face": "interieur",
+      "position": {
+        "x": 5.6,
+        "y": 2.9,
+        "z": 2.5
+      },
+      "hauteurAxe": 2.5,
+      "indiceProtection": null,
+      "circuit": "c-demo"
+    },
+    {
+      "id": "bd-02",
+      "reference": "BD-02",
+      "type": "boite-derivation",
+      "paroi": "est",
+      "face": "interieur",
+      "position": {
+        "x": 5.6,
+        "y": 5.4,
+        "z": 2.5
+      },
+      "hauteurAxe": 2.5,
+      "indiceProtection": null,
+      "circuit": "c-demo"
+    },
+    {
+      "id": "bd-03",
+      "reference": "BD-03",
+      "type": "boite-derivation",
+      "paroi": "est",
+      "face": "interieur",
+      "position": {
+        "x": 5.6,
+        "y": 2.9,
+        "z": 1.5
+      },
+      "hauteurAxe": 1.5,
+      "indiceProtection": null,
+      "circuit": "c-demo"
+    },
+    {
+      "id": "bd-04",
+      "reference": "BD-04",
+      "type": "boite-derivation",
+      "paroi": "est",
+      "face": "interieur",
+      "position": {
+        "x": 5.6,
+        "y": 5.4,
+        "z": 1.5
+      },
+      "hauteurAxe": 1.5,
+      "indiceProtection": null,
+      "circuit": "c-demo"
+    }
+  ],
+  "cheminements": [
+    {
+      "id": "ch-01",
+      "reference": "CH-01",
+      "circuits": [
+        "c-demo"
+      ],
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 0.6,
+            "z": 1.5
+          },
+          "a": {
+            "x": 5.6,
+            "y": 0.6,
+            "z": 2.5
+          }
+        },
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 0.6,
+            "z": 2.5
+          },
+          "a": {
+            "x": 5.6,
+            "y": 2.9,
+            "z": 2.5
+          }
+        }
+      ],
+      "diametre": 0.025
+    },
+    {
+      "id": "ch-02",
+      "reference": "CH-02",
+      "circuits": [
+        "c-demo"
+      ],
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 2.9,
+            "z": 2.5
+          },
+          "a": {
+            "x": 5.6,
+            "y": 2.9,
+            "z": 1.5
+          }
+        }
+      ],
+      "diametre": null
+    },
+    {
+      "id": "ch-03",
+      "reference": "CH-03",
+      "circuits": [
+        "c-demo"
+      ],
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 2.9,
+            "z": 2.5
+          },
+          "a": {
+            "x": 5.6,
+            "y": 5.4,
+            "z": 2.5
+          }
+        }
+      ],
+      "diametre": null
+    },
+    {
+      "id": "ch-04",
+      "reference": "CH-04",
+      "circuits": [
+        "c-demo"
+      ],
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 5.4,
+            "z": 2.5
+          },
+          "a": {
+            "x": 5.6,
+            "y": 5.4,
+            "z": 1.5
+          }
+        }
+      ],
+      "diametre": null
+    },
+    {
+      "id": "ch-05",
+      "reference": "CH-05",
+      "circuits": [
+        "c-demo"
+      ],
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 2.9,
+            "z": 1.5
+          },
+          "a": {
+            "x": 5.6,
+            "y": 3.25,
+            "z": 1.5
+          }
+        }
+      ],
+      "diametre": null
+    },
+    {
+      "id": "ch-06",
+      "reference": "CH-06",
+      "circuits": [
+        "c-demo"
+      ],
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.8,
+            "y": 3.25,
+            "z": 1.5
+          },
+          "a": {
+            "x": 5.8,
+            "y": 3.25,
+            "z": 1.2
+          }
+        },
+        {
+          "face": "est",
+          "de": {
+            "x": 5.8,
+            "y": 3.25,
+            "z": 1.2
+          },
+          "a": {
+            "x": 5.8,
+            "y": 2.9,
+            "z": 1.2
+          }
+        }
+      ],
+      "diametre": null
+    },
+    {
+      "id": "ch-07",
+      "reference": "CH-07",
+      "circuits": [
+        "c-demo"
+      ],
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 5.4,
+            "z": 1.5
+          },
+          "a": {
+            "x": 5.6,
+            "y": 5.05,
+            "z": 1.5
+          }
+        }
+      ],
+      "diametre": null
+    },
+    {
+      "id": "ch-08",
+      "reference": "CH-08",
+      "circuits": [
+        "c-demo"
+      ],
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.8,
+            "y": 5.05,
+            "z": 1.5
+          },
+          "a": {
+            "x": 5.8,
+            "y": 5.05,
+            "z": 1.2
+          }
+        },
+        {
+          "face": "est",
+          "de": {
+            "x": 5.8,
+            "y": 5.05,
+            "z": 1.2
+          },
+          "a": {
+            "x": 5.8,
+            "y": 5.4,
+            "z": 1.2
+          }
+        }
+      ],
+      "diametre": null
+    },
+    {
+      "id": "ch-09",
+      "reference": "CH-09",
+      "circuits": [
+        "c-demo"
+      ],
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 2.9,
+            "z": 2.5
+          },
+          "a": {
+            "x": 5.6,
+            "y": 2.9,
+            "z": 2.75
+          }
+        },
+        {
+          "face": "plafond",
+          "de": {
+            "x": 5.6,
+            "y": 2.9,
+            "z": 2.75
+          },
+          "a": {
+            "x": 2.8,
+            "y": 2.9,
+            "z": 2.75
+          }
+        },
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.8,
+            "y": 2.9,
+            "z": 2.75
+          },
+          "a": {
+            "x": 2.8,
+            "y": 2.8,
+            "z": 2.75
+          }
+        }
+      ],
+      "diametre": null
+    },
+    {
+      "id": "ch-10",
+      "reference": "CH-10",
+      "circuits": [
+        "c-demo"
+      ],
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 2.9,
+            "z": 1.5
+          },
+          "a": {
+            "x": 5.6,
+            "y": 2.9,
+            "z": 1.2
+          }
+        }
+      ],
+      "diametre": null
+    },
+    {
+      "id": "ch-11",
+      "reference": "CH-11",
+      "circuits": [
+        "c-demo"
+      ],
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 5.4,
+            "z": 1.5
+          },
+          "a": {
+            "x": 5.6,
+            "y": 5.4,
+            "z": 1.2
+          }
+        }
+      ],
+      "diametre": null
+    }
+  ],
+  "traversees": [
+    {
+      "id": "tv-01",
+      "reference": "TV-01",
+      "paroi": "est",
+      "position": {
+        "x": 5.6,
+        "y": 3.25,
+        "z": 1.5
+      },
+      "sens": "interieur-vers-exterieur",
+      "penteVersExterieur": true
+    },
+    {
+      "id": "tv-02",
+      "reference": "TV-02",
+      "paroi": "est",
+      "position": {
+        "x": 5.6,
+        "y": 5.05,
+        "z": 1.5
+      },
+      "sens": "interieur-vers-exterieur",
+      "penteVersExterieur": true
+    }
+  ],
+  "etapes": [
+    {
+      "id": "d-consignation",
+      "phase": "consignation",
+      "nature": "consignation",
+      "sousTension": false,
+      "instruction": "Couper l'alimentation en amont, condamner le dispositif de coupure et poser l'étiquette de consignation. Vérifier l'absence de tension au VAT sur chaque conducteur.",
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Cadenas de consignation",
+        "Étiquette",
+        "Vérificateur d'absence de tension"
+      ],
+      "dependances": []
+    },
+    {
+      "id": "d-tableau",
+      "phase": "tableau",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Fixer le tableau divisionnaire sur la paroi est, à 0,60 m de l'angle sud-est, axe à 1,50 m du sol. Poser les protections et repérer chaque circuit de façon durable.",
+      "composants": [
+        "tableau"
+      ],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Tableau divisionnaire",
+        "Protections",
+        "Étiquettes de repérage"
+      ],
+      "dependances": [
+        "d-consignation"
+      ]
+    },
+    {
+      "id": "d-cheminement",
+      "phase": "cheminement",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Poser les conduits IRL en saillie sur la paroi est et au plafond, selon le tracé de la maquette : montée depuis le tableau, antenne horizontale à 2,30 m, descentes vers chaque socle, et traversée du plafond vers le moteur. Éviter la trajectoire du tablier.",
+      "composants": [],
+      "cheminements": [
+        "ch-01",
+        "ch-02",
+        "ch-03",
+        "ch-04",
+        "ch-05",
+        "ch-06",
+        "ch-07",
+        "ch-08",
+        "ch-09",
+        "ch-10",
+        "ch-11"
+      ],
+      "traversees": [],
+      "materiel": [
+        "Conduit IRL",
+        "Colliers de fixation",
+        "Chevilles béton",
+        "Coudes et accessoires"
+      ],
+      "dependances": [
+        "d-tableau"
+      ]
+    },
+    {
+      "id": "d-boites",
+      "phase": "boites",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Poser les deux boîtes de dérivation aux intersections de parcours, à 2,30 m. Percer les deux traversées des 0,20 m de béton pour les points extérieurs, avec pente vers l'extérieur. Toute connexion se fera dans une boîte, aucune dans un conduit.",
+      "composants": [
+        "bd-01",
+        "bd-02",
+        "bd-03",
+        "bd-04"
+      ],
+      "cheminements": [],
+      "traversees": [
+        "tv-01",
+        "tv-02"
+      ],
+      "materiel": [
+        "Boîtes de dérivation",
+        "Scie cloche béton",
+        "Perforateur",
+        "Mastic d'étanchéité"
+      ],
+      "dependances": [
+        "d-cheminement"
+      ]
+    },
+    {
+      "id": "d-tirage",
+      "phase": "tirage",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Tirer les conducteurs du tableau jusqu'à chaque boîte, en une seule passe, sans coupure dans les gaines.",
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Conducteurs",
+        "Aiguille de tirage"
+      ],
+      "dependances": [
+        "d-boites"
+      ]
+    },
+    {
+      "id": "d-appareillage",
+      "phase": "appareillage",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Poser et raccorder les cinq socles, conducteur de protection raccordé à chacun. Refermer les boîtiers extérieurs et vérifier que le couvercle se rabat sur un cordon branché.",
+      "composants": [
+        "pc-01",
+        "pc-02",
+        "pc-03",
+        "pc-04",
+        "pc-05"
+      ],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Socles 2P+T",
+        "Tournevis",
+        "Pince à dénuder"
+      ],
+      "dependances": [
+        "d-tirage"
+      ]
+    },
+    {
+      "id": "d-continuite",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "continuite-pe",
+      "sousTension": false,
+      "instruction": "Mesurer la continuité du conducteur de protection depuis le tableau jusqu'à chacun des cinq points. Consigner chaque valeur.",
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Contrôleur d'installation"
+      ],
+      "dependances": [
+        "d-appareillage"
+      ]
+    },
+    {
+      "id": "d-terre",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "resistance-terre",
+      "sousTension": false,
+      "instruction": "Mesurer la résistance de la prise de terre et consigner la valeur.",
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Telluromètre"
+      ],
+      "dependances": [
+        "d-appareillage"
+      ]
+    },
+    {
+      "id": "d-isolement",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "isolement",
+      "sousTension": false,
+      "instruction": "Mesurer l'isolement du circuit, conducteurs déconnectés des récepteurs. Consigner la valeur.",
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Mégohmmètre"
+      ],
+      "dependances": [
+        "d-appareillage"
+      ]
+    },
+    {
+      "id": "d-serrage",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "serrage",
+      "sousTension": false,
+      "instruction": "Contrôler le serrage de toutes les connexions, au tableau comme à chaque point.",
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Tournevis dynamométrique"
+      ],
+      "dependances": [
+        "d-appareillage"
+      ]
+    },
+    {
+      "id": "d-reperage",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "concordance-reperage",
+      "sousTension": false,
+      "instruction": "Vérifier que le repérage du tableau correspond à la réalité des circuits, point par point.",
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [],
+      "dependances": [
+        "d-appareillage"
+      ]
+    },
+    {
+      "id": "d-levee",
+      "phase": "levee-consignation",
+      "nature": "levee-consignation",
+      "sousTension": false,
+      "instruction": "Retirer la condamnation et remettre l'installation sous tension. À partir d'ici, l'installation est sous tension.",
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [],
+      "dependances": [
+        "d-continuite",
+        "d-terre",
+        "d-isolement",
+        "d-serrage",
+        "d-reperage"
+      ]
+    },
+    {
+      "id": "d-differentiels",
+      "phase": "essais-sous-tension",
+      "nature": "verification",
+      "verification": "declenchement-differentiels",
+      "sousTension": true,
+      "instruction": "Actionner le bouton test de chaque dispositif différentiel et vérifier que les cinq points sont effectivement coupés. Consigner le résultat.",
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Contrôleur de différentiel"
+      ],
+      "dependances": [
+        "d-levee"
+      ]
+    }
+  ],
+  "note": "Jeu de démonstration. Deux boîtes de jonction sur l'antenne à 2,50 m et deux boîtes de pied à 1,50 m où la descente se divise : sans elles, un départ vers une traversée se brancherait au milieu d'un conduit, c'est-à-dire hors boîte. Exclu du livrable chantier."
+}

@@ -1,0 +1,73 @@
+{
+  "gabaritParDefaut": {
+    "largeur": 0.1,
+    "hauteur": 0.1,
+    "profondeur": 0.05
+  },
+  "types": [
+    {
+      "id": "socle-simple",
+      "libelle": "socle simple",
+      "gabarit": {
+        "largeur": 0.09,
+        "hauteur": 0.09,
+        "profondeur": 0.04
+      }
+    },
+    {
+      "id": "socle-double",
+      "libelle": "socle double",
+      "gabarit": {
+        "largeur": 0.16,
+        "hauteur": 0.09,
+        "profondeur": 0.04
+      }
+    },
+    {
+      "id": "tableau",
+      "libelle": "tableau divisionnaire",
+      "gabarit": {
+        "largeur": 0.36,
+        "hauteur": 0.26,
+        "profondeur": 0.11
+      }
+    },
+    {
+      "id": "luminaire",
+      "libelle": "luminaire",
+      "gabarit": {
+        "largeur": 0.3,
+        "hauteur": 0.3,
+        "profondeur": 0.08
+      }
+    },
+    {
+      "id": "commande",
+      "libelle": "commande",
+      "gabarit": {
+        "largeur": 0.09,
+        "hauteur": 0.09,
+        "profondeur": 0.03
+      }
+    },
+    {
+      "id": "borne",
+      "libelle": "borne de recharge",
+      "gabarit": {
+        "largeur": 0.3,
+        "hauteur": 0.45,
+        "profondeur": 0.18
+      }
+    },
+    {
+      "id": "boite-derivation",
+      "libelle": "boîte de dérivation",
+      "gabarit": {
+        "largeur": 0.1,
+        "hauteur": 0.1,
+        "profondeur": 0.05
+      }
+    }
+  ],
+  "note": "Gabarits d'encombrement pour le rendu, et libellés lisibles. Ce ne sont pas des références commerciales : la maquette vise la lisibilité, pas le photo-réalisme. La boîte de dérivation y figure comme tout autre type : c'est un composant de plein droit, pas un accessoire implicite du tracé."
+}

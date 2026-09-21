@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://elec-garage.local/contracts/chantier.schema.json",
+  "title": "Catalogue de chantier",
+  "description": "Liste ordonnée et fermée des phases, natures d'étape et vérifications. Propriété du socle : une fonctionnalité électrique choisit une phase, elle n'en invente pas. C'est une donnée et non du code, afin qu'une évolution du déroulé de chantier ne demande pas de modifier la logique.",
+  "type": "object",
+  "required": ["phases", "naturesEtape", "verifications"],
+  "additionalProperties": false,
+  "properties": {
+    "phases": {
+      "description": "Dans l'ordre du chantier. Le rang d'une phase est sa position dans ce tableau : l'ordre du tableau EST l'information.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/entree" }
+    },
+    "naturesEtape": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/entree" } },
+    "verifications": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "allOf": [{ "$ref": "#/$defs/entree" }],
+        "properties": {
+          "id": { "type": "string" },
+          "libelle": { "type": "string" },
+          "exigeeParPrincipeV": {
+            "type": "boolean",
+            "description": "true pour les vérifications que le Principe V de la constitution rend obligatoires. La règle V10 contrôle leur présence dans la séquence."
+          }
+        },
+        "required": ["id", "libelle", "exigeeParPrincipeV"]
+      }
+    },
+    "note": { "type": "string" }
+  },
+  "$defs": {
+    "entree": {
+      "type": "object",
+      "required": ["id", "libelle"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "libelle": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

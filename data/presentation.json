@@ -1,0 +1,110 @@
+{
+  "couleurs": {
+    "fond": "#e9eef2",
+    "paroi": "#ccd4da",
+    "faceInterieure": "#f4f7f9",
+    "sol": "#aab4bc",
+    "plafond": "#dfe5e9",
+    "arete": "#5b6770",
+    "obstacle": "#d08a2c",
+    "obstacleIncertain": "#c0392b",
+    "composantEnPlace": "#8b97a1",
+    "composantSansCircuit": "#7f8c8d",
+    "contourAjout": "#11181d",
+    "cheminement": "#2c6e9b",
+    "traversee": "#7d5ba6",
+    "collision": "#c0392b"
+  },
+  "paletteCircuits": [
+    "#1f77b4",
+    "#d62728",
+    "#2ca02c",
+    "#9467bd",
+    "#ff7f0e",
+    "#17becf",
+    "#8c564b"
+  ],
+  "epaisseurDalle": 0.08,
+  "toleranceRaccordement": 0.01,
+  "diametreConduitConventionnel": 0.02,
+  "opacites": {
+    "arete": 0.35,
+    "obstacle": 0.28,
+    "obstacleIncertain": 0.12,
+    "cheminementEnPlace": 1
+  },
+  "eclairage": {
+    "hemispherique": {
+      "ciel": "#ffffff",
+      "sol": "#9aa5ad",
+      "intensite": 2.0
+    },
+    "directionnel": {
+      "couleur": "#ffffff",
+      "intensite": 1.2,
+      "position": {
+        "x": 6,
+        "y": -8,
+        "z": 10
+      }
+    }
+  },
+  "camera": {
+    "champ": 55,
+    "proche": 0.05,
+    "lointain": 200,
+    "rayonMin": 0.8,
+    "rayonMax": 40
+  },
+  "vueInitiale": "trois-quarts",
+  "vues": [
+    {
+      "id": "trois-quarts",
+      "libelle": "Trois quarts",
+      "theta": -0.785398,
+      "phi": 1.047198,
+      "rayon": 14
+    },
+    {
+      "id": "dessus",
+      "libelle": "Dessus",
+      "theta": -1.570796,
+      "phi": 0.12,
+      "rayon": 13
+    },
+    {
+      "id": "interieur",
+      "libelle": "Intérieur",
+      "theta": 1.427997,
+      "phi": 1.532484,
+      "rayon": 3.2
+    },
+    {
+      "id": "plafond",
+      "libelle": "Plafond",
+      "theta": -1.570796,
+      "phi": 2.941593,
+      "rayon": 6
+    },
+    {
+      "id": "sud",
+      "libelle": "Façade sud",
+      "theta": -1.570796,
+      "phi": 1.495997,
+      "rayon": 13
+    }
+  ],
+  "libelles": {
+    "parois": {
+      "sud": "paroi sud (façade)",
+      "nord": "paroi nord (fond)",
+      "est": "paroi est (droite)",
+      "ouest": "paroi ouest (gauche)",
+      "plafond": "plafond"
+    },
+    "faces": {
+      "interieur": "intérieur",
+      "exterieur": "extérieur"
+    }
+  }
+}

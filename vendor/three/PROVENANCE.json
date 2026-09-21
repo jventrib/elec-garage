@@ -1,0 +1,10 @@
+{
+  "name": "three",
+  "version": "0.186.0",
+  "source": "npm pack three",
+  "fichiers": [
+    "three.core.js",
+    "three.module.js"
+  ],
+  "note": "Vendoré volontairement : FR-028 interdit toute dépendance à un service tiers en ligne, FR-030 impose le fonctionnement hors réseau. Ne pas remplacer par un CDN."
+}

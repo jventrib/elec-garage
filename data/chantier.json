@@ -1,0 +1,96 @@
+{
+  "phases": [
+    {
+      "id": "consignation",
+      "libelle": "Consignation"
+    },
+    {
+      "id": "tableau",
+      "libelle": "Tableau et protections"
+    },
+    {
+      "id": "cheminement",
+      "libelle": "Cheminements et gaines"
+    },
+    {
+      "id": "boites",
+      "libelle": "Boîtes et traversées de mur"
+    },
+    {
+      "id": "tirage",
+      "libelle": "Tirage des conducteurs"
+    },
+    {
+      "id": "appareillage",
+      "libelle": "Pose de l'appareillage"
+    },
+    {
+      "id": "essais-hors-tension",
+      "libelle": "Essais hors tension"
+    },
+    {
+      "id": "levee-consignation",
+      "libelle": "Levée de consignation"
+    },
+    {
+      "id": "essais-sous-tension",
+      "libelle": "Essais sous tension"
+    }
+  ],
+  "naturesEtape": [
+    {
+      "id": "consignation",
+      "libelle": "Consignation"
+    },
+    {
+      "id": "pose",
+      "libelle": "Pose"
+    },
+    {
+      "id": "verification",
+      "libelle": "Vérification"
+    },
+    {
+      "id": "levee-consignation",
+      "libelle": "Levée de consignation"
+    }
+  ],
+  "verifications": [
+    {
+      "id": "continuite-pe",
+      "libelle": "Continuité des conducteurs de protection",
+      "exigeeParPrincipeV": true
+    },
+    {
+      "id": "resistance-terre",
+      "libelle": "Résistance de la prise de terre",
+      "exigeeParPrincipeV": true
+    },
+    {
+      "id": "isolement",
+      "libelle": "Mesure d'isolement",
+      "exigeeParPrincipeV": true
+    },
+    {
+      "id": "declenchement-differentiels",
+      "libelle": "Déclenchement des dispositifs différentiels",
+      "exigeeParPrincipeV": true
+    },
+    {
+      "id": "serrage",
+      "libelle": "Serrage des connexions",
+      "exigeeParPrincipeV": true
+    },
+    {
+      "id": "concordance-reperage",
+      "libelle": "Concordance du repérage du tableau",
+      "exigeeParPrincipeV": true
+    },
+    {
+      "id": "autre",
+      "libelle": "Autre vérification",
+      "exigeeParPrincipeV": false
+    }
+  ],
+  "note": "Liste ordonnée et fermée, propriété du socle. Une fonctionnalité électrique choisit une phase, elle n'en invente pas. Les essais sont scindés de part et d'autre de la levée de consignation : isolement, terre et continuité se mesurent hors tension, le déclenchement d'un différentiel exige la tension."
+}

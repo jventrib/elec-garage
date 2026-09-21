@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://elec-garage.local/contracts/types-composants.schema.json",
+  "title": "Catalogue des types de composants",
+  "description": "Gabarits d'encombrement et libellés lisibles. Ce ne sont pas des références commerciales : la maquette vise la lisibilité, pas le photo-réalisme. Un apport ne peut employer qu'un type déclaré ici. Le type « boite-derivation » y figure comme tout autre : une boîte est un composant de plein droit (FR-033), pas un accessoire implicite du tracé.",
+  "type": "object",
+  "required": [
+    "types",
+    "gabaritParDefaut"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "types": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/type"
+      }
+    },
+    "gabaritParDefaut": {
+      "$ref": "#/$defs/gabarit"
+    },
+    "note": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "gabarit": {
+      "description": "Encombrement en mètres, dans le plan de pose puis en saillie.",
+      "type": "object",
+      "required": [
+        "largeur",
+        "hauteur",
+        "profondeur"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "largeur": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "hauteur": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "profondeur": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "type": {
+      "type": "object",
+      "required": [
+        "id",
+        "libelle",
+        "gabarit"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "libelle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "gabarit": {
+          "$ref": "#/$defs/gabarit"
+        }
+      }
+    }
+  }
+}

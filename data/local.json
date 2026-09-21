@@ -1,0 +1,73 @@
+{
+  "oeuvre": {
+    "x": 5.6,
+    "y": 5.6
+  },
+  "hauteurSousPlafond": 2.75,
+  "epaisseurParois": 0.2,
+  "repere": {
+    "origine": "angle-sud-ouest-interieur-sol-fini",
+    "axeX": "est",
+    "axeY": "nord",
+    "axeZ": "haut",
+    "unite": "metre"
+  },
+  "provenance": {
+    "schemaUnifilaire": null,
+    "noteDeCalcul": null,
+    "releve": "2026-09-21"
+  },
+  "baies": [
+    {
+      "id": "porte-sectionnelle",
+      "paroi": "sud",
+      "debut": 0.2,
+      "largeur": 5.0,
+      "hauteur": null,
+      "incertain": true
+    },
+    {
+      "id": "porte-service",
+      "paroi": "est",
+      "debut": 1.3,
+      "largeur": 1.1,
+      "hauteur": 2.5,
+      "incertain": true
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "vantail-service-ouvert",
+      "baie": "porte-service",
+      "etat": "ouvert",
+      "volume": null,
+      "incertain": true
+    },
+    {
+      "id": "tablier-sectionnelle-ouvert",
+      "baie": "porte-sectionnelle",
+      "etat": "ouvert",
+      "volume": null,
+      "incertain": true
+    },
+    {
+      "id": "tablier-sectionnelle-ferme",
+      "baie": "porte-sectionnelle",
+      "etat": "ferme",
+      "volume": null,
+      "incertain": true
+    },
+    {
+      "id": "gabarit-manoeuvre-vehicule",
+      "etat": "ferme",
+      "volume": null,
+      "incertain": true
+    },
+    {
+      "id": "debattement-portieres",
+      "etat": "ouvert",
+      "volume": null,
+      "incertain": true
+    }
+  ]
+}
