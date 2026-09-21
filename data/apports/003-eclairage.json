@@ -1,0 +1,703 @@
+{
+  "fonctionnalite": "003-eclairage",
+  "provenance": {
+    "schemaUnifilaire": null,
+    "noteDeCalcul": null,
+    "releve": "2026-09-21"
+  },
+  "circuits": [
+    {
+      "id": "c-eclairage",
+      "libelle": "Éclairage garage",
+      "couleur": "#ff7f0e",
+      "conducteurs": 8,
+      "detailConducteurs": "au plus huit, dans la goulotte : phase, neutre, protection, la sortie de MC-01 vers le plafonnier, et les paires d'ordre de CM-01 et de CM-04. Six au plus dans un conduit, sur CH-05",
+      "section": 1.5,
+      "sensibiliteDifferentielle": 30,
+      "chuteTensionCumulee": 1.76,
+      "typeDifferentiel": null,
+      "calibreProtection": null,
+      "courantEmploi": null
+    }
+  ],
+  "composants": [
+    {
+      "id": "ec-el-01a",
+      "reference": "EL-01a",
+      "type": "luminaire",
+      "paroi": "plafond",
+      "face": "interieur",
+      "position": {
+        "x": 1.4,
+        "y": 3.25,
+        "z": 2.75
+      },
+      "hauteurAxe": null,
+      "indiceProtection": null,
+      "circuit": "c-eclairage"
+    },
+    {
+      "id": "ec-el-01b",
+      "reference": "EL-01b",
+      "type": "luminaire",
+      "paroi": "plafond",
+      "face": "interieur",
+      "position": {
+        "x": 4.2,
+        "y": 3.25,
+        "z": 2.75
+      },
+      "hauteurAxe": null,
+      "indiceProtection": null,
+      "circuit": "c-eclairage"
+    },
+    {
+      "id": "ec-cm-01",
+      "reference": "CM-01",
+      "type": "commande",
+      "paroi": "est",
+      "face": "interieur",
+      "position": {
+        "x": 5.6,
+        "y": 2.68,
+        "z": 1.1
+      },
+      "hauteurAxe": 1.1,
+      "indiceProtection": null,
+      "circuit": "c-eclairage",
+      "pilote": [
+        "ec-el-01a",
+        "ec-el-01b"
+      ],
+      "commutation": "entree-module",
+      "boitier": "bt-commandes",
+      "module": "au-mc-01"
+    },
+    {
+      "id": "ec-el-02",
+      "reference": "EL-02",
+      "type": "luminaire",
+      "paroi": "sud",
+      "face": "exterieur",
+      "position": {
+        "x": 2.7,
+        "y": -0.2,
+        "z": 2.22
+      },
+      "hauteurAxe": 2.22,
+      "indiceProtection": null,
+      "circuit": "c-eclairage"
+    },
+    {
+      "id": "ec-cm-02",
+      "reference": "CM-02",
+      "type": "commande",
+      "paroi": "sud",
+      "face": "exterieur",
+      "position": {
+        "x": 2.4,
+        "y": -0.2,
+        "z": 2.22
+      },
+      "hauteurAxe": 2.22,
+      "indiceProtection": null,
+      "circuit": "c-eclairage",
+      "pilote": [
+        "ec-el-02"
+      ],
+      "commutation": "sur-place"
+    },
+    {
+      "id": "ec-cm-03",
+      "reference": "CM-03",
+      "type": "commande",
+      "paroi": "est",
+      "face": "exterieur",
+      "position": {
+        "x": 5.8,
+        "y": 2.6,
+        "z": 1.1
+      },
+      "hauteurAxe": 1.1,
+      "indiceProtection": null,
+      "circuit": "c-eclairage",
+      "pilote": [
+        "ec-el-03"
+      ],
+      "commutation": "retour-commande"
+    },
+    {
+      "id": "ec-el-03",
+      "reference": "EL-03",
+      "type": "luminaire",
+      "paroi": "est",
+      "face": "exterieur",
+      "position": {
+        "x": 5.8,
+        "y": 2.6,
+        "z": 2.6
+      },
+      "hauteurAxe": 2.6,
+      "indiceProtection": null,
+      "circuit": "c-eclairage"
+    },
+    {
+      "id": "ec-bl-01",
+      "reference": "BL-01",
+      "type": "boite-derivation",
+      "paroi": "plafond",
+      "face": "interieur",
+      "position": {
+        "x": 2.7,
+        "y": 3.25,
+        "z": 2.75
+      },
+      "hauteurAxe": null,
+      "indiceProtection": null,
+      "circuit": "c-eclairage"
+    }
+  ],
+  "cheminements": [
+    {
+      "id": "ec-ch-01",
+      "reference": "CH-L1",
+      "circuits": [
+        "c-eclairage",
+        "c-prises"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 0.7,
+            "z": 2.6
+          },
+          "a": {
+            "x": 5.6,
+            "y": 0,
+            "z": 2.6
+          }
+        },
+        {
+          "face": "sud",
+          "de": {
+            "x": 5.6,
+            "y": 0,
+            "z": 2.6
+          },
+          "a": {
+            "x": 5.6,
+            "y": 0,
+            "z": 2.22
+          }
+        },
+        {
+          "face": "sud",
+          "de": {
+            "x": 5.6,
+            "y": 0,
+            "z": 2.22
+          },
+          "a": {
+            "x": 5.4,
+            "y": 0,
+            "z": 2.22
+          }
+        },
+        {
+          "face": "sud",
+          "de": {
+            "x": 5.4,
+            "y": 0,
+            "z": 2.22
+          },
+          "a": {
+            "x": 2.7,
+            "y": 0,
+            "z": 2.22
+          }
+        }
+      ]
+    },
+    {
+      "id": "ec-ch-02",
+      "reference": "CH-L2",
+      "circuits": [
+        "c-eclairage"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.7,
+            "y": 2.6,
+            "z": 2.75
+          },
+          "a": {
+            "x": 2.7,
+            "y": 3.25,
+            "z": 2.75
+          }
+        }
+      ]
+    },
+    {
+      "id": "ec-ch-03",
+      "reference": "CH-L3",
+      "circuits": [
+        "c-eclairage"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.7,
+            "y": 3.25,
+            "z": 2.75
+          },
+          "a": {
+            "x": 4.2,
+            "y": 3.25,
+            "z": 2.75
+          }
+        }
+      ]
+    },
+    {
+      "id": "ec-ch-04",
+      "reference": "CH-L4",
+      "circuits": [
+        "c-eclairage"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.7,
+            "y": 3.25,
+            "z": 2.75
+          },
+          "a": {
+            "x": 1.4,
+            "y": 3.25,
+            "z": 2.75
+          }
+        }
+      ]
+    },
+    {
+      "id": "ec-ch-06",
+      "reference": "CH-L6",
+      "circuits": [
+        "c-eclairage"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "sud",
+          "de": {
+            "x": 2.7,
+            "y": -0.2,
+            "z": 2.22
+          },
+          "a": {
+            "x": 2.4,
+            "y": -0.2,
+            "z": 2.22
+          }
+        }
+      ]
+    }
+  ],
+  "traversees": [
+    {
+      "id": "ec-tv-01",
+      "reference": "TV-L1",
+      "paroi": "sud",
+      "position": {
+        "x": 2.7,
+        "y": 0,
+        "z": 2.22
+      },
+      "sens": "interieur-vers-exterieur",
+      "penteVersExterieur": true,
+      "denivele": null
+    },
+    {
+      "id": "ec-tv-02",
+      "reference": "TV-L2",
+      "paroi": "est",
+      "position": {
+        "x": 5.6,
+        "y": 2.6,
+        "z": 2.6525
+      },
+      "sens": "interieur-vers-exterieur",
+      "penteVersExterieur": true,
+      "denivele": 0.105
+    },
+    {
+      "id": "ec-tv-03",
+      "reference": "TV-L3",
+      "paroi": "est",
+      "position": {
+        "x": 5.6,
+        "y": 2.6,
+        "z": 1.1
+      },
+      "sens": "interieur-vers-exterieur",
+      "penteVersExterieur": true,
+      "denivele": null
+    }
+  ],
+  "etapes": [
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Cadenas de consignation",
+        "Étiquette de consignation",
+        "Vérificateur d'absence de tension"
+      ],
+      "dependances": [],
+      "id": "ec-consignation",
+      "phase": "consignation",
+      "nature": "consignation",
+      "sousTension": false,
+      "instruction": "Couper l'alimentation du circuit d'éclairage en amont, condamner le dispositif de coupure et poser l'étiquette de consignation. Vérifier l'absence de tension au VAT sur chaque conducteur."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [
+        "ec-tv-01",
+        "ec-tv-02",
+        "ec-tv-03"
+      ],
+      "fixations": [
+        "ec-el-01a",
+        "ec-el-01b",
+        "ec-cm-01",
+        "ec-el-02",
+        "ec-cm-02",
+        "ec-cm-03",
+        "ec-el-03",
+        "ec-bl-01",
+        "ec-ch-01",
+        "ec-ch-02",
+        "ec-ch-03",
+        "ec-ch-04",
+        "ec-ch-06"
+      ],
+      "materiel": [
+        "Cordeau et crayon de traçage",
+        "Perforateur",
+        "Scie cloche béton",
+        "Mastic d'étanchéité",
+        "Chevilles adaptées au béton",
+        "Sonde de détection (métaux et câbles)"
+      ],
+      "dependances": [
+        "ec-consignation"
+      ],
+      "id": "ec-percage",
+      "phase": "percage",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "TRACER PUIS PERCER, avant toute fixation. Tracer l'emplacement de BL-01 au plafond en (2,70 ; 3,25), les tracés de conduit et leurs colliers. Percer les trous de cheville, puis LES TROIS TRAVERSÉES DE PAROI, en biais vers le bas. DEUX NE SE PERCENT PAS EN PLEINE PAROI : celle du point de l'accès piéton part DU FOND DE LA GOULOTTE GL-02, à y = 2,60 m, et celle de son interrupteur extérieur DU FOND DE BD-04, en (5,60 ; 2,60 ; 1,10). La première ENTRE À 2,705 M, au milieu du profilé, et SORT À 2,60 M, sous le point extérieur : 10,5 cm de pente sur l'épaisseur du mur, à tracer des deux côtés avant d'attaquer. La goulotte et la boîte ne sont pas encore posées : c'est précisément le moment de percer leur fond, et il faut COORDONNER avec le circuit des prises, qui les posera juste après. ATTENTION À LA PENTE sur celle de 1,10 m : le boîtier extérieur sera DOS À DOS avec BD-04, ce qui invite à percer horizontalement — et un percement horizontal annule la pente exigée. Pour celle de la façade sud, la bande libre ne fait que 0,25 m entre le haut de l'ouverture à 2,10 m et la sous-face du rail à 2,35 m : tracer au trait, avec 0,12 m de garde en haut et 0,13 m en bas — les deux cotes les plus serrées de la fonctionnalité. La vue de cette étape montre chaque perçage à sa place, distingué par sa nature — traversée à la scie cloche, fixation d'objet, fixation de collier — et porte les gardes qui le contraignent. S'y reporter plutôt que de tout tenir de ce texte. SONDER AVANT DE PERCER : gaine noyée, canalisation, fer. Un trou pénètre la paroi de 5 à 8 cm."
+    },
+    {
+      "composants": [
+        "ec-bl-01"
+      ],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Boîte de dérivation pour la fourche",
+        "Boîtiers extérieurs",
+        "Tournevis"
+      ],
+      "dependances": [
+        "ec-percage"
+      ],
+      "id": "ec-boites",
+      "phase": "boites",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Poser BL-01 sur la cheville déjà percée : c'est la seule boîte propre à ce circuit, au plafond en (2,70 ; 3,25), et c'est la FOURCHE qui répartit vers les deux sorties du plafonnier. Les autres boîtes et organes du circuit sont partagés et posés par le circuit des prises — dont la goulotte GL-02 et BD-04, qui se posent PAR-DESSUS les traversées déjà percées dans leur fond. Poser aussi les boîtiers extérieurs des deux points de façade et celui de l'interrupteur extérieur, chacun au dos de sa traversée."
+    },
+    {
+      "composants": [],
+      "cheminements": [
+        "ec-ch-01",
+        "ec-ch-02",
+        "ec-ch-03",
+        "ec-ch-04",
+        "ec-ch-06"
+      ],
+      "traversees": [],
+      "materiel": [
+        "Conduit IRL 20",
+        "Conduit extérieur qualifié pour 0,30 m — référence à arrêter",
+        "Colliers de fixation",
+        "Chevilles adaptées au béton",
+        "Coudes et accessoires de conduit"
+      ],
+      "dependances": [
+        "ec-boites"
+      ],
+      "id": "ec-cheminement",
+      "phase": "cheminement",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Le tronc est POSÉ PAR LE CIRCUIT DES PRISES et partagé : montée du tableau par la goulotte GL-01, goulotte GL-02 au plafond de la paroi est, descente CH-05 aux commandes en IRL 25, et parcours de plafond CH-07 DROIT VERS L'OUEST jusqu'à BD-05, en IRL 20. Ne rien y ajouter. Ne poser ici que les branches PROPRES à l'éclairage, en IRL 20. Au plafond : depuis BD-05, VIRAGE VERS LE NORD sur 0,65 m jusqu'à BL-01, puis la FOURCHE vers les deux sorties du plafonnier — 1,50 m vers l'est, 1,30 m vers l'ouest. Ailleurs : depuis GL-01, la branche vers la façade sud, qui longe la paroi est puis la paroi sud à 2,22 m ; et la liaison extérieure de 0,30 m entre le point de façade et son détecteur. RIEN À POSER POUR LE POINT DE L'ACCÈS PIÉTON : il sort du fond de GL-02, sans conduit propre."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Conducteurs 1,5 mm²",
+        "Aiguille de tirage"
+      ],
+      "dependances": [
+        "ec-cheminement"
+      ],
+      "id": "ec-tirage",
+      "phase": "tirage",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Tirer les conducteurs de 1,5 mm² : phase, neutre, protection, et le RETOUR COMMANDÉ du point de l'accès piéton. Le point de façade n'en appelle aucun : il est alimenté en permanence et commuté sur place par son détecteur. LA PHASE VA À LA GOULOTTE, où MC-01 la reçoit, à BD-04 pour l'interrupteur extérieur, et au point de façade ; ELLE NE VA PAS À CM-01. Le retour de l'accès piéton naît aux bornes de l'interrupteur extérieur, rentre par le fond de BD-04, remonte CH-05 jusqu'à la goulotte GL-02 et ressort par son fond vers le point de l'accès piéton. LE PLAFONNIER ET CM-01 NE SE CÂBLENT PAS ICI : la sortie de MC-01 vers le plafonnier et la paire d'ordre de CM-01 se tirent à l'étape de tirage de l'automatisation. DANS LE TRONC PARTAGÉ, TIRER EN MÊME TEMPS QUE LES CONDUCTEURS DES PRISES : avec ceux de l'automatisation, jusqu'à dix conducteurs passent ensemble dans les goulottes, neuf dans CH-05 et sept dans CH-07, et les faire passer en deux fois est beaucoup plus difficile. CH-05 EST LE TUBE LE PLUS CHARGÉ DE L'INSTALLATION. Prévoir de l'aiguille, du lubrifiant de tirage, et ne pas forcer sur un conducteur seul."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Bornes automatiques",
+        "Pince à dénuder"
+      ],
+      "dependances": [
+        "ec-tirage"
+      ],
+      "id": "ec-connexions",
+      "phase": "connexions",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Faire les connexions de BL-01, la fourche du plafonnier, et celles de l'éclairage dans OC-01, OC-02 et les boîtes partagées BD-04 et BD-05, en bornes à levier WAGO 221 — référence et nombre sur la fiche de chaque boîte. Un conducteur qui ne fait que traverser une boîte n'y est pas coupé. À BL-01, c'est la SORTIE DE MC-01 qui se sépare vers les deux sorties du plafonnier. Refermer les couvercles ; les boîtes doivent RESTER ACCESSIBLES. Laisser 10 à 15 cm de réserve dans chaque boîte. DANS LES ENVELOPPES PARTAGÉES, NE PAS DÉRANGER LES CONDUCTEURS DES PRISES NI LE CÂBLE DE LA BORNE : les premiers restent sous tension si seul l'éclairage est consigné, le second ne doit recevoir aucune connexion."
+    },
+    {
+      "composants": [
+        "ec-el-01a",
+        "ec-el-01b",
+        "ec-cm-01",
+        "ec-el-02",
+        "ec-cm-02",
+        "ec-cm-03",
+        "ec-el-03"
+      ],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Sorties d'éclairage (DCL ou équivalent)",
+        "Interrupteurs en saillie",
+        "Détecteur de présence",
+        "Tournevis"
+      ],
+      "dependances": [
+        "ec-connexions"
+      ],
+      "id": "ec-appareillage",
+      "phase": "appareillage",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Poser et raccorder les sorties d'éclairage et les commandes, conducteur de protection raccordé à chacune sans exception — y compris les deux points extérieurs et le détecteur. Les deux sorties du plafonnier sont sur l'axe décalé au nord, à 3,25 m, de part et d'autre de la fourche BL-01 : elles forment UN SEUL point lumineux et s'allument ensemble. CM-01, dans BD-04 à 1,10 m, commande le plafonnier depuis l'intérieur, et ce boîtier transite le circuit des prises. CM-01 EST UN INTERRUPTEUR SUR L'ENTRÉE DE MC-01 : il ne coupe aucune puissance. Lui raccorder sa paire d'ordre et le PE — ni phase ni neutre. L'INTERRUPTEUR DU POINT DE L'ACCÈS PIÉTON EST DEHORS, au dos de cette même boîte, à 1,10 m : il commande depuis l'extérieur, là où l'on se trouve quand on en a besoin. Son indice de protection doit tenir l'exposition directe, MANŒUVRE COMPRISE. Le point de l'accès piéton lui-même se pose AU DOS DE SA TRAVERSÉE, à 2,60 m sur le même aplomb, alimenté par le fond de la goulotte GL-02 ; son retour commandé naît aux bornes de l'interrupteur extérieur, rentre par le fond de BD-04 et remonte le tronc."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Protection du circuit",
+        "Étiquettes de repérage"
+      ],
+      "dependances": [
+        "ec-appareillage"
+      ],
+      "id": "ec-tableau",
+      "phase": "tableau",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "CÂBLER LE DÉPART EN DERNIER. Poser au tableau divisionnaire la protection du circuit d'éclairage, DISTINCTE de celle des prises, raccorder le départ et repérer le circuit de façon durable. C'est cette séparation qui fait qu'un défaut électrique sur les prises ne plonge pas le garage dans le noir. À noter que la protection reste distincte alors que le conduit du tronc est partagé : un incident MÉCANIQUE sur ce tronc — une cheville, un écrasement — atteindrait en revanche les deux circuits."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Contrôleur d'installation"
+      ],
+      "dependances": [
+        "ec-tableau"
+      ],
+      "id": "ec-continuite",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "continuite-pe",
+      "sousTension": false,
+      "instruction": "Mesurer la continuité du conducteur de protection depuis le tableau jusqu'à CHACUNE des quatre sorties et jusqu'au détecteur — EL-01a, EL-01b, EL-02, EL-03, CM-02 — et consigner les cinq valeurs. Le garage n'a pas de prise de terre propre : cette mesure point par point est la seule parade."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Telluromètre"
+      ],
+      "dependances": [
+        "ec-tableau"
+      ],
+      "id": "ec-terre",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "resistance-terre",
+      "sousTension": false,
+      "instruction": "Mesurer la résistance de la prise de terre et consigner la valeur. En régime TT, R ≤ 50/IΔn : 1 667 Ω pour 30 mA, mais 100 Ω si un dispositif de 500 mA existe en amont."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Mégohmmètre"
+      ],
+      "dependances": [
+        "ec-tableau"
+      ],
+      "id": "ec-isolement",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "isolement",
+      "sousTension": false,
+      "instruction": "Mesurer l'isolement du circuit, conducteurs déconnectés de tout luminaire et du détecteur. Consigner la valeur."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Tournevis dynamométrique"
+      ],
+      "dependances": [
+        "ec-tableau"
+      ],
+      "id": "ec-serrage",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "serrage",
+      "sousTension": false,
+      "instruction": "Contrôler le serrage de toutes les connexions : au tableau, dans OC-01, OC-02 et les deux boîtes partagées BD-04 et BD-05, dans BL-01 à la fourche, derrière chaque sortie et dans le boîtier de la commande intérieure et dans celui de l'interrupteur extérieur. LA FOURCHE BL-01 mérite une attention particulière : c'est là que la sortie de MC-01 se sépare vers les deux sorties du plafonnier. Les bornes de EL-01a et EL-01b ne portent chacune qu'un conducteur par pôle : il n'y a PAS de repiquage entre les deux sorties. Dans BD-04, vérifier les bornes de CM-01 : sa paire d'ordre seule, et le PE. Dans GL-02 et dans BD-04, vérifier aussi le DÉPART EN FOND vers l'extérieur : celui de la goulotte va au point de l'accès piéton, celui de BD-04 à son interrupteur. Dans les boîtes partagées, ne pas déranger les conducteurs du circuit des prises, qui y transitent et restent sous tension si seul l'éclairage est consigné."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [],
+      "dependances": [
+        "ec-tableau"
+      ],
+      "id": "ec-reperage",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "concordance-reperage",
+      "sousTension": false,
+      "instruction": "Vérifier que le repérage du tableau correspond à la réalité : couper la protection de l'éclairage et constater que les quatre sorties s'éteignent ET QUE LES PRISES RESTENT ALIMENTÉES. C'est la preuve que les deux circuits sont distincts."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [],
+      "dependances": [
+        "ec-continuite",
+        "ec-terre",
+        "ec-isolement",
+        "ec-serrage",
+        "ec-reperage"
+      ],
+      "id": "ec-levee",
+      "phase": "levee-consignation",
+      "nature": "levee-consignation",
+      "sousTension": false,
+      "instruction": "Retirer la condamnation et remettre l'installation sous tension. DEUX RÉSERVES À RETENIR POUR PLUS TARD. D'abord le point de façade est alimenté EN PERMANENCE : toute intervention sur lui, sur son détecteur ou sur leur liaison exige sa propre consignation, celle du circuit d'éclairage n'y suffit pas. Ensuite OC-01, OC-02, BD-04 et BD-05 portent DEUX circuits : y consigner l'éclairage ne met pas les prises hors tension, ni l'inverse. Seule BL-01, à la fourche du plafonnier, ne porte que l'éclairage."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Contrôleur de différentiel"
+      ],
+      "dependances": [
+        "ec-levee"
+      ],
+      "id": "ec-differentiels",
+      "phase": "essais-sous-tension",
+      "nature": "verification",
+      "verification": "declenchement-differentiels",
+      "sousTension": true,
+      "instruction": "Actionner le bouton test du dispositif différentiel et vérifier que les quatre sorties sont coupées, et que les prises restent alimentées. Ce test vérifie le mécanisme, NON l'adéquation du TYPE de différentiel aux charges , qui ne se constate pas au bouton test. Elle est plus aiguë ici : le détecteur est une charge à découpage alimentée en permanence."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [],
+      "dependances": [
+        "ec-levee"
+      ],
+      "id": "ec-commandes",
+      "phase": "essais-sous-tension",
+      "nature": "verification",
+      "verification": "autre",
+      "sousTension": true,
+      "instruction": "DE NUIT. CM-01 agit par MC-01 : le module doit être posé et alimenté. Vérifier que CM-01 allume et éteint les DEUX sorties du plafonnier d'un seul geste, sans qu'aucune reste seule. Vérifier ensuite, DEPUIS L'EXTÉRIEUR, que l'interrupteur extérieur agit sur le point de l'accès piéton SEUL, sans effet sur le point de façade ni sur le plafonnier — l'opérateur est alors du même côté que la commande et que son effet. Le contrôle symétrique, que CM-01 n'agisse pas sur le point extérieur, DEMANDE DEUX PASSAGES ou deux personnes, les deux commandes n'étant pas du même côté du mur. Une inversion de câblage est INVISIBLE au contrôle de continuité : c'est le seul défaut de cette installation qu'aucune mesure ne révèle. NE PAS CHERCHER À CONSTATER L'ÉTAT DU POINT EXTÉRIEUR DEPUIS L'INTÉRIEUR : ce n'est pas possible."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [],
+      "dependances": [
+        "ec-levee"
+      ],
+      "id": "ec-detecteur",
+      "phase": "essais-sous-tension",
+      "nature": "verification",
+      "verification": "autre",
+      "sousTension": true,
+      "instruction": "Régler le champ de détection de CM-02 pour qu'il couvre l'aire de manœuvre et IGNORE la voie publique et la propriété voisine. Régler la temporisation d'extinction, CONSIGNER la valeur retenue au dossier, et vérifier que le réglage effectif y correspond. Rappeler à l'exploitant qu'il n'y a pas d'allumage forcé : qui reste immobile verra la lumière s'éteindre."
+    }
+  ]
+}

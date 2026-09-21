@@ -55,3 +55,46 @@ test('les quatre parois encadrent l’œuvre et donnent 6,00 m hors tout', () =>
 test('le relevé du dépôt passe les contrôles structurels', () => {
   assert.deepEqual(validerLocal(LOCAL()), []);
 });
+
+/* ---------------- Fenêtre nord et allège ---------------- */
+
+test('la fenêtre nord est centrée, et sa baie se déduit de ses cotes', () => {
+  const local = LOCAL();
+  const f = local.baies.find((b) => b.id === 'fenetre-nord');
+  const s = segmentBaie(local, f);
+  assert.equal(s.axe, 'x');
+  // Les bornes viennent du relevé, elles ne sont pas recopiées ici : ce que ce
+  // test vérifie est la façon dont segmentBaie les compose, non l'altitude du
+  // jour. Une correction de cote ne doit pas faire échouer un test de géométrie.
+  assert.equal(s.min, f.debut);
+  assert.equal(s.max, f.debut + f.largeur);
+  assert.equal(s.trumeauAvant, s.trumeauApres, 'centrée : trumeaux égaux');
+  assert.ok(f.allege > 0, 'une fenêtre a une allège, contrairement à une porte');
+  assert.ok(
+    f.allege + f.hauteur < local.hauteurSousPlafond,
+    'la fenêtre laisse un linteau sous le plafond',
+  );
+});
+
+test('les deux portes ont une allège nulle', () => {
+  for (const b of LOCAL().baies.filter((x) => x.id.startsWith('porte-'))) {
+    assert.equal(b.allege, 0, `${b.id} part du sol`);
+  }
+});
+
+test('une baie qui monte au-delà du plafond est rejetée', () => {
+  const local = copie(LOCAL());
+  local.baies.find((b) => b.id === 'fenetre-nord').allege = 2.5;
+  assert.ok(validerLocal(local).some((d) => /au-delà de la hauteur sous plafond/.test(d.message)));
+});
+
+test('une allège négative ou absente est rejetée', () => {
+  for (const valeur of [-0.1, undefined, 'bas']) {
+    const local = copie(LOCAL());
+    local.baies[0].allege = valeur;
+    assert.ok(
+      validerLocal(local).some((d) => /allege doit être un nombre/.test(d.message)),
+      `allege = ${valeur} doit être rejetée`,
+    );
+  }
+});

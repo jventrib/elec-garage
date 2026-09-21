@@ -1,0 +1,571 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://elec-garage.local/contracts/apport.schema.json",
+  "title": "Apport d'une fonctionnalité électrique",
+  "description": "Contrat que remplit une fonctionnalité électrique pour verser ses composants et ses étapes au socle. Un fichier par fonctionnalité, dans data/apports/. Le socle n'a pas à être modifié pour en accepter un nouveau.",
+  "type": "object",
+  "required": [
+    "fonctionnalite",
+    "provenance",
+    "circuits",
+    "composants",
+    "cheminements",
+    "traversees",
+    "etapes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "fonctionnalite": {
+      "type": "string",
+      "pattern": "^[0-9]{3}-[a-z0-9-]+$",
+      "description": "Doit correspondre au nom du fichier, par exemple 002-prises-de-courant"
+    },
+    "provenance": {
+      "type": "object",
+      "description": "Documents normatifs dont ce fichier dérive (FR-009). La maquette n'est pas la source normative : en cas de divergence, ces documents l'emportent.",
+      "required": [
+        "schemaUnifilaire",
+        "noteDeCalcul"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schemaUnifilaire": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Version ou date du schéma unifilaire. null tant qu'il n'existe pas."
+        },
+        "noteDeCalcul": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Version ou date de la note de calcul. null tant qu'elle n'existe pas."
+        },
+        "releve": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Date du relevé géométrique dont proviennent les cotes."
+        }
+      }
+    },
+    "circuits": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/circuit"
+      }
+    },
+    "composants": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/composant"
+      }
+    },
+    "cheminements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cheminement"
+      },
+      "description": "Parcours des conduits posés en apparent. Tableau obligatoire, éventuellement vide : une fonctionnalité qui n'apporte aucun cheminement le déclare explicitement plutôt que d'omettre le champ."
+    },
+    "traversees": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/traversee"
+      },
+      "description": "Passages de conduit à travers les 0,20 m de béton. Tableau obligatoire, éventuellement vide."
+    },
+    "etapes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/etape"
+      }
+    }
+  },
+  "$defs": {
+    "circuit": {
+      "type": "object",
+      "required": [
+        "id",
+        "libelle"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "libelle": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repérage tel qu'il figure au tableau"
+        },
+        "couleur": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Facultatif. À défaut, le socle en attribue une de façon déterministe."
+        },
+        "conducteurs": {
+          "description": "Nombre de conducteurs que ce circuit met dans un tube. Facultatif. Valeur MAJORANTE et uniforme : les retours commandés n'existent pas sur toutes les branches, mais la note de calcul dimensionne sur le cas le plus chargé. La fiche d'un conduit somme les circuits qu'il porte et en déduit la condition de remplissage D >= d*racine(3n).",
+          "type": "integer",
+          "minimum": 1
+        },
+        "detailConducteurs": {
+          "description": "Ce que sont ces conducteurs, en clair — « phase, neutre, protection ». Affiché sur la fiche d'un conduit dédié, là où une répartition par circuit n'apprendrait rien. Ne se déclare pas sans « conducteurs ».",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "courantEmploi": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Courant d'emploi retenu, en ampères. null tant que la note de calcul ne l'a pas établi."
+        },
+        "section": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Section des conducteurs en mm². Peut être une décision de conception arrêtée avant la note de calcul, laquelle doit alors la vérifier."
+        },
+        "calibreProtection": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Calibre de la protection contre les surintensités, en ampères. Son appariement avec la section est une valeur normative."
+        },
+        "sensibiliteDifferentielle": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Sensibilité du dispositif différentiel, en milliampères. 30 au maximum, exigé par le Principe II."
+        },
+        "typeDifferentiel": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "AC",
+            "A",
+            "B",
+            null
+          ],
+          "description": "Type du dispositif différentiel. Le Principe II exige qu'il soit justifié au regard des charges : un type AC ne détecte pas les composantes continues pulsées."
+        },
+        "chuteTensionCumulee": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Chute de tension cumulée au point le plus éloigné, en pourcentage. Calculée, non saisie de mémoire."
+        }
+      },
+      "description": "Circuit électrique. Les champs électriques sont tous facultatifs et peuvent valoir null : l'implantation et les tracés sont livrables avant la note de calcul, et une valeur non établie doit s'afficher comme inconnue plutôt que d'être devinée. Ils ne sont renseignés qu'une fois, ici : la note de calcul porte le raisonnement, pas une copie des valeurs."
+    },
+    "composant": {
+      "type": "object",
+      "required": [
+        "id",
+        "reference",
+        "type",
+        "paroi",
+        "face",
+        "position",
+        "hauteurAxe",
+        "indiceProtection",
+        "circuit"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repère du dossier, par exemple PC-01"
+        },
+        "type": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Identifiant d'un type déclaré dans data/types-composants.json, qui porte son gabarit et son libellé."
+        },
+        "paroi": {
+          "enum": [
+            "sud",
+            "nord",
+            "est",
+            "ouest",
+            "plafond"
+          ]
+        },
+        "face": {
+          "enum": [
+            "interieur",
+            "exterieur"
+          ]
+        },
+        "position": {
+          "type": "object",
+          "required": [
+            "x",
+            "y",
+            "z"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "z": {
+              "type": "number"
+            }
+          }
+        },
+        "hauteurAxe": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "null = inconnu. Sera affiché comme inconnu, jamais remplacé par une valeur plausible."
+        },
+        "boitier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Facultatif. Identifiant du boîtier partagé avec d'autres appareils — un boîtier à deux postes, par exemple. Les appareils qui le partagent sont raccordés entre eux dans cette enceinte, ce que la constitution admet depuis sa v1.8.0 sous quatre conditions. La règle V16 tient pour atteignable tout membre d'un boîtier dont un membre l'est. La proximité ne suffit pas : c'est le boîtier déclaré qui rattache."
+        },
+        "pilote": {
+          "description": "Facultatif, sur une commande seulement. Identifiants des points que cette commande pilote. C'est la donnée qui permet au socle de dériver le TRAJET RÉEL de chaque conducteur — donc ce que chaque conduit porte vraiment, et non le majorant du circuit. Inséparable de « commutation ». Un point piloté doit exister, appartenir au même circuit, et n'être piloté que par une seule commande — ou par plusieurs commandes d'un même module.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "commutation": {
+          "description": "Facultatif, sur une commande seulement. Où se fait la coupure, ce qui décide du chemin de la phase et qu'aucune géométrie ne permet de deviner. « retour-commande » : la phase descend à la commande, et un retour commandé remonte vers les points. « sur-place » : le point est alimenté en permanence et commuté chez lui — cas d'un détecteur de présence (FR-042) —, la phase va donc au point et le retour ne quitte pas la liaison point ↔ commande. « entree-module » : l'interrupteur ne coupe aucune puissance — il adresse un ORDRE à un module qui détient la phase et la sortie. Deux conducteurs d'ordre vont du module à l'interrupteur — un seul, le retour, si l'entrée du module commute la phase (voir « entree ») —, et une sortie du module aux points qu'il commute. Inséparable de « module » ; « pilote » y est facultatif.",
+          "enum": [
+            "retour-commande",
+            "sur-place",
+            "entree-module"
+          ]
+        },
+        "module": {
+          "description": "Facultatif, sur une commande « entree-module » seulement, et alors obligatoire. Identifiant du module de commande, du même circuit, qui reçoit l'ordre de cette commande et détient la phase et la sortie. Deux commandes d'un même module peuvent piloter les mêmes points : chacune a sa paire d'ordre, ce n'est pas un va-et-vient.",
+          "type": "string",
+          "minLength": 1
+        },
+        "entree": {
+          "description": "Facultatif, sur un module de commande seulement. Ce que ses entrées attendent d'un bouton — c'est une propriété du PRODUIT. « phase » : l'entrée commute la phase du circuit ; le bouton reçoit la phase par le plus court depuis le tableau, et UN conducteur d'ordre, le retour, va du bouton au module. « boucle », ou absent : l'entrée est alimentée par le module, et le bouton ferme une boucle — deux conducteurs d'ordre, un aller et un retour.",
+          "type": "string",
+          "enum": [
+            "phase",
+            "boucle"
+          ]
+        },
+        "contigu": {
+          "description": "Facultatif. Identifiants des composants dont l'enveloppe TOUCHE celle de celui-ci sans la recouvrir, et avec lesquels les conducteurs passent directement. Crée une continuité électrique là où aucun conduit n'existe — le cas d'une goulotte posée sur le dessus d'un tableau. Les deux objets DOIVENT porter un volume, et leurs enveloppes DOIVENT se toucher à la tolérance de raccordement près : c'est l'objet de V22. Le rattachement est DÉCLARÉ, jamais déduit de la proximité, comme pour « boitier ».",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "indiceProtection": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "null = inconnu, typiquement tant que la note de calcul n'est pas établie."
+        },
+        "circuit": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Identifiant d'un circuit déclaré, ou null si le rattachement n'est pas arrêté."
+        },
+        "dimensions": {
+          "description": "Encombrement d'une boîte de dérivation, facultatif. Déclaré, il lui donne un VOLUME : le graphe y rattache tout bout de conduit qui tombe dedans, et V20 n'y voit pas de heurt. Inséparable de « entrees », qui en est la contrepartie (V21). Une boîte sans dimensions reste un point, comportement d'origine.",
+          "type": "object",
+          "properties": {
+            "largeur": {
+              "description": "Le long de la paroi ; sur x au plafond.",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "hauteur": {
+              "description": "Sur z ; sur y au plafond, faute d'une verticale.",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "profondeur": {
+              "description": "Saillie, suivant la normale à la paroi, vers l'espace et non dans le mur.",
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "largeur",
+            "hauteur",
+            "profondeur"
+          ],
+          "additionalProperties": false
+        },
+        "entrees": {
+          "description": "Nombre d'entrées de conduit d'une boîte de dérivation. Contrepartie obligatoire de « dimensions » : un conduit qui se termine dans la boîte en occupe une, un conduit qui la traverse en occupe deux. Une traversée de paroi n'en occupe aucune, elle sort par le fond. Contrôlé par V21.",
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "etape": {
+      "type": "object",
+      "required": [
+        "id",
+        "phase",
+        "instruction",
+        "nature",
+        "composants",
+        "cheminements",
+        "traversees",
+        "materiel",
+        "dependances",
+        "sousTension"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phase": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Identifiant d'une phase déclarée dans data/chantier.json. La liste n'est PAS recopiée ici : elle n'existe qu'à un seul endroit (FR-021), et le contrôle se fait à l'exécution contre le catalogue."
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Non vide. Une étape muette est un défaut de cohérence bloquant."
+        },
+        "nature": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Identifiant d'une nature déclarée dans data/chantier.json."
+        },
+        "verification": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Obligatoire pour une étape de nature « verification ». Identifiant déclaré dans data/chantier.json. La règle V10 contrôle que les six vérifications exigées par le Principe V sont présentes."
+        },
+        "composants": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Composants mis en place par cette étape. Vide pour une consignation ou une vérification."
+        },
+        "cheminements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Cheminements posés par cette étape. Un conduit est un objet posable comme un socle : il apparaît à une étape et suit les trois registres visuels (FR-040)."
+        },
+        "traversees": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Traversées réalisées par cette étape."
+        },
+        "materiel": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Matériel et outillage nécessaires, pour que l'installateur n'ouvre aucun autre document."
+        },
+        "dependances": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Étapes devant précéder celle-ci. Le graphe doit rester acyclique."
+        },
+        "sousTension": {
+          "type": "boolean",
+          "description": "true si l'étape s'exécute sur une installation sous tension. Toute étape true doit être ordonnée après la levée de consignation."
+        },
+        "justificationSousTension": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Exigée lorsqu'une étape sousTension: false se situe après la levée de consignation."
+        }
+      }
+    },
+    "point": {
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        }
+      }
+    },
+    "face": {
+      "enum": [
+        "sud",
+        "nord",
+        "est",
+        "ouest",
+        "plafond"
+      ],
+      "description": "Face sur laquelle le conduit est fixé. Le rattachement à une face n'est pas décoratif : il rend l'orthogonalité vérifiable et permet de dessiner le conduit en saillie du bon côté du nu."
+    },
+    "segment": {
+      "type": "object",
+      "required": [
+        "face",
+        "de",
+        "a"
+      ],
+      "additionalProperties": false,
+      "description": "Portion rectiligne d'un cheminement. L'orthogonalité n'est PAS déclarée, elle est vérifiée : sur une face verticale, un segment conforme fait varier soit l'abscisse le long de la paroi, soit l'altitude, jamais les deux ; sur le plafond, soit x, soit y.",
+      "properties": {
+        "face": {
+          "$ref": "#/$defs/face"
+        },
+        "de": {
+          "$ref": "#/$defs/point"
+        },
+        "a": {
+          "$ref": "#/$defs/point"
+        }
+      }
+    },
+    "cheminement": {
+      "type": "object",
+      "required": [
+        "id",
+        "reference",
+        "circuits",
+        "segments",
+        "diametre"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repère du dossier, par exemple CH-01."
+        },
+        "circuits": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Circuits portés par ce conduit. Plusieurs circuits dans un même conduit constituent un groupement, dont le facteur de correction conditionne le courant admissible retenu par la note de calcul (Principe III). C'est pourquoi l'information appartient au cheminement et non au circuit."
+        },
+        "segments": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/segment"
+          }
+        },
+        "diametre": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0,
+          "description": "Diamètre extérieur du conduit en mètres, ou null tant que la note de calcul ne l'a pas arrêté — il dépend du taux de remplissage, donc du nombre de conducteurs. null s'affiche comme inconnu."
+        }
+      }
+    },
+    "traversee": {
+      "type": "object",
+      "required": [
+        "id",
+        "reference",
+        "paroi",
+        "position",
+        "sens",
+        "penteVersExterieur"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "paroi": {
+          "enum": [
+            "sud",
+            "nord",
+            "est",
+            "ouest"
+          ]
+        },
+        "position": {
+          "$ref": "#/$defs/point",
+          "description": "Point de percement, au nu intérieur de la paroi."
+        },
+        "sens": {
+          "enum": [
+            "interieur-vers-exterieur",
+            "exterieur-vers-interieur"
+          ]
+        },
+        "penteVersExterieur": {
+          "type": "boolean",
+          "description": "La constitution exige une pente vers l'extérieur, afin qu'aucune eau ne chemine vers l'intérieur. Déclaré pour être contrôlable : une traversée desservant l'extérieur sans pente est un défaut."
+        }
+      }
+    }
+  }
+}

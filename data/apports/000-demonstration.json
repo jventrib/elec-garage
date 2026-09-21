@@ -36,10 +36,10 @@
       "face": "interieur",
       "position": {
         "x": 5.6,
-        "y": 2.9,
-        "z": 1.2
+        "y": 2.6,
+        "z": 0.3
       },
-      "hauteurAxe": 1.2,
+      "hauteurAxe": 0.3,
       "indiceProtection": null,
       "circuit": "c-demo"
     },
@@ -51,10 +51,10 @@
       "face": "exterieur",
       "position": {
         "x": 5.8,
-        "y": 2.9,
-        "z": 1.2
+        "y": 2.6,
+        "z": 0.3
       },
-      "hauteurAxe": 1.2,
+      "hauteurAxe": 0.3,
       "indiceProtection": null,
       "circuit": "c-demo"
     },
@@ -66,10 +66,10 @@
       "face": "interieur",
       "position": {
         "x": 5.6,
-        "y": 5.4,
-        "z": 1.2
+        "y": 5.2,
+        "z": 0.3
       },
-      "hauteurAxe": 1.2,
+      "hauteurAxe": 0.3,
       "indiceProtection": null,
       "circuit": "c-demo"
     },
@@ -81,10 +81,10 @@
       "face": "exterieur",
       "position": {
         "x": 5.8,
-        "y": 5.4,
-        "z": 1.2
+        "y": 5.2,
+        "z": 0.3
       },
-      "hauteurAxe": 1.2,
+      "hauteurAxe": 0.3,
       "indiceProtection": null,
       "circuit": "c-demo"
     },
@@ -112,9 +112,9 @@
       "position": {
         "x": 5.6,
         "y": 2.9,
-        "z": 2.5
+        "z": 2.6
       },
-      "hauteurAxe": 2.5,
+      "hauteurAxe": 2.6,
       "indiceProtection": null,
       "circuit": "c-demo"
     },
@@ -127,9 +127,9 @@
       "position": {
         "x": 5.6,
         "y": 5.4,
-        "z": 2.5
+        "z": 2.6
       },
-      "hauteurAxe": 2.5,
+      "hauteurAxe": 2.6,
       "indiceProtection": null,
       "circuit": "c-demo"
     },
@@ -142,9 +142,9 @@
       "position": {
         "x": 5.6,
         "y": 2.9,
-        "z": 1.5
+        "z": 0.3
       },
-      "hauteurAxe": 1.5,
+      "hauteurAxe": 0.3,
       "indiceProtection": null,
       "circuit": "c-demo"
     },
@@ -157,9 +157,9 @@
       "position": {
         "x": 5.6,
         "y": 5.4,
-        "z": 1.5
+        "z": 0.3
       },
-      "hauteurAxe": 1.5,
+      "hauteurAxe": 0.3,
       "indiceProtection": null,
       "circuit": "c-demo"
     }
@@ -171,6 +171,10 @@
       "circuits": [
         "c-demo"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
       "segments": [
         {
           "face": "est",
@@ -182,7 +186,7 @@
           "a": {
             "x": 5.6,
             "y": 0.6,
-            "z": 2.5
+            "z": 2.6
           }
         },
         {
@@ -190,16 +194,15 @@
           "de": {
             "x": 5.6,
             "y": 0.6,
-            "z": 2.5
+            "z": 2.6
           },
           "a": {
             "x": 5.6,
             "y": 2.9,
-            "z": 2.5
+            "z": 2.6
           }
         }
-      ],
-      "diametre": 0.025
+      ]
     },
     {
       "id": "ch-02",
@@ -207,22 +210,25 @@
       "circuits": [
         "c-demo"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": null
+      },
       "segments": [
         {
           "face": "est",
           "de": {
             "x": 5.6,
             "y": 2.9,
-            "z": 2.5
+            "z": 2.6
           },
           "a": {
             "x": 5.6,
             "y": 2.9,
-            "z": 1.5
+            "z": 0.3
           }
         }
-      ],
-      "diametre": null
+      ]
     },
     {
       "id": "ch-03",
@@ -230,22 +236,25 @@
       "circuits": [
         "c-demo"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": null
+      },
       "segments": [
         {
           "face": "est",
           "de": {
             "x": 5.6,
             "y": 2.9,
-            "z": 2.5
+            "z": 2.6
           },
           "a": {
             "x": 5.6,
             "y": 5.4,
-            "z": 2.5
+            "z": 2.6
           }
         }
-      ],
-      "diametre": null
+      ]
     },
     {
       "id": "ch-04",
@@ -253,22 +262,25 @@
       "circuits": [
         "c-demo"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": null
+      },
       "segments": [
         {
           "face": "est",
           "de": {
             "x": 5.6,
             "y": 5.4,
-            "z": 2.5
+            "z": 2.6
           },
           "a": {
             "x": 5.6,
             "y": 5.4,
-            "z": 1.5
+            "z": 0.3
           }
         }
-      ],
-      "diametre": null
+      ]
     },
     {
       "id": "ch-05",
@@ -276,22 +288,25 @@
       "circuits": [
         "c-demo"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": null
+      },
       "segments": [
         {
           "face": "est",
           "de": {
             "x": 5.6,
             "y": 2.9,
-            "z": 1.5
+            "z": 0.3
           },
           "a": {
             "x": 5.6,
             "y": 3.25,
-            "z": 1.5
+            "z": 0.3
           }
         }
-      ],
-      "diametre": null
+      ]
     },
     {
       "id": "ch-06",
@@ -299,35 +314,25 @@
       "circuits": [
         "c-demo"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": null
+      },
       "segments": [
         {
           "face": "est",
           "de": {
             "x": 5.8,
             "y": 3.25,
-            "z": 1.5
+            "z": 0.3
           },
           "a": {
             "x": 5.8,
-            "y": 3.25,
-            "z": 1.2
-          }
-        },
-        {
-          "face": "est",
-          "de": {
-            "x": 5.8,
-            "y": 3.25,
-            "z": 1.2
-          },
-          "a": {
-            "x": 5.8,
-            "y": 2.9,
-            "z": 1.2
+            "y": 2.6,
+            "z": 0.3
           }
         }
-      ],
-      "diametre": null
+      ]
     },
     {
       "id": "ch-07",
@@ -335,22 +340,25 @@
       "circuits": [
         "c-demo"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": null
+      },
       "segments": [
         {
           "face": "est",
           "de": {
             "x": 5.6,
             "y": 5.4,
-            "z": 1.5
+            "z": 0.3
           },
           "a": {
             "x": 5.6,
-            "y": 5.05,
-            "z": 1.5
+            "y": 5.5,
+            "z": 0.3
           }
         }
-      ],
-      "diametre": null
+      ]
     },
     {
       "id": "ch-08",
@@ -358,35 +366,25 @@
       "circuits": [
         "c-demo"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": null
+      },
       "segments": [
         {
           "face": "est",
           "de": {
             "x": 5.8,
-            "y": 5.05,
-            "z": 1.5
+            "y": 5.5,
+            "z": 0.3
           },
           "a": {
             "x": 5.8,
-            "y": 5.05,
-            "z": 1.2
-          }
-        },
-        {
-          "face": "est",
-          "de": {
-            "x": 5.8,
-            "y": 5.05,
-            "z": 1.2
-          },
-          "a": {
-            "x": 5.8,
-            "y": 5.4,
-            "z": 1.2
+            "y": 5.2,
+            "z": 0.3
           }
         }
-      ],
-      "diametre": null
+      ]
     },
     {
       "id": "ch-09",
@@ -394,13 +392,17 @@
       "circuits": [
         "c-demo"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": null
+      },
       "segments": [
         {
           "face": "est",
           "de": {
             "x": 5.6,
             "y": 2.9,
-            "z": 2.5
+            "z": 2.6
           },
           "a": {
             "x": 5.6,
@@ -434,8 +436,7 @@
             "z": 2.75
           }
         }
-      ],
-      "diametre": null
+      ]
     },
     {
       "id": "ch-10",
@@ -443,22 +444,25 @@
       "circuits": [
         "c-demo"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": null
+      },
       "segments": [
         {
           "face": "est",
           "de": {
             "x": 5.6,
             "y": 2.9,
-            "z": 1.5
+            "z": 0.3
           },
           "a": {
             "x": 5.6,
-            "y": 2.9,
-            "z": 1.2
+            "y": 2.6,
+            "z": 0.3
           }
         }
-      ],
-      "diametre": null
+      ]
     },
     {
       "id": "ch-11",
@@ -466,22 +470,25 @@
       "circuits": [
         "c-demo"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": null
+      },
       "segments": [
         {
           "face": "est",
           "de": {
             "x": 5.6,
             "y": 5.4,
-            "z": 1.5
+            "z": 0.3
           },
           "a": {
             "x": 5.6,
-            "y": 5.4,
-            "z": 1.2
+            "y": 5.2,
+            "z": 0.3
           }
         }
-      ],
-      "diametre": null
+      ]
     }
   ],
   "traversees": [
@@ -492,10 +499,11 @@
       "position": {
         "x": 5.6,
         "y": 3.25,
-        "z": 1.5
+        "z": 0.3
       },
       "sens": "interieur-vers-exterieur",
-      "penteVersExterieur": true
+      "penteVersExterieur": true,
+      "denivele": null
     },
     {
       "id": "tv-02",
@@ -503,11 +511,12 @@
       "paroi": "est",
       "position": {
         "x": 5.6,
-        "y": 5.05,
-        "z": 1.5
+        "y": 5.5,
+        "z": 0.3
       },
       "sens": "interieur-vers-exterieur",
-      "penteVersExterieur": true
+      "penteVersExterieur": true,
+      "denivele": null
     }
   ],
   "etapes": [
@@ -526,57 +535,6 @@
         "Vérificateur d'absence de tension"
       ],
       "dependances": []
-    },
-    {
-      "id": "d-tableau",
-      "phase": "tableau",
-      "nature": "pose",
-      "sousTension": false,
-      "instruction": "Fixer le tableau divisionnaire sur la paroi est, à 0,60 m de l'angle sud-est, axe à 1,50 m du sol. Poser les protections et repérer chaque circuit de façon durable.",
-      "composants": [
-        "tableau"
-      ],
-      "cheminements": [],
-      "traversees": [],
-      "materiel": [
-        "Tableau divisionnaire",
-        "Protections",
-        "Étiquettes de repérage"
-      ],
-      "dependances": [
-        "d-consignation"
-      ]
-    },
-    {
-      "id": "d-cheminement",
-      "phase": "cheminement",
-      "nature": "pose",
-      "sousTension": false,
-      "instruction": "Poser les conduits IRL en saillie sur la paroi est et au plafond, selon le tracé de la maquette : montée depuis le tableau, antenne horizontale à 2,30 m, descentes vers chaque socle, et traversée du plafond vers le moteur. Éviter la trajectoire du tablier.",
-      "composants": [],
-      "cheminements": [
-        "ch-01",
-        "ch-02",
-        "ch-03",
-        "ch-04",
-        "ch-05",
-        "ch-06",
-        "ch-07",
-        "ch-08",
-        "ch-09",
-        "ch-10",
-        "ch-11"
-      ],
-      "traversees": [],
-      "materiel": [
-        "Conduit IRL",
-        "Colliers de fixation",
-        "Chevilles béton",
-        "Coudes et accessoires"
-      ],
-      "dependances": [
-        "d-tableau"
-      ]
     },
     {
       "id": "d-boites",
@@ -602,7 +560,38 @@
         "Mastic d'étanchéité"
       ],
       "dependances": [
-        "d-cheminement"
+        "d-consignation"
+      ]
+    },
+    {
+      "id": "d-cheminement",
+      "phase": "cheminement",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Poser les conduits IRL 20 en saillie : montée depuis le tableau, antenne horizontale à 2,60 m — au-dessus du linteau de la porte de service — descentes vers les boîtes de pied à 0,30 m, et montée vers le plafond pour le moteur.",
+      "composants": [],
+      "cheminements": [
+        "ch-01",
+        "ch-02",
+        "ch-03",
+        "ch-04",
+        "ch-05",
+        "ch-06",
+        "ch-07",
+        "ch-08",
+        "ch-09",
+        "ch-10",
+        "ch-11"
+      ],
+      "traversees": [],
+      "materiel": [
+        "Conduit IRL",
+        "Colliers de fixation",
+        "Chevilles béton",
+        "Coudes et accessoires"
+      ],
+      "dependances": [
+        "d-boites"
       ]
     },
     {
@@ -619,7 +608,7 @@
         "Aiguille de tirage"
       ],
       "dependances": [
-        "d-boites"
+        "d-cheminement"
       ]
     },
     {
@@ -647,6 +636,26 @@
       ]
     },
     {
+      "id": "d-tableau",
+      "phase": "tableau",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Fixer le tableau divisionnaire sur la paroi est, à 0,60 m de l'angle sud-est, axe à 1,50 m du sol. Poser les protections et repérer chaque circuit de façon durable.",
+      "composants": [
+        "tableau"
+      ],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Tableau divisionnaire",
+        "Protections",
+        "Étiquettes de repérage"
+      ],
+      "dependances": [
+        "d-appareillage"
+      ]
+    },
+    {
       "id": "d-continuite",
       "phase": "essais-hors-tension",
       "nature": "verification",
@@ -660,7 +669,7 @@
         "Contrôleur d'installation"
       ],
       "dependances": [
-        "d-appareillage"
+        "d-tableau"
       ]
     },
     {
@@ -677,7 +686,7 @@
         "Telluromètre"
       ],
       "dependances": [
-        "d-appareillage"
+        "d-tableau"
       ]
     },
     {
@@ -694,7 +703,7 @@
         "Mégohmmètre"
       ],
       "dependances": [
-        "d-appareillage"
+        "d-tableau"
       ]
     },
     {
@@ -711,7 +720,7 @@
         "Tournevis dynamométrique"
       ],
       "dependances": [
-        "d-appareillage"
+        "d-tableau"
       ]
     },
     {
@@ -726,7 +735,7 @@
       "traversees": [],
       "materiel": [],
       "dependances": [
-        "d-appareillage"
+        "d-tableau"
       ]
     },
     {
@@ -765,5 +774,5 @@
       ]
     }
   ],
-  "note": "Jeu de démonstration. Deux boîtes de jonction sur l'antenne à 2,50 m et deux boîtes de pied à 1,50 m où la descente se divise : sans elles, un départ vers une traversée se brancherait au milieu d'un conduit, c'est-à-dire hors boîte. Exclu du livrable chantier."
+  "note": "Jeu de démonstration. Socles à 0,30 m d'axe, décision du 2026-09-21. L'antenne est à 2,60 m pour franchir le linteau de la porte de service, haute de 2,50 m. Chaque descente se termine sur une boîte de pied d'où partent le socle intérieur et la traversée vers l'extérieur. Exclu du livrable chantier."
 }

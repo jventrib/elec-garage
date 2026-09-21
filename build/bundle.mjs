@@ -163,7 +163,16 @@ function construire({ avecDemo }) {
     .filter((f) => f.endsWith('.json') && f !== 'index.json')
     .map((f) => f.replace(/\.json$/, ''))
     .sort();
-  const retenus = noms.filter((n) => avecDemo || !n.startsWith('000-'));
+  // `--demo` construit le livrable de DÉMONSTRATION, à la place des apports réels
+  // et non en plus d'eux. Tant que la démonstration était le seul apport, les deux
+  // lectures se confondaient. Depuis l'arrivée de 002, elles ne se confondent plus :
+  // le jeu de démonstration décrit le MÊME circuit que lui, à des cotes voisines, et
+  // les empiler fabrique des jonctions de conduits qui n'existent dans aucune des
+  // deux installations. La règle V17 les signale, et le livrable s'ouvrirait sur un
+  // bandeau de défauts.
+  const retenus = avecDemo
+    ? noms.filter((n) => n.startsWith('000-'))
+    : noms.filter((n) => !n.startsWith('000-'));
   const exclus = noms.filter((n) => !retenus.includes(n));
   const apports = retenus.map((n) => JSON.parse(lire(`data/apports/${n}.json`)));
   const donnees = JSON.stringify({ socle, apports }).replace(/</g, '\\u003c');
@@ -265,4 +274,4 @@ const r = construire({ avecDemo: process.argv.includes('--demo') });
 console.log(`dist/garage.html écrit — ${(r.octets / 1024 / 1024).toFixed(2)} Mo`);
 console.log(`  modules empaquetés : ${r.modules}`);
 console.log(`  apports inclus : ${r.retenus.join(', ') || '(aucun)'}`);
-if (r.exclus.length) console.log(`  apports exclus du livrable chantier : ${r.exclus.join(', ')}`);
+if (r.exclus.length) console.log(`  apports écartés de ce livrable : ${r.exclus.join(', ')}`);

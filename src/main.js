@@ -13,9 +13,20 @@ import { construireLocal } from './scene/local.js';
 import { construireObstacles } from './scene/obstacles.js';
 import { construireComposants } from './scene/composants.js';
 import { construireCheminements } from './scene/cheminements.js';
-import { creerPanneauEtape } from './ui/panneau-etape.js';
-import { creerFiche } from './ui/fiche-composant.js';
+import { construirePercages } from './scene/percages.js';
+import { construireTrajets, assombrir } from './scene/trajets.js';
+import { construireGraphe } from './geometrie/graphe.js';
+import { trajetsDe, deriverConducteurs } from './geometrie/trajets.js';
+import { noeudsDesEnveloppes } from './geometrie/connecteurs.js';
+import { couleurDeCircuit } from './scene/composants.js';
+import { creerPilotageLibre, ETIQUETTES } from './ui/pilotage-libre.js';
+import { cadrageDe, distanceDeCadrage, anglesDepuisDirection } from './geometrie/cadrage.js';
+import { construireCotes } from './scene/cotes.js';
+import { creerPanneauEtape, resumeIncertitudes } from './ui/panneau-etape.js';
+import { creerFiche, lignesTrajets } from './ui/fiche-composant.js';
 import { creerControles } from './ui/controles.js';
+import { occupationParCheminement } from './geometrie/conducteurs.js';
+import { connecteursParEnveloppe } from './geometrie/connecteurs.js';
 
 export async function demarrer() {
   const el = (id) => document.getElementById(id);
@@ -29,7 +40,27 @@ export async function demarrer() {
   const obstacles = construireObstacles(modele.local, modele.presentation);
   const composants = construireComposants(modele);
   const cheminements = construireCheminements(modele);
-  vue.scene.add(groupeLocal, obstacles.groupe, composants.groupe, cheminements.groupe);
+  const cotes = construireCotes(modele);
+  // Les points de perçage de l'étape courante. Le modèle fusionné porte
+  // `chantier.fixations` : il tient lieu de socle pour l'entraxe et la cheville.
+  const percages = construirePercages(modele, modele);
+  // Ce que chaque tube porte RÉELLEMENT, dérivé du pilotage déclaré. Calculé une
+  // fois : la dérivation parcourt le graphe, et la fiche s'ouvre à chaque clic.
+  const occupation = occupationParCheminement(modele);
+  // Les connecteurs de chaque enveloppe de jonction : dérivés une fois, comme
+  // l'occupation des conduits, et lus par la fiche.
+  const connecteurs = connecteursParEnveloppe(modele);
+  // Le trajet des conducteurs d'un objet désigné : le graphe, les conducteurs et les
+  // enveloppes se dérivent une fois, et chaque clic ne fait que choisir.
+  const graphe = construireGraphe(modele);
+  const pourTrajets = { graphe, derives: deriverConducteurs(modele, graphe), enveloppes: noeudsDesEnveloppes(modele, graphe) };
+  const trajets = construireTrajets(modele);
+  vue.scene.add(groupeLocal, obstacles.groupe, composants.groupe, cheminements.groupe, cotes.groupe, percages.groupe, trajets.groupe);
+
+  // Le pilotage au clavier du mode libre. Il ne s'active qu'en mode libre, et ses
+  // touches sont disjointes de celles de la séquence — voir `pilotage-libre.js`.
+  const pilotage = creerPilotageLibre(vue);
+  vue.aChaqueImage = (secondes) => pilotage.avancer(secondes);
 
   // Le plafond s'escamote dès que la caméra passe au-dessus : sans cela, la vue
   // de dessus serait la zone aveugle que FR-004 interdit.
@@ -37,8 +68,14 @@ export async function demarrer() {
     plafond.visible = vue.camera.position.z < modele.local.hauteurSousPlafond;
   };
 
-  const panneau = creerPanneauEtape(el('etape'), el('bandeau'), modele.chantier, el('incertains'));
-  const fiche = creerFiche(el('fiche'));
+  const panneau = creerPanneauEtape(el('etape'), el('bandeau'), modele.chantier);
+  // Refermer la fiche ramène l'orbite au centre : qui referme n'a plus d'objet en
+  // tête, et le laisser tourner autour de celui qu'il vient de quitter le perdrait.
+  const fiche = creerFiche(el('fiche'), {
+    surFermeture: () => {
+      if (!vue.estEnModeLibre()) vue.viser({ cible: vue.centre() });
+    },
+  });
   const lecteur = creerLecteur({ sequence });
   const composantsParId = new Map(modele.composants.map((c) => [c.id, c]));
   // Repères lisibles de tout objet posable, pour le panneau d'étape.
@@ -57,6 +94,8 @@ export async function demarrer() {
     const partition = etatParGenre(sequence, modele, lecteur.rang);
     composants.appliquerEtat(partition.composants);
     cheminements.appliquerEtat(partition);
+    cotes.appliquerEtat(partition);
+    percages.afficher(lecteur.etape());
     panneau.afficher(lecteur.etape(), lecteur.rang, lecteur.total, composantsParId, reperes);
   }
 
@@ -75,6 +114,34 @@ export async function demarrer() {
     if (nom) vue.allerAVue(nom);
   });
 
+  // La bascule de mode de caméra.
+  //
+  // Le mode courant DOIT rester visible : le glisser oriente le regard en mode
+  // libre et orbite sinon, et sans indication l'utilisateur ne sait pas ce que son
+  // geste va produire. Le libellé porte aussi les touches, étiquetées pour la
+  // disposition détectée — une aide qui montrerait W sur un clavier français
+  // mentirait.
+  const azerty = (globalThis.navigator?.language ?? '').toLowerCase().startsWith('fr');
+  const etiquettes = azerty ? ETIQUETTES.azerty : ETIQUETTES.qwerty;
+  const aide = `${etiquettes.KeyW}${etiquettes.KeyA}${etiquettes.KeyS}${etiquettes.KeyD}`
+    + ` · ${etiquettes.Space}/${etiquettes.ShiftLeft} monter et descendre`;
+  const boutonMode = el('mode-camera');
+  const majMode = () => {
+    const libre = vue.estEnModeLibre();
+    boutonMode.textContent = libre ? `Déplacement libre — ${aide}` : 'Caméra : orbite';
+    boutonMode.setAttribute('aria-pressed', String(libre));
+    boutonMode.title = libre
+      ? 'Le glisser oriente le regard. Revenir à l’orbite pour tourner autour de la maquette.'
+      : 'Le glisser tourne autour de la maquette. Passer en déplacement libre pour s’y déplacer.';
+  };
+  boutonMode.addEventListener('click', () => {
+    vue.basculerMode();
+    majMode();
+  });
+  // Une vue prédéfinie ramène à l'orbite : l'indicateur doit suivre.
+  el('vues').addEventListener('click', majMode);
+  majMode();
+
   let ouvrants = 'ferme';
   const bouton = el('ouvrants');
   const majOuvrants = () => {
@@ -87,35 +154,136 @@ export async function demarrer() {
   });
   majOuvrants();
 
-  // Ce que le dossier n'a pas pu vérifier, dit comme tel.
-  panneau.signalerIncertitudes({
+  // Les cotes de tracé. Elles ne montrent que celles des objets que l'étape
+  // courante POSE — c'est ce qui les rend lisibles — et se coupent d'un geste.
+  // À ne pas confondre avec le bouton « Cotes manquantes », qui est le bilan de
+  // ce que le RELEVÉ ne dit pas : l'un aide à percer, l'autre dit ce qu'on ignore.
+  let tracage = true;
+  const boutonTracage = el('tracage');
+  const majTracage = () => {
+    boutonTracage.textContent = tracage ? 'Cotes de tracé : visibles' : 'Cotes de tracé : masquées';
+    boutonTracage.setAttribute('aria-pressed', String(tracage));
+    cotes.basculer(tracage);
+  };
+  boutonTracage.addEventListener('click', () => {
+    tracage = !tracage;
+    majTracage();
+  });
+  majTracage();
+
+  // Bilan des cotes manquantes : un bouton discret dans l'en-tête, et le détail
+  // dans la fiche. Il occupait auparavant un bandeau posé sur la maquette, ce qui
+  // masquait en permanence ce qu'on venait regarder.
+  const incertitudes = resumeIncertitudes({
     obstacles: obstacles.incertains,
     collisions: cheminements.collisions,
+    libelles: modele.presentation.libelles,
   });
+  const boutonCotes = el('cotes');
+  boutonCotes.hidden = incertitudes.rien;
+  if (!incertitudes.rien) {
+    boutonCotes.textContent = incertitudes.resume;
+    boutonCotes.className = incertitudes.collisions > 0 ? 'alerte' : 'reserve';
+    boutonCotes.addEventListener('click', () => fiche.afficherIncertitudes(incertitudes.detail));
+  }
 
-  // Désignation d'un objet. Un circuit se suit ensuite sur son TRACÉ RÉEL, du
-  // tableau jusqu'à son dernier point, en passant par chaque boîte (FR-035).
-  function soulignerCircuit(idCircuit) {
-    if (!idCircuit) return;
-    composants.souligner(idCircuit);
-    cheminements.souligner(idCircuit);
+  /**
+   * Ce que les contrôles de collision concluent au sujet d'UN obstacle. C'est la
+   * question utile devant un volume dont la cote manque : non pas « combien de
+   * contrôles en tout », mais « que sait-on de celui-ci ».
+   */
+  function bilanCollisions(idObstacle) {
+    const tous = cheminements.collisions?.resultats ?? [];
+    const siens = tous.filter((r) => r.obstacle === idObstacle);
+    if (siens.length === 0) return null;
+    const compte = (v) => siens.filter((r) => r.verdict === v).length;
+    return {
+      conforme: compte('conforme'),
+      collision: compte('en-collision'),
+      nonConcluant: compte('non-concluant'),
+    };
+  }
+
+  // Désignation d'un objet. Les conducteurs qui y passent se suivent sur leur TRACÉ
+  // RÉEL, d'une extrémité à l'autre, un circuit par couleur (FR-035) ; les conduits
+  // qui les portent restent soulignés, et les appareils d'extrémité prennent la
+  // couleur de leur circuit. Rend la ligne « Trajets » de la fiche.
+  function montrerTrajets(cible) {
+    const liste = trajetsDe(modele, cible, pourTrajets);
+    const appareils = trajets.afficher(liste);
+    cheminements.souligner(liste.filter((t) => !t.inconnu).map((t) => t.circuit));
+    composants.teinterExtremites(appareils);
+    const couleur = (id) => couleurDeCircuit(modele.circuits, id, modele.presentation);
+    const foncee = (id) => assombrir(couleur(id), modele.presentation.trajets.assombrissementOrdre);
+    return lignesTrajets(liste, modele.composants, couleur, foncee);
   }
 
   vue.renderer.domElement.addEventListener('pointerup', (e) => {
-    const objet = vue.objetSous(e, [...composants.meshes(), ...cheminements.meshes()]);
+    // Un GLISSÉ n'a rien désigné : il a cadré. Sans cette garde, la rotation
+    // d'orbite se terminait comme un clic dans le vide — fiche refermée, focus
+    // perdu — et faire le tour d'un composant le faisait sortir du composant.
+    //
+    // Elle se pose AVANT `rafraichir()`, qui réapplique l'état de l'étape et
+    // efface au passage la mise en évidence du circuit. Plus bas, on aurait gardé
+    // la fiche mais éteint le circuit surligné à chaque geste : le défaut déplacé
+    // plutôt que corrigé.
+    if (!vue.estUnClic()) return;
+
+    // Les obstacles sont désignables au même titre que le reste : c'est sur eux
+    // que se lisent leurs propres réserves de cote.
+    const objet = vue.objetSous(e, [
+      ...composants.meshes(),
+      ...cheminements.meshes(),
+      ...obstacles.meshes(),
+    ]);
     const composant = composants.composantDe(objet);
     const cheminement = cheminements.cheminementDe(objet);
     const traversee = cheminements.traverseeDe(objet);
+    const obstacle = obstacles.obstacleDe(objet);
 
     rafraichir();
+    trajets.effacer();
+
+    /**
+     * Recentre l'orbite sur l'objet désigné.
+     *
+     * En mode déplacement libre, on ne déplace RIEN : les deux modes sont
+     * distincts, et téléporter quelqu'un pendant qu'il vole le désorienterait.
+     *
+     * Un objet sans étendue déclarée ne se cadre pas non plus — quatre des sept
+     * obstacles sont dans ce cas, et leur inventer une étendue ferait passer une
+     * absence de cote pour une cote.
+     */
+    const focaliser = (objet, nature) => {
+      if (vue.estEnModeLibre()) return false;
+      const c = cadrageDe(objet, nature, modele.types, modele.local);
+      if (!c) return false;
+      const rayon = distanceDeCadrage(c.etendue, modele.presentation.camera);
+      const angles = anglesDepuisDirection(c.direction);
+      vue.viser({ cible: c.cible, rayon, ...(angles ?? {}) });
+      return true;
+    };
+
     if (composant) {
-      fiche.afficher(composant, modele.circuits, modele.provenance, vocabulaire);
-      soulignerCircuit(composant.circuit);
+      const lignes = montrerTrajets({ genre: 'composant', id: composant.id });
+      fiche.afficher(composant, modele.circuits, modele.provenance, vocabulaire, connecteurs.get(composant.id) ?? null, lignes);
+      focaliser(composant, 'composant');
     } else if (cheminement) {
-      fiche.afficherCheminement(cheminement, modele.circuits, modele.provenance);
-      soulignerCircuit((cheminement.circuits ?? [])[0]);
+      const lignes = montrerTrajets({ genre: 'cheminement', id: cheminement.id });
+      fiche.afficherCheminement(cheminement, modele.circuits, modele.provenance, occupation, lignes);
+      focaliser(cheminement, 'cheminement');
     } else if (traversee) {
-      fiche.afficherTraversee(traversee, modele.provenance, vocabulaire);
+      const lignes = montrerTrajets({ genre: 'traversee', id: traversee.id });
+      fiche.afficherTraversee(traversee, modele.provenance, vocabulaire, lignes);
+      focaliser(traversee, 'traversee');
+    } else if (obstacle) {
+      fiche.afficherObstacle(
+        obstacle,
+        obstacles.incertitudeDe(obstacle.id),
+        vocabulaire,
+        bilanCollisions(obstacle.id),
+      );
+      focaliser(obstacle, 'obstacle');
     } else {
       fiche.vider();
     }

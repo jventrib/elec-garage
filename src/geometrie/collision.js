@@ -1,12 +1,25 @@
+import { calibreDe } from './section.js';
 /**
  * Intersection d'un cheminement avec un obstacle.
  *
- * Trois verdicts, jamais deux. Trois obstacles sur quatre du relevé ont un volume
- * inconnu — rail de la sectionnelle, vantail de la porte de service, gabarit de
- * manœuvre du véhicule. Un contrôle binaire répondrait « pas de collision » sur un
- * volume qu'il n'a pas pu tester, et cette réponse serait un mensonge de l'espèce
- * précise que le Principe VI proscrit : une valeur rassurante à la place d'une
- * inconnue.
+ * Trois verdicts, jamais deux. Un contrôle binaire répondrait « pas de collision »
+ * sur un volume qu'il n'a pas pu tester, et cette réponse serait un mensonge de
+ * l'espèce précise que le Principe VI proscrit : une valeur rassurante à la place
+ * d'une inconnue.
+ *
+ * Un obstacle se présente sous trois formes, et non deux :
+ *
+ * - `volume` relevé — les deux verdicts sont démontrables.
+ * - `volumeMajorant` seul — l'encombrement réel n'est pas relevé, mais il est
+ *   encadré par des cotes qui le sont. Alors **un seul** verdict se démontre :
+ *   être disjoint du majorant prouve le dégagement, tandis que le recouper ne
+ *   prouve rien, l'obstacle réel étant plus petit que son majorant. C'est le cas
+ *   du tablier de la sectionnelle en position ouverte, borné par la course du
+ *   rail et par la hauteur de passage de la baie.
+ * - ni l'un ni l'autre — aucun verdict.
+ *
+ * L'asymétrie du cas médian n'est pas une commodité : elle place l'imprécision du
+ * côté du surcoût d'un détour, jamais du côté d'un conduit posé dans le tablier.
  */
 
 export const VERDICTS = {
@@ -31,19 +44,29 @@ function seChevauchent(a, b) {
   return ['x', 'y', 'z'].every((axe) => a.min[axe] <= b.max[axe] && b.min[axe] <= a.max[axe]);
 }
 
-/**
- * Verdict pour un segment face à un obstacle. Un obstacle dont le volume n'est pas
- * relevé, ou marqué incertain, ne permet aucune conclusion.
- */
+/** Verdict pour un segment face à un obstacle. */
 export function verdictSegment(segment, obstacle, diametre = null) {
-  if (!obstacle.volume || obstacle.incertain) return VERDICTS.NON_CONCLUANT;
-  return seChevauchent(boiteDeSegment(segment, diametre), obstacle.volume)
-    ? VERDICTS.COLLISION
-    : VERDICTS.CONFORME;
+  const boite = boiteDeSegment(segment, diametre);
+
+  if (obstacle.volume && !obstacle.incertain) {
+    return seChevauchent(boite, obstacle.volume) ? VERDICTS.COLLISION : VERDICTS.CONFORME;
+  }
+
+  // Majorant : seul le dégagement se démontre. Le recoupement ne conclut pas.
+  if (obstacle.volumeMajorant && !seChevauchent(boite, obstacle.volumeMajorant)) {
+    return VERDICTS.CONFORME;
+  }
+
+  return VERDICTS.NON_CONCLUANT;
 }
 
 /** Pourquoi un obstacle empêche de conclure, en clair. */
 function raisonNonConcluant(obstacle) {
+  if (obstacle.volumeMajorant) return 'recoupe le majorant déduit ; encombrement réel non relevé';
+  // Un obstacle sans baie de rattachement décrit une zone libre du local, non
+  // l'ouvrant d'une baie. Le vocabulaire suit celui du panneau d'incertitudes :
+  // le même objet ne doit pas y être nommé de deux façons.
+  if (!obstacle.volume && obstacle.baie === undefined) return 'zone libre du local, non relevée';
   if (!obstacle.volume && obstacle.incertain) return 'encombrement non relevé';
   if (!obstacle.volume) return 'volume absent des données';
   return 'obstacle déclaré incertain';
@@ -61,7 +84,7 @@ export function controlerCollisions(modele) {
           cheminement: ch.id,
           segment: i + 1,
           obstacle: obstacle.id,
-          verdict: verdictSegment(segment, obstacle, ch.diametre),
+          verdict: verdictSegment(segment, obstacle, calibreDe(ch.section)),
         });
       }
     }

@@ -14,10 +14,12 @@ import {
   EdgesGeometry,
   LineSegments,
   LineBasicMaterial,
+  Vector3,
 } from '../../vendor/three/three.module.js';
-import { nusDeParoi } from '../donnees/chargement.js';
+import { nusDeParoi, entreeDeTraversee, sortieDeTraversee } from '../donnees/chargement.js';
 import { AXE_NORMAL, longueurSegment } from '../geometrie/cheminement.js';
 import { VERDICTS, controlerCollisions } from '../geometrie/collision.js';
+import { encombrementDe, sectionArretee } from '../geometrie/section.js';
 
 /** Sens dans lequel le conduit sort du nu : vers l'intérieur du local, ou dehors. */
 function sensDeSaillie(face, surNuInterieur) {
@@ -26,16 +28,23 @@ function sensDeSaillie(face, surNuInterieur) {
   return surNuInterieur ? signe : -signe;
 }
 
-/** Boîte de rendu d'un segment, décalée pour reposer en saillie du nu. */
-function boiteEnSaillie(local, segment, diametre) {
+/**
+ * Boîte de rendu d'un segment, décalée pour reposer en saillie du nu.
+ *
+ * L'encombrement n'est plus une valeur unique : une section rectangulaire n'a pas
+ * la même cote de face et de profil. `saillie` sort de la paroi, `transversal`
+ * court le long d'elle, et l'axe du segment porte sa longueur.
+ */
+function boiteEnSaillie(local, segment, encombrement) {
   const normal = AXE_NORMAL[segment.face];
   const nus = nusDeParoi(local, segment.face);
   if (!normal || !nus) return null;
 
   const surNuInterieur = Math.abs(segment.de[normal] - nus.interieur) <= 1e-6;
-  const decalage = (sensDeSaillie(segment.face, surNuInterieur) * diametre) / 2;
+  const decalage = (sensDeSaillie(segment.face, surNuInterieur) * encombrement.saillie) / 2;
 
-  const taille = { x: diametre, y: diametre, z: diametre };
+  const taille = { x: encombrement.transversal, y: encombrement.transversal, z: encombrement.transversal };
+  taille[normal] = encombrement.saillie;
   const centre = {
     x: (segment.de.x + segment.a.x) / 2,
     y: (segment.de.y + segment.a.y) / 2,
@@ -54,7 +63,7 @@ export function construireCheminements(modele) {
   groupe.name = 'cheminements';
   const presentation = modele.presentation;
   const couleurs = presentation.couleurs;
-  const diametreParDefaut = presentation.diametreConduitConventionnel;
+  const sectionParDefaut = presentation.sectionConventionnelle;
 
   const collisions = controlerCollisions(modele);
   /** Pire verdict rencontré par chaque cheminement. */
@@ -71,11 +80,11 @@ export function construireCheminements(modele) {
     const noeud = new Group();
     noeud.name = ch.id;
     noeud.visible = false;
-    const diametre = ch.diametre ?? diametreParDefaut;
+    const encombrement = encombrementDe(ch.section, sectionParDefaut[ch.section?.forme ?? 'circulaire']);
     const meshes = [];
 
     for (const segment of ch.segments ?? []) {
-      const b = boiteEnSaillie(modele.local, segment, diametre);
+      const b = boiteEnSaillie(modele.local, segment, encombrement);
       if (!b) continue;
       const geo = new BoxGeometry(b.taille.x, b.taille.y, b.taille.z);
       const materiau = new MeshStandardMaterial({ color: couleurs.cheminement, roughness: 0.8 });
@@ -97,32 +106,48 @@ export function construireCheminements(modele) {
       noeud,
       meshes,
       cheminement: ch,
-      diametreConnu: ch.diametre !== null && ch.diametre !== undefined,
+      sectionConnue: sectionArretee(ch.section),
       verdict: verdictParCheminement.get(ch.id) ?? VERDICTS.CONFORME,
     });
   }
 
-  // Traversées : un fourreau qui perce les 0,20 m de béton.
+  // Traversées : un fourreau qui perce les 0,20 m de béton, EN BIAIS.
+  //
+  // Il était dessiné droit, à altitude constante. C'était figurer exactement la
+  // faute que la prose de l'étape met en garde de commettre — « deux boîtiers dos
+  // à dos invitent à percer horizontalement, et un percement horizontal annule la
+  // pente ». Un avertissement écrit ne corrige pas un geste naturel ; une image
+  // qui le contredit, si.
+  //
+  // Quand le dénivelé n'est pas arrêté, on dessine à une pente CONVENTIONNELLE et
+  // la fiche dit « inconnu » — jamais à plat. Le repli naturel serait ici le pire
+  // de tous, puisqu'il coïnciderait avec l'erreur.
   const traverseesParId = new Map();
   for (const t of modele.traversees ?? []) {
     const nus = nusDeParoi(modele.local, t.paroi);
     if (!nus) continue;
-    const d = diametreParDefaut * 1.6;
-    const taille = { x: d, y: d, z: d };
-    taille[nus.axe] = Math.abs(nus.exterieur - nus.interieur);
-    const centre = { ...t.position };
-    centre[nus.axe] = (nus.interieur + nus.exterieur) / 2;
+    const entree = entreeDeTraversee(modele.local, t);
+    const sortie = sortieDeTraversee(modele.local, t);
+    if (!entree || !sortie) continue;
 
-    const geo = new BoxGeometry(taille.x, taille.y, taille.z);
+    const deniveleConnu = typeof t.denivele === 'number' && t.denivele > 0;
+    const chute = deniveleConnu ? t.denivele : presentation.deniveleConventionnel;
+    const a = new Vector3(entree.x, entree.y, entree.z + (deniveleConnu ? 0 : chute / 2));
+    const b = new Vector3(sortie.x, sortie.y, sortie.z - (deniveleConnu ? 0 : chute / 2));
+
+    const d = sectionParDefaut.circulaire.diametre * 1.6;
+    const axe = new Vector3().subVectors(b, a);
+    const geo = new BoxGeometry(d, d, axe.length());
     const materiau = new MeshStandardMaterial({ color: couleurs.traversee, roughness: 0.8 });
     const mesh = new Mesh(geo, materiau);
-    mesh.position.set(centre.x, centre.y, centre.z);
+    mesh.position.copy(new Vector3().addVectors(a, b).multiplyScalar(0.5));
+    mesh.quaternion.setFromUnitVectors(new Vector3(0, 0, 1), axe.clone().normalize());
     mesh.userData = { traversee: t };
     const noeud = new Group();
     noeud.add(mesh);
     noeud.visible = false;
     groupe.add(noeud);
-    traverseesParId.set(t.id, { noeud, materiau, traversee: t });
+    traverseesParId.set(t.id, { noeud, materiau, traversee: t, deniveleConnu, entree: a, sortie: b });
   }
 
   /**
@@ -166,12 +191,17 @@ export function construireCheminements(modele) {
     }
   }
 
-  /** Met en évidence un circuit sur son tracé réel (FR-035). */
-  function souligner(idCircuit) {
-    if (idCircuit === null) return;
+  /**
+   * Met en évidence un ou plusieurs circuits sur leur tracé réel (FR-035). Plusieurs
+   * d'un coup : les trajets d'un conduit partagé les concernent tous, et les
+   * souligner l'un après l'autre éteindrait le précédent.
+   */
+  function souligner(idCircuits) {
+    if (idCircuits === null) return;
+    const ids = Array.isArray(idCircuits) ? idCircuits : [idCircuits];
     for (const e of parId.values()) {
       if (!e.noeud.visible) continue;
-      const porte = (e.cheminement.circuits ?? []).includes(idCircuit);
+      const porte = (e.cheminement.circuits ?? []).some((id) => ids.includes(id));
       for (const m of e.meshes) {
         m.materiau.color.set(porte ? couleurs.cheminement : couleurs.composantEnPlace);
         m.contour.visible = porte;
@@ -186,5 +216,5 @@ export function construireCheminements(modele) {
   const cheminementDe = (objet) => objet?.userData?.cheminement ?? null;
   const traverseeDe = (objet) => objet?.userData?.traversee ?? null;
 
-  return { groupe, appliquerEtat, souligner, meshes, cheminementDe, traverseeDe, collisions };
+  return { groupe, appliquerEtat, souligner, meshes, cheminementDe, traverseeDe, collisions, traverseesParId };
 }

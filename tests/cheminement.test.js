@@ -65,21 +65,44 @@ test('un segment au plafond repose sur la sous-face et reste dans l’œuvre', (
   assert.equal(appuiSurFace(local, seg('plafond', pt(1, 1, 2.6), pt(3, 1, 2.6))).ok, false);
 });
 
-test('la longueur d’un cheminement est dérivée de ses segments', () => {
-  const modele = fusionner(socle, [DEMO()]);
-  const ch01 = modele.cheminements.find((c) => c.id === 'ch-01');
-  // 1,00 m de montée depuis le tableau puis 2,30 m jusqu'à la première boîte.
-  assert.equal(Math.round(longueurCheminement(ch01) * 1000) / 1000, 3.3);
-  // Rien n'est déclaré dans les données.
-  assert.equal('longueur' in ch01, false);
+/*
+ * Ces deux tests emploient une fixture et non le jeu de démonstration : coder en
+ * dur les coordonnées d'un tracé réel les faisait casser à chaque relevé, sans
+ * qu'aucune règle n'ait changé.
+ */
+const FIXTURE = {
+  id: 'ch-fixture',
+  reference: 'CH-FIXTURE',
+  circuits: ['c-x'],
+  section: { forme: 'circulaire', diametre: null },
+  segments: [
+    seg('est', pt(5.6, 1.0, 1.0), pt(5.6, 1.0, 2.0)), // 1,00 m de montée
+    seg('est', pt(5.6, 1.0, 2.0), pt(5.6, 3.5, 2.0)), // 2,50 m d'antenne
+  ],
+};
+
+test('la longueur d’un cheminement est la somme de ses segments', () => {
+  assert.equal(longueurCheminement(FIXTURE), 3.5);
+  // Rien n'est déclaré : la longueur se déduit.
+  assert.equal('longueur' in FIXTURE, false);
 });
 
-test('les extrémités d’un cheminement sont son premier et son dernier point', () => {
+test('les extrémités sont le premier et le dernier point du parcours', () => {
+  const [debut, fin] = extremites(FIXTURE);
+  assert.deepEqual(debut, FIXTURE.segments[0].de);
+  assert.deepEqual(fin, FIXTURE.segments.at(-1).a);
+});
+
+test('la longueur de tout cheminement du dépôt est cohérente avec ses segments', () => {
   const modele = fusionner(socle, [DEMO()]);
-  const ch01 = modele.cheminements.find((c) => c.id === 'ch-01');
-  const [debut, fin] = extremites(ch01);
-  assert.deepEqual(debut, { x: 5.6, y: 0.6, z: 1.5 });
-  assert.deepEqual(fin, { x: 5.6, y: 2.9, z: 2.5 });
+  for (const ch of modele.cheminements) {
+    const somme = ch.segments.reduce(
+      (t, s) => t + Math.hypot(s.a.x - s.de.x, s.a.y - s.de.y, s.a.z - s.de.z),
+      0,
+    );
+    assert.ok(Math.abs(longueurCheminement(ch) - somme) < 1e-9, ch.id);
+    assert.ok(longueurCheminement(ch) > 0, `${ch.id} a une longueur nulle`);
+  }
 });
 
 test('la tolérance de raccordement est réellement appliquée', () => {

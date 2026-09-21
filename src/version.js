@@ -6,4 +6,4 @@
  * À incrémenter lors d'un changement de forme des données ou d'une signature
  * publique entre modules.
  */
-export const VERSION = '5-correctif-gabarit';
+export const VERSION = '72-trajets-sans-pastilles';

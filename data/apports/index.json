@@ -1,1 +1,6 @@
-["000-demonstration"]
+[
+  "002-prises-de-courant",
+  "003-eclairage",
+  "004-borne-recharge",
+  "005-automatisation-locale"
+]

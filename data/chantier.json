@@ -5,24 +5,32 @@
       "libelle": "Consignation"
     },
     {
-      "id": "tableau",
-      "libelle": "Tableau et protections"
-    },
-    {
-      "id": "cheminement",
-      "libelle": "Cheminements et gaines"
+      "id": "percage",
+      "libelle": "Implantation et perçage"
     },
     {
       "id": "boites",
-      "libelle": "Boîtes et traversées de mur"
+      "libelle": "Boîtes et supports"
+    },
+    {
+      "id": "cheminement",
+      "libelle": "Colliers et tubes"
     },
     {
       "id": "tirage",
       "libelle": "Tirage des conducteurs"
     },
     {
+      "id": "connexions",
+      "libelle": "Raccordement dans les boîtes"
+    },
+    {
       "id": "appareillage",
-      "libelle": "Pose de l'appareillage"
+      "libelle": "Pose et raccordement de l’appareillage"
+    },
+    {
+      "id": "tableau",
+      "libelle": "Raccordement au tableau"
     },
     {
       "id": "essais-hors-tension",
@@ -92,5 +100,39 @@
       "exigeeParPrincipeV": false
     }
   ],
-  "note": "Liste ordonnée et fermée, propriété du socle. Une fonctionnalité électrique choisit une phase, elle n'en invente pas. Les essais sont scindés de part et d'autre de la levée de consignation : isolement, terre et continuité se mesurent hors tension, le déclenchement d'un différentiel exige la tension."
+  "note": "Liste ordonnée et fermée, propriété du socle. Une fonctionnalité électrique choisit une phase, elle n'en invente pas. Les essais sont scindés de part et d'autre de la levée de consignation : isolement, terre et continuité se mesurent hors tension, le déclenchement d'un différentiel exige la tension.\n\nRÉORDONNÉE LE 2026-09-22, sur l'ordre de montage du maître d'ouvrage. Trois corrections, et elles évitent toutes la même galère — percer ou fixer un élément déjà câblé :\n1. « percage » est nouvelle et vient en tête : on trace et on perce TOUT avant de fixer quoi que ce soit, traversées de paroi comprises. La contrainte « percer avant de poser le boîtier » n'est donc plus une consigne écrite, elle est structurelle.\n2. « boites » passe AVANT « cheminement » : les tubes s'emboîtent ENTRE les boîtes, on ne peut pas les poser d'abord. L'ordre inverse était une erreur de la version d'origine.\n3. « tableau » passe de la deuxième place à l'AVANT-DERNIÈRE avant les essais : on câble les départs sur les disjoncteurs en dernier, quand le reste est en place et vérifiable. Le poser en tête faisait raccorder un circuit qui n'existait pas encore.\nS'y ajoute « connexions », entre le tirage et l'appareillage : les connexions dans les boîtes de dérivation se font toutes ensemble, et les couvercles se referment avant d'aborder l'appareillage.",
+  "fixations": {
+    "_note": "Données PRODUIT, non des cotes de projet. Tant qu'elles ne sont pas renseignées, tout ce qui en dépend reste inconnu : le nombre et la position des colliers pour l'entraxe, le diamètre et la profondeur de perçage pour la cheville. Aucune valeur courante ne leur est substituée.",
+    "entraxe": null,
+    "entraxeParSection": {},
+    "cheville": {
+      "diametre": null,
+      "profondeur": null
+    }
+  },
+  "connecteurs": {
+    "_note": "Données PRODUIT, relevées sur la fiche du fabricant. Choix du maître d'ouvrage du 2026-09-24 : bornes à levier WAGO 221. Plage de section en conducteur rigide, cas de ce chantier. Une section hors de toute plage rend le connecteur inconnu : aucune référence approchée ne lui est substituée.",
+    "gamme": "WAGO 221, borne à levier",
+    "source": "https://www.wago.com/global/products/electrical-interconnections/discover-installation-terminal-blocks-and-connectors/221",
+    "references": [
+      {
+        "reference": "221-412",
+        "entrees": 2,
+        "sectionMin": 0.2,
+        "sectionMax": 4
+      },
+      {
+        "reference": "221-413",
+        "entrees": 3,
+        "sectionMin": 0.2,
+        "sectionMax": 4
+      },
+      {
+        "reference": "221-415",
+        "entrees": 5,
+        "sectionMin": 0.2,
+        "sectionMax": 4
+      }
+    ]
+  }
 }

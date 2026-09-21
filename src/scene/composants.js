@@ -30,14 +30,23 @@ export function couleurDeCircuit(circuits, idCircuit, presentation) {
 
 /**
  * Dimensions et décalage d'un marqueur selon sa paroi et sa face.
- * Les gabarits viennent de data/types-composants.json : aucune dimension de
- * composant n'est écrite ici.
+ *
+ * Le VOLUME DÉCLARÉ par l'objet prime ; le gabarit du type n'est qu'un repli, pour
+ * ceux qui n'en portent pas. Aucune dimension n'est écrite dans ce fichier : elles
+ * viennent des données ou de data/types-composants.json.
+ *
+ * L'ordre a compté : il était inverse, et une enveloppe qui déclarait 0,112 m se
+ * dessinait à 0,100 m — le gabarit écrasait la cote. Une dimension déclarée est une
+ * cote au même titre qu'un relevé, et lui substituer la valeur conventionnelle d'un
+ * type revient à présenter une valeur plausible à la place d'une valeur connue, ce
+ * que le Principe VI proscrit.
+ *
  * Le décalage sort le marqueur du nu de la paroi, du bon côté : c'est ce qui rend
  * un composant extérieur lisible comme extérieur (FR-005).
  */
 export function gabarit(composant, catalogue) {
   const declare = catalogue.types.find((t) => t.id === composant.type);
-  const d = declare?.gabarit ?? catalogue.gabaritParDefaut;
+  const d = composant.dimensions ?? declare?.gabarit ?? catalogue.gabaritParDefaut;
   const g = { l: d.largeur, h: d.hauteur, p: d.profondeur };
   const sens = composant.face === 'exterieur' ? 1 : -1;
   switch (composant.paroi) {
@@ -125,8 +134,24 @@ export function construireComposants(modele) {
     }
   }
 
+  /**
+   * Les appareils d'extrémité d'un trajet prennent la couleur de leur circuit, et
+   * les autres appareils visibles passent au neutre. Un appareil où aboutissent
+   * plusieurs circuits — le tableau, typiquement — garde le neutre, souligné de son
+   * contour : une seule couleur ne dirait pas lesquels, et la fiche les nomme.
+   */
+  function teinterExtremites(appareils) {
+    for (const e of parId.values()) {
+      if (!e.noeud.visible) continue;
+      const circuits = appareils.get(e.composant.id) ?? [];
+      const seul = circuits.length === 1 ? couleurDeCircuit(modele.circuits, circuits[0], presentation) : null;
+      e.materiau.color.set(seul ?? enPlace);
+      e.contour.visible = circuits.length > 0;
+    }
+  }
+
   const meshes = () => [...parId.values()].map((e) => e.mesh);
   const composantDe = (objet) => objet?.userData?.composant ?? null;
 
-  return { groupe, appliquerEtat, souligner, meshes, composantDe, parId };
+  return { groupe, appliquerEtat, souligner, teinterExtremites, meshes, composantDe, parId };
 }

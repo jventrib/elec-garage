@@ -22,28 +22,47 @@ export function empreinteDe(texte) {
  * Déduplique consignation et levée de consignation : une seule de chacune dans la
  * séquence, quel que soit le nombre de contributeurs (FR-025). Les dépendances qui
  * visaient une étape écartée sont redirigées vers celle retenue.
+ *
+ * **Les instructions des étapes écartées sont REPRISES, pas jetées.** Corrigé le
+ * 2026-09-22, en ajoutant la borne de recharge. Elle se consigne au disjoncteur
+ * d'abonné et non à l'interrupteur du tableau, puisqu'elle en part en amont — et
+ * son étape de consignation était écartée, emportant silencieusement la seule
+ * consigne qui dise où couper. Aucune règle ne pouvait le voir : V3 ne contrôle
+ * que les objets posés, et une étape écartée n'en pose aucun.
+ *
+ * Trois circuits qui se coupent à trois endroits différents donnent bien **une**
+ * consignation, mais elle a **trois** consignes. Les concaténer est la seule
+ * lecture juste : le geste est unique, ce qu'il faut savoir ne l'est pas.
  */
 export function dedupliquerEtapesCommunes(etapes) {
   const retenue = new Map();
   const redirection = new Map();
+  const reprises = new Map();
   const gardees = [];
   for (const e of etapes) {
     if (e.nature === 'consignation' || e.nature === 'levee-consignation') {
       const deja = retenue.get(e.nature);
       if (deja) {
         redirection.set(e.id, deja);
+        if ((e.instruction ?? '').trim()) {
+          reprises.set(deja, [...(reprises.get(deja) ?? []), e.instruction.trim()]);
+        }
         continue;
       }
       retenue.set(e.nature, e.id);
     }
     gardees.push(e);
   }
-  const resolues = gardees.map((e) => ({
-    ...e,
-    dependances: [...new Set((e.dependances ?? []).map((d) => redirection.get(d) ?? d))].filter(
-      (d) => d !== e.id,
-    ),
-  }));
+  const resolues = gardees.map((e) => {
+    const ajouts = (reprises.get(e.id) ?? []).filter((t) => !(e.instruction ?? '').includes(t));
+    return {
+      ...e,
+      instruction: ajouts.length ? [e.instruction, ...ajouts].filter(Boolean).join(' ') : e.instruction,
+      dependances: [...new Set((e.dependances ?? []).map((d) => redirection.get(d) ?? d))].filter(
+        (d) => d !== e.id,
+      ),
+    };
+  });
   return { etapes: resolues, redirection };
 }
 

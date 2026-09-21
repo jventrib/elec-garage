@@ -5,7 +5,7 @@ import { SOCLE, DEMO, copie, RACINE } from './_aides.js';
 import { join } from 'node:path';
 import { fusionner } from '../src/donnees/chargement.js';
 import { composerSequence } from '../src/sequence/ordonnancement.js';
-import { validerCatalogues, validerTout } from '../src/donnees/validation.js';
+import { validerCatalogues, validerTout, validerApport } from '../src/donnees/validation.js';
 import { phases, rangPhase, verificationsExigees, naturesEtape, libelleDe } from '../src/sequence/phases.js';
 
 test('les catalogues du dépôt sont valides', () => {
@@ -122,4 +122,42 @@ test('les libellés viennent des données et retombent sur l’identifiant', () 
   assert.equal(libelleDe(c.phases, 'inconnue'), 'inconnue');
   assert.ok(naturesEtape(c).includes('pose'));
   assert.equal(phases(c).length, c.phases.length);
+});
+
+test('chaque type du catalogue déclare son rôle', () => {
+  const ROLES = ['appareillage', 'jonction', 'accessoire'];
+  for (const t of SOCLE().types.types)
+    assert.ok(ROLES.includes(t.role), `« ${t.id} » ne déclare pas de rôle connu`);
+});
+
+test('un accessoire de conduit ne porte ni volume ni entrées', () => {
+  // Rien ne s'y connecte : lui donner des entrées reviendrait à le présenter
+  // comme une enveloppe de jonction, et l'installateur l'ouvrirait pour y
+  // chercher des bornes qui n'existent pas.
+  const socle = SOCLE();
+  const a = copie(DEMO());
+  const c = a.composants[1];
+  c.type = 'accessoire-conduit';
+  c.dimensions = { largeur: 0.05, hauteur: 0.05, profondeur: 0.03 };
+  c.entrees = 2;
+  const d = validerApport(a, socle);
+  assert.ok(
+    d.some((x) => /ne se déclarent que sur une jonction/.test(x.message)),
+    'un accessoire de conduit doit être refusé comme porteur d’entrées',
+  );
+});
+
+test('un organe de connexion est une jonction et porte volume et entrées', () => {
+  const socle = SOCLE();
+  const a = copie(DEMO());
+  const c = a.composants[1];
+  c.type = 'organe-connexion';
+  c.dimensions = { largeur: 0.06, hauteur: 0.06, profondeur: 0.035 };
+  c.entrees = 2;
+  const d = validerApport(a, socle);
+  assert.equal(
+    d.some((x) => /ne se déclarent que sur une jonction/.test(x.message)),
+    false,
+    'un organe de connexion est une enveloppe de cheminement au même titre qu’une boîte',
+  );
 });

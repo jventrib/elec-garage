@@ -1,0 +1,382 @@
+{
+  "fonctionnalite": "004-borne-recharge",
+  "provenance": {
+    "schemaUnifilaire": null,
+    "noteDeCalcul": null,
+    "releve": "2026-09-22"
+  },
+  "circuits": [
+    {
+      "id": "c-borne",
+      "libelle": "Borne de recharge",
+      "couleur": "#d62728",
+      "conducteurs": 3,
+      "detailConducteurs": "phase, neutre, protection, sous la gaine d'un câble 3G10",
+      "cable": "3G10",
+      "section": 10,
+      "sensibiliteDifferentielle": 30,
+      "chuteTensionCumulee": 2.32,
+      "typeDifferentiel": null,
+      "calibreProtection": null,
+      "courantEmploi": 32
+    }
+  ],
+  "composants": [
+    {
+      "id": "br-br-01",
+      "reference": "BR-01",
+      "type": "borne",
+      "paroi": "nord",
+      "face": "interieur",
+      "position": {
+        "x": 2.8,
+        "y": 5.6,
+        "z": 1.0
+      },
+      "hauteurAxe": 1.0,
+      "indiceProtection": null,
+      "circuit": "c-borne"
+    }
+  ],
+  "cheminements": [
+    {
+      "id": "br-ch-03",
+      "reference": "CH-B3",
+      "circuits": [
+        "c-borne"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.025
+      },
+      "apport": "004-borne-recharge",
+      "segments": [
+        {
+          "face": "nord",
+          "de": {
+            "x": 4.5,
+            "y": 5.6,
+            "z": 2.66
+          },
+          "a": {
+            "x": 4.5,
+            "y": 5.6,
+            "z": 1.4
+          }
+        },
+        {
+          "face": "nord",
+          "de": {
+            "x": 4.5,
+            "y": 5.6,
+            "z": 1.4
+          },
+          "a": {
+            "x": 2.8,
+            "y": 5.6,
+            "z": 1.4
+          }
+        },
+        {
+          "face": "nord",
+          "de": {
+            "x": 2.8,
+            "y": 5.6,
+            "z": 1.4
+          },
+          "a": {
+            "x": 2.8,
+            "y": 5.6,
+            "z": 1.0
+          }
+        }
+      ]
+    }
+  ],
+  "traversees": [],
+  "etapes": [
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Cadenas de consignation",
+        "Pancarte de consignation",
+        "Vérificateur d'absence de tension"
+      ],
+      "dependances": [],
+      "id": "br-consignation",
+      "phase": "consignation",
+      "nature": "consignation",
+      "sousTension": false,
+      "instruction": "COUPER AU DISJONCTEUR D'ABONNÉ, pas à l'interrupteur différentiel du tableau divisionnaire. Le circuit de la borne part du BORNIER, en amont de cet interrupteur : l'ouvrir ne coupe PAS la borne. Condamner en position ouverte, puis vérifier l'absence de tension au départ de la borne lui-même, et non sur une prise voisine. C'est le point de vigilance principal de ce circuit, et il vaut aussi pour toute intervention ultérieure."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "fixations": [
+        "br-br-01",
+        "br-ch-03"
+      ],
+      "materiel": [
+        "Cordeau et crayon de traçage",
+        "Perforateur",
+        "Chevilles adaptées au béton",
+        "Sonde de détection (métaux et câbles)"
+      ],
+      "dependances": [
+        "br-consignation"
+      ],
+      "id": "br-percage",
+      "phase": "percage",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "TRACER PUIS PERCER les seuls trous de cette ligne : les colliers de fixation le long de la descente, et les chevilles de BR-01 sous la fenêtre nord. AUCUNE TRAVERSÉE DE PAROI : le parcours est entièrement intérieur, seul cas des trois circuits. AUCUN TROU NON PLUS POUR LES DEUX GOULOTTES QUE LA LIGNE EMPRUNTE : elles appartiennent au circuit des prises, qui les trace et les fixe. La vue de cette étape montre chaque perçage à sa place, distingué par sa nature — traversée à la scie cloche, fixation d'objet, fixation de collier — et porte les gardes qui le contraignent. S'y reporter plutôt que de tout tenir de ce texte. SONDER AVANT DE PERCER : gaine noyée, canalisation, fer. Un trou pénètre la paroi de 5 à 8 cm."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Étiquettes durables pour boîte à plusieurs circuits"
+      ],
+      "dependances": [
+        "br-percage"
+      ],
+      "id": "br-boites",
+      "phase": "boites",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "AUCUNE BOÎTE À POSER pour ce circuit : la ligne n'a aucune dérivation. Vérifier en revanche, pendant que le circuit des prises pose les goulottes GL-01 et GL-02, qu'elles portent le repérage NOMMANT LE CIRCUIT DE LA BORNE, avec la mention que la consignation des autres circuits NE LE MET PAS HORS TENSION, ni l'ouverture de l'interrupteur différentiel du tableau ; et que GL-02 reçoit bien PAR LE DESSOUS, à son extrémité ouest en x = 4,50 m, l'entrée de la descente vers la borne."
+    },
+    {
+      "composants": [],
+      "cheminements": [
+        "br-ch-03"
+      ],
+      "traversees": [],
+      "materiel": [
+        "Conduit IRL 25 pour la descente — ESSAYER LE TIRAGE DU 3G10 SUR UN TRONÇON AVANT D'ACHETER : il y dépasse le tiers de la section, et le jeu n'est que de quelques millimètres",
+        "Colliers de fixation",
+        "Chevilles adaptées au béton",
+        "Coudes et accessoires de conduit"
+      ],
+      "dependances": [
+        "br-boites"
+      ],
+      "id": "br-cheminement",
+      "phase": "cheminement",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Poser la descente CH-B3, EN PROPRE, en IRL 25 : c'est le seul conduit de la ligne, et il ne porte qu'elle. LE CÂBLE 3G10 Y EST TRÈS SERRÉ : poser le tube AVEC LE MOINS DE COUDES POSSIBLE, à grand rayon, et vérifier sur un tronçon que le câble y passe avant de tout fixer. Du tableau à l'angle nord-est puis jusqu'à x = 4,50 m, la ligne court dans les goulottes GL-01 et GL-02, posées par le circuit des prises : RIEN À Y POSER. La descente sort PAR LE DESSOUS de GL-02 à son extrémité, à 0,20 m à l'est de la fenêtre et non devant elle, descend à 1,40 m, court SOUS L'ALLÈGE jusqu'à l'aplomb de BR-01 et l'aborde par le dessus. Le parcours est entièrement intérieur, sans aucune traversée de paroi."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Câble 3G10 — section selon la note de calcul",
+        "Repères de câble",
+        "Aiguille de tirage"
+      ],
+      "dependances": [
+        "br-cheminement"
+      ],
+      "id": "br-tirage",
+      "phase": "tirage",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Tirer la ligne D'UN SEUL TENANT du tableau à la borne, EN CÂBLE 3G10, à enveloppe propre : sur 7,12 m, elle court dans les goulottes GL-01 et GL-02 avec les conducteurs des prises et de l'éclairage, et c'est son enveloppe qui l'en sépare. AUCUNE CONNEXION NE DOIT ÊTRE FAITE DANS LES GOULOTTES : le câble y passe sans être coupé et n'entre dans aucun organe de connexion. Le coucher au fond du profilé, à l'écart de OC-01 et OC-02. Sur un circuit de charge à fort courant continu, une connexion desserrée est le premier défaut à écarter. Repérer le câble de façon à le reconnaître à l'ouverture des capots. DANS LA DESCENTE CH-B3, TIRER SANS FORCER, au lubrifiant : si le câble bloque, s'arrêter — le tube n'a pas la place réglementaire, et le forcer abîme la gaine."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [],
+      "dependances": [
+        "br-tirage"
+      ],
+      "id": "br-connexions",
+      "phase": "connexions",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "RIEN À RACCORDER. C'est l'étape la plus courte du chantier et la plus facile à faire à tort : le câble de la borne PARCOURT les deux goulottes sans y être coupé, et aucune connexion ne doit y être faite. Avant de refermer les capots, constater que le câble est CONTINU et identifiable : c'est le seul moment où cela se vérifie sans rouvrir une goulotte sous tension."
+    },
+    {
+      "composants": [
+        "br-br-01"
+      ],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "BR-01 — borne 32 A monophasée",
+        "Chevilles adaptées au béton",
+        "Support de rangement du câble"
+      ],
+      "dependances": [
+        "br-connexions"
+      ],
+      "id": "br-appareillage",
+      "phase": "appareillage",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Poser et raccorder BR-01, centrée sous la fenêtre nord à 2,80 m, axe à 1,00 m. TOUT DOIT TENIR SOUS L'ALLÈGE, à 1,50 m : aucune partie du coffret ni de ses organes de manœuvre ne doit empiéter sur l'ouverture. Le conduit l'aborde PAR LE DESSUS et à son aplomb. Conducteur de protection raccordé. Prévoir l'emplacement de rangement du câble, hors du passage du véhicule et hors de la zone de ruissellement au sol."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Protection contre les surintensités du circuit",
+        "Dispositif différentiel dédié",
+        "Module de détection 6 mA — selon la voie retenue",
+        "Étiquettes de repérage"
+      ],
+      "dependances": [
+        "br-appareillage"
+      ],
+      "id": "br-tableau",
+      "phase": "tableau",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "CÂBLER LE DÉPART EN DERNIER, quand la ligne est posée, tirée et l'appareillage en place. Poser la protection contre les surintensités et le DIFFÉRENTIEL PROPRE de la borne SUR LE BORNIER, en amont de l'interrupteur de type AC existant — et non derrière lui. Poser le MODULE DE DÉTECTION 6 mA si c'est la voie retenue, et non si la borne l'intègre. REPÉRER LE TABLEAU à l'endroit du geste : ce départ n'est pas coupé par l'interrupteur différentiel, et c'est la seule ligne du garage dans ce cas. Vérification visuelle de l'ensemble avant les essais."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Contrôleur d'installation"
+      ],
+      "dependances": [
+        "br-tableau"
+      ],
+      "id": "br-continuite",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "continuite-pe",
+      "sousTension": false,
+      "instruction": "Mesurer la continuité du conducteur de protection depuis le tableau jusqu'à BR-01, et consigner la valeur. Le garage n'a pas de prise de terre propre : la terre arrive par le PE du 3G16, et cette mesure point par point est la seule parade."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Mesureur de terre"
+      ],
+      "dependances": [
+        "br-tableau"
+      ],
+      "id": "br-terre",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "resistance-terre",
+      "sousTension": false,
+      "instruction": "Mesurer la résistance de la prise de terre et consigner la valeur. Le seuil applicable se lit R <= 50/IDn ; il est commun aux trois circuits, mais c'est ici qu'il porte le courant le plus élevé."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Contrôleur d'isolement"
+      ],
+      "dependances": [
+        "br-tableau"
+      ],
+      "id": "br-isolement",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "isolement",
+      "sousTension": false,
+      "instruction": "Mesurer l'isolement du circuit de la borne et consigner la valeur."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Tournevis dynamométrique"
+      ],
+      "dependances": [
+        "br-tableau"
+      ],
+      "id": "br-serrage",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "serrage",
+      "sousTension": false,
+      "instruction": "Contrôler le serrage de toutes les connexions du circuit : au bornier, à la protection, au différentiel, au module 6 mA s'il y en a un, et derrière BR-01. IL N'Y EN A AUCUNE DANS LES GOULOTTES : s'il s'en trouve une, la défaire. Sur 32 A appelés pendant des heures, le serrage est la vérification qui compte le plus."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [],
+      "dependances": [
+        "br-tableau"
+      ],
+      "id": "br-reperage",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "concordance-reperage",
+      "sousTension": false,
+      "instruction": "Vérifier la concordance du repérage : au tableau, sur BR-01 et sur les deux goulottes. Un tiers cherchant le circuit de la borne doit le trouver sans essai par tâtonnement. Vérifier en particulier que la mention « non coupé par l'interrupteur différentiel » est présente et lisible."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [],
+      "dependances": [
+        "br-continuite",
+        "br-terre",
+        "br-isolement",
+        "br-serrage",
+        "br-reperage"
+      ],
+      "id": "br-levee",
+      "phase": "levee-consignation",
+      "nature": "levee-consignation",
+      "sousTension": false,
+      "instruction": "Lever la consignation : retirer le cadenas et la pancarte du disjoncteur d'abonné, réarmer. Annoncer aux occupants que la remise sous tension a lieu."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Testeur de différentiel"
+      ],
+      "dependances": [
+        "br-levee"
+      ],
+      "id": "br-differentiel",
+      "phase": "essais-sous-tension",
+      "nature": "verification",
+      "verification": "declenchement-differentiels",
+      "sousTension": true,
+      "instruction": "Actionner le bouton test du différentiel de la borne et consigner le résultat. Vérifier que la charge s'interrompt ET QUE LES CIRCUITS DES PRISES ET DE L'ÉCLAIRAGE RESTENT ALIMENTÉS : c'est la preuve que le circuit est bien dédié et bien pris en amont du type AC."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Véhicule à recharger",
+        "Caméra thermique ou thermomètre de contact"
+      ],
+      "dependances": [
+        "br-levee"
+      ],
+      "id": "br-charge",
+      "phase": "essais-sous-tension",
+      "nature": "verification",
+      "verification": "autre",
+      "sousTension": true,
+      "instruction": "CONDUIRE UNE CHARGE DE QUATRE HEURES AU MOINS, véhicule branché, et consigner le constat. Vérifier l'absence de déclenchement et l'absence d'échauffement anormal aux connexions — au bornier, à la protection et derrière la borne. C'EST LE SEUL ESSAI QUI ÉPROUVE LA DURÉE, et un défaut de serrage sur 32 A continus ne se révèle pas en trente secondes. Conduire cet essai HABITATION AU REPOS, conformément au mode d'usage retenu."
+    }
+  ]
+}

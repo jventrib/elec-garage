@@ -99,7 +99,35 @@ export function sortieDeTraversee(local, traversee) {
   const p = traversee.position;
   const versExterieur = traversee.sens === 'interieur-vers-exterieur';
   const cible = versExterieur ? nus.exterieur : nus.interieur;
-  return { ...p, [nus.axe]: cible };
+  return { ...p, [nus.axe]: cible, z: p.z - demiDenivele(traversee) };
+}
+
+/**
+ * Le demi-dénivelé d'une traversée.
+ *
+ * `position` est l'AXE du perçage, et non son entrée : la mèche entre au-dessus
+ * et ressort au-dessous, chaque côté à un demi-dénivelé de l'axe. C'est ce qui
+ * permet à deux boîtiers dos à dos, posés à la même hauteur d'axe, de recevoir un
+ * perçage en biais sans que l'un des deux sorte de son enveloppe.
+ *
+ * Un dénivelé non établi vaut ZÉRO ICI, et zéro seulement : la géométrie retombe
+ * alors sur celle d'avant, ce qui laisse les tracés déjà arrêtés inchangés. Il NE
+ * DOIT PAS pour autant être présenté comme une pente — c'est l'affaire de V18 et
+ * de la vue, qui le signalent comme non coté.
+ */
+export function demiDenivele(traversee) {
+  const d = traversee?.denivele;
+  return typeof d === 'number' && d > 0 ? d / 2 : 0;
+}
+
+/** Point d'entrée du perçage, sur le nu que le sens désigne comme départ. */
+export function entreeDeTraversee(local, traversee) {
+  const nus = nusDeParoi(local, traversee.paroi);
+  if (!nus || nus.exterieur === null) return null;
+  const p = traversee.position;
+  const versExterieur = traversee.sens === 'interieur-vers-exterieur';
+  const cible = versExterieur ? nus.interieur : nus.exterieur;
+  return { ...p, [nus.axe]: cible, z: p.z + demiDenivele(traversee) };
 }
 
 /**
@@ -153,7 +181,7 @@ export const CLES_ATTENDUES = {
   local: ['oeuvre', 'hauteurSousPlafond', 'epaisseurParois', 'repere', 'baies', 'obstacles', 'provenance'],
   chantier: ['phases', 'naturesEtape', 'verifications'],
   types: ['types', 'gabaritParDefaut'],
-  presentation: ['couleurs', 'paletteCircuits', 'epaisseurDalle', 'toleranceRaccordement', 'diametreConduitConventionnel', 'vues', 'libelles'],
+  presentation: ['couleurs', 'paletteCircuits', 'epaisseurDalle', 'toleranceRaccordement', 'sectionConventionnelle', 'deniveleConventionnel', 'vues', 'libelles'],
 };
 
 /**

@@ -32,11 +32,16 @@ Livrable chantier — produit `dist/garage.html` :
 npm run build
 ```
 
-Même livrable, en incluant l'apport de démonstration :
+Livrable de **démonstration**, à la place des apports réels — pour exercer le socle sans
+dépendre d'une conception en cours :
 
 ```bash
 node build/bundle.mjs --demo
 ```
+
+> Le drapeau **remplace** les apports réels, il ne s'y ajoute pas. Le jeu de démonstration
+> décrit le même circuit que `002-prises-de-courant` à des cotes voisines : empilés, leurs
+> conduits se croiseraient et la règle V17 signalerait des jonctions inexistantes.
 
 Tests de la logique pure :
 
@@ -112,10 +117,27 @@ dérivation à chaque jonction. Trois conséquences dans le code :
   milieu d'un conduit. Sans boîte, la connexion serait inaccessible, donc
   invérifiable à vie.
 - **Le contrôle de collision rend trois verdicts, jamais deux** : conforme, en
-  collision, ou **non concluant**. Ce dernier dès que l'obstacle n'est pas relevé.
-  Aujourd'hui les cinq obstacles du relevé ont un volume inconnu, donc aucun
-  contrôle ne peut conclure favorablement — et l'interface le dit au lieu de
-  répondre « pas de collision ».
+  collision, ou **non concluant**. Ce dernier dès que l'obstacle n'est pas relevé,
+  et l'interface le dit au lieu de répondre « pas de collision ».
+
+  Un obstacle peut aussi n'être ni relevé ni inconnu, mais **borné**. Le tablier de
+  la porte sectionnelle en position ouverte n'est pas mesuré ; il est pourtant
+  encadré par trois cotes qui le sont — la largeur de la baie, la course du rail
+  qui le guide, et la hauteur de passage qu'il dégage. Un tel majorant n'autorise
+  qu'un seul verdict : en être disjoint prouve le dégagement, le recouper ne prouve
+  rien. L'asymétrie est le point entier de la chose, car elle fait payer
+  l'imprécision d'un détour de conduit et jamais d'un conduit posé dans la porte.
+
+- **Une réserve se lit sur l'objet qu'elle concerne.** Les obstacles sont
+  sélectionnables : cliquer l'un d'eux ouvre sa fiche, qui dit l'état de sa cote,
+  ce qui lui manque, ce qui est réellement dessiné pour lui, et ce que les
+  contrôles concluent à son sujet. L'en-tête ne porte qu'un compte.
+
+  C'est une correction de fond, pas de présentation. Ces réserves avaient d'abord
+  été entassées dans un bandeau permanent au-dessus de la maquette, faute d'objet
+  où les poser — et un avertissement qui masque ce qu'on est venu regarder finit
+  par être ignoré, ce qui le rend pire qu'absent. Rétrécir le bandeau ne traitait
+  que le symptôme : ce qui manquait était la possibilité de désigner un obstacle.
 
 Le diamètre d'un conduit reste `null` tant que la note de calcul ne l'a pas arrêté.
 Il est alors dessiné à un diamètre conventionnel, et sa fiche affiche « inconnu » :
@@ -123,10 +145,22 @@ le dessin est une convention, la donnée reste déclarée absente.
 - `src/donnees/`, `src/sequence/` — logique pure, testée sans navigateur : c'est ce
   qui peut être faux sans que cela se voie à l'écran.
 - `src/scene/`, `src/ui/` — rendu et interface, validés par les scénarios visuels
-  de `specs/001-visualisation-3d/quickstart.md`.
+  de `dossier/001-visualisation-3d/quickstart.md`.
 
 ## Documents
 
-- Constitution du projet : `.specify/memory/constitution.md`
-- Spécification, plan, recherche, modèle de données, contrats :
-  `specs/001-visualisation-3d/`
+- Constitution du projet : `openspec/constitution.md`
+- Spécifications vivantes, par capacité : `openspec/specs/`
+  - `maquette/visualisation`, `maquette/socle-et-apports`
+  - `installation/points-utilisation`, `installation/electricite`,
+    `installation/cheminements`, `installation/automatisation`
+- Travaux en cours : `openspec/changes/`
+  - `reserves-maitre-ouvrage` — relevés, valeurs normatives et décisions qui bloquent
+    le chantier
+  - `automatisation-locale-mise-en-oeuvre` — le seul reste-à-faire constructible
+- Dossier du projet : `dossier/00N-*/` — notes de calcul, nomenclatures, implantations,
+  recherches, modèles de données et scénarios de recette. Ce sont des documents **vivants**,
+  cités par des tâches ouvertes, et la source des valeurs que les spécifications citent.
+  `dossier/fournitures.md` y est **généré** par `npm run fournitures`.
+- Les artefacts Spec Kit eux-mêmes — `spec.md`, `plan.md`, `tasks.md`, `checklists/` — ont été
+  supprimés le 2026-09-22 : `openspec/specs/` les remplace.

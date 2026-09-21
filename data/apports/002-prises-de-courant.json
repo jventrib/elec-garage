@@ -1,0 +1,772 @@
+{
+  "fonctionnalite": "002-prises-de-courant",
+  "provenance": {
+    "schemaUnifilaire": null,
+    "noteDeCalcul": null,
+    "releve": "2026-09-21"
+  },
+  "circuits": [
+    {
+      "id": "c-prises",
+      "libelle": "Prises garage",
+      "couleur": "#2ca02c",
+      "conducteurs": 4,
+      "detailConducteurs": "phase, neutre, protection, et le fil d'ordre du bouton de porte vers MC-02 — l'entrée du module commute la phase",
+      "section": 2.5,
+      "sensibiliteDifferentielle": 30,
+      "chuteTensionCumulee": 3.04,
+      "typeDifferentiel": null,
+      "calibreProtection": null,
+      "courantEmploi": null
+    }
+  ],
+  "composants": [
+    {
+      "id": "pr-td-01",
+      "reference": "TD-01",
+      "type": "tableau",
+      "paroi": "est",
+      "face": "interieur",
+      "position": {
+        "x": 5.6,
+        "y": 0.7,
+        "z": 1.5
+      },
+      "hauteurAxe": 1.5,
+      "indiceProtection": null,
+      "circuit": null
+    },
+    {
+      "id": "pr-pc-01",
+      "reference": "PC-01",
+      "type": "socle-double",
+      "paroi": "est",
+      "face": "interieur",
+      "position": {
+        "x": 5.6,
+        "y": 2.6,
+        "z": 0.3
+      },
+      "hauteurAxe": 0.3,
+      "indiceProtection": null,
+      "circuit": "c-prises"
+    },
+    {
+      "id": "pr-pc-03",
+      "reference": "PC-03",
+      "type": "socle-simple",
+      "paroi": "nord",
+      "face": "interieur",
+      "position": {
+        "x": 5.45,
+        "y": 5.6,
+        "z": 0.3
+      },
+      "hauteurAxe": 0.3,
+      "indiceProtection": null,
+      "circuit": "c-prises"
+    },
+    {
+      "id": "pr-pc-05",
+      "reference": "PC-05",
+      "type": "socle-simple",
+      "paroi": "plafond",
+      "face": "interieur",
+      "position": {
+        "x": 2.55,
+        "y": 2.6,
+        "z": 2.75
+      },
+      "hauteurAxe": null,
+      "indiceProtection": null,
+      "circuit": "c-prises",
+      "boitier": "bt-moteur"
+    },
+    {
+      "id": "pr-pc-02",
+      "reference": "PC-02",
+      "type": "socle-double",
+      "paroi": "est",
+      "face": "exterieur",
+      "position": {
+        "x": 5.8,
+        "y": 2.6,
+        "z": 0.3
+      },
+      "hauteurAxe": 0.3,
+      "indiceProtection": null,
+      "circuit": "c-prises"
+    },
+    {
+      "id": "pr-pc-04",
+      "reference": "PC-04",
+      "type": "socle-double",
+      "paroi": "nord",
+      "face": "exterieur",
+      "position": {
+        "x": 5.45,
+        "y": 5.8,
+        "z": 0.3
+      },
+      "hauteurAxe": 0.3,
+      "indiceProtection": null,
+      "circuit": "c-prises"
+    },
+    {
+      "id": "pr-bd-04",
+      "reference": "BD-04",
+      "type": "boite-derivation",
+      "paroi": "est",
+      "face": "interieur",
+      "position": {
+        "x": 5.6,
+        "y": 2.6,
+        "z": 1.1
+      },
+      "hauteurAxe": 1.1,
+      "indiceProtection": null,
+      "circuit": "c-prises",
+      "boitier": "bt-commandes"
+    },
+    {
+      "id": "pr-bd-05",
+      "reference": "BD-05",
+      "type": "boite-derivation",
+      "paroi": "plafond",
+      "face": "interieur",
+      "position": {
+        "x": 2.7,
+        "y": 2.6,
+        "z": 2.75
+      },
+      "hauteurAxe": null,
+      "indiceProtection": null,
+      "circuit": "c-prises"
+    },
+    {
+      "id": "pr-oc-01",
+      "reference": "OC-01",
+      "type": "organe-connexion",
+      "paroi": "est",
+      "face": "interieur",
+      "position": {
+        "x": 5.6,
+        "y": 0.7,
+        "z": 2.6
+      },
+      "hauteurAxe": 2.6,
+      "indiceProtection": null,
+      "circuit": "c-prises"
+    },
+    {
+      "id": "pr-oc-02",
+      "reference": "OC-02",
+      "type": "organe-connexion",
+      "paroi": "est",
+      "face": "interieur",
+      "position": {
+        "x": 5.6,
+        "y": 2.45,
+        "z": 2.705
+      },
+      "hauteurAxe": 2.705,
+      "indiceProtection": null,
+      "circuit": "c-prises"
+    },
+    {
+      "id": "pr-ac-01",
+      "reference": "AC-01",
+      "type": "accessoire-conduit",
+      "paroi": "plafond",
+      "face": "interieur",
+      "position": {
+        "x": 5.56,
+        "y": 2.6,
+        "z": 2.75
+      },
+      "hauteurAxe": null,
+      "indiceProtection": null,
+      "circuit": "c-prises",
+      "tirage": null
+    }
+  ],
+  "cheminements": [
+    {
+      "id": "pr-gl-01",
+      "reference": "GL-01",
+      "circuits": [
+        "c-prises",
+        "c-eclairage",
+        "c-borne"
+      ],
+      "section": {
+        "forme": "rectangulaire",
+        "largeur": 0.12,
+        "profondeur": 0.06
+      },
+      "raccordement": "lateral",
+      "modePose": {
+        "nature": "goulotte",
+        "lettreSelection": null
+      },
+      "contigu": [
+        "pr-td-01"
+      ],
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 0.7,
+            "z": 1.63
+          },
+          "a": {
+            "x": 5.6,
+            "y": 0.7,
+            "z": 2.6
+          }
+        },
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 0.7,
+            "z": 2.6
+          },
+          "a": {
+            "x": 5.6,
+            "y": 0.7,
+            "z": 2.75
+          }
+        }
+      ]
+    },
+    {
+      "id": "pr-gl-02",
+      "reference": "GL-02",
+      "circuits": [
+        "c-prises",
+        "c-eclairage",
+        "c-borne"
+      ],
+      "section": {
+        "forme": "rectangulaire",
+        "largeur": 0.09,
+        "profondeur": 0.04
+      },
+      "raccordement": "lateral",
+      "modePose": {
+        "nature": "goulotte",
+        "lettreSelection": null
+      },
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 0.7,
+            "z": 2.705
+          },
+          "a": {
+            "x": 5.6,
+            "y": 5.6,
+            "z": 2.705
+          }
+        },
+        {
+          "face": "nord",
+          "de": {
+            "x": 5.6,
+            "y": 5.6,
+            "z": 2.705
+          },
+          "a": {
+            "x": 4.5,
+            "y": 5.6,
+            "z": 2.705
+          }
+        }
+      ]
+    },
+    {
+      "id": "pr-ch-03",
+      "reference": "CH-03",
+      "circuits": [
+        "c-prises"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "nord",
+          "de": {
+            "x": 5.45,
+            "y": 5.6,
+            "z": 2.66
+          },
+          "a": {
+            "x": 5.45,
+            "y": 5.6,
+            "z": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "pr-ch-05",
+      "reference": "CH-05",
+      "circuits": [
+        "c-prises",
+        "c-eclairage"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.025
+      },
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 2.6,
+            "z": 2.66
+          },
+          "a": {
+            "x": 5.6,
+            "y": 2.6,
+            "z": 1.1
+          }
+        }
+      ]
+    },
+    {
+      "id": "pr-ch-06",
+      "reference": "CH-06",
+      "circuits": [
+        "c-prises"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 2.6,
+            "z": 1.1
+          },
+          "a": {
+            "x": 5.6,
+            "y": 2.6,
+            "z": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "pr-ch-07",
+      "reference": "CH-07",
+      "circuits": [
+        "c-prises",
+        "c-eclairage"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 5.56,
+            "y": 2.6,
+            "z": 2.75
+          },
+          "a": {
+            "x": 2.7,
+            "y": 2.6,
+            "z": 2.75
+          }
+        }
+      ]
+    },
+    {
+      "id": "pr-ch-08",
+      "reference": "CH-08",
+      "circuits": [
+        "c-prises"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.7,
+            "y": 2.6,
+            "z": 2.75
+          },
+          "a": {
+            "x": 2.55,
+            "y": 2.6,
+            "z": 2.75
+          }
+        }
+      ]
+    }
+  ],
+  "traversees": [
+    {
+      "id": "pr-tv-01",
+      "reference": "TV-01",
+      "paroi": "est",
+      "position": {
+        "x": 5.6,
+        "y": 2.6,
+        "z": 0.3
+      },
+      "sens": "interieur-vers-exterieur",
+      "penteVersExterieur": true,
+      "denivele": null
+    },
+    {
+      "id": "pr-tv-02",
+      "reference": "TV-02",
+      "paroi": "nord",
+      "position": {
+        "x": 5.45,
+        "y": 5.6,
+        "z": 0.3
+      },
+      "sens": "interieur-vers-exterieur",
+      "penteVersExterieur": true,
+      "denivele": null
+    }
+  ],
+  "etapes": [
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Cadenas de consignation",
+        "Étiquette de consignation",
+        "Vérificateur d'absence de tension"
+      ],
+      "dependances": [],
+      "id": "pr-consignation",
+      "phase": "consignation",
+      "nature": "consignation",
+      "sousTension": false,
+      "instruction": "Couper l'alimentation du circuit en amont, condamner le dispositif de coupure et poser l'étiquette de consignation. Vérifier l'absence de tension au VAT sur chaque conducteur avant toute intervention."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [
+        "pr-tv-01",
+        "pr-tv-02"
+      ],
+      "fixations": [
+        "pr-td-01",
+        "pr-pc-01",
+        "pr-pc-03",
+        "pr-pc-05",
+        "pr-pc-02",
+        "pr-pc-04",
+        "pr-bd-04",
+        "pr-bd-05",
+        "pr-oc-01",
+        "pr-oc-02",
+        "pr-ac-01",
+        "pr-gl-01",
+        "pr-gl-02",
+        "pr-ch-03",
+        "pr-ch-05",
+        "pr-ch-06",
+        "pr-ch-07",
+        "pr-ch-08"
+      ],
+      "materiel": [
+        "Cordeau et crayon de traçage",
+        "Perforateur",
+        "Scie cloche béton",
+        "Mastic d'étanchéité",
+        "Chevilles adaptées au béton",
+        "Sonde de détection (métaux et câbles)"
+      ],
+      "dependances": [
+        "pr-consignation"
+      ],
+      "id": "pr-percage",
+      "phase": "percage",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "TRACER PUIS PERCER TOUT, avant de fixer quoi que ce soit. Tracer les emplacements des deux boîtes de dérivation, des quatre boîtiers de socles, les deux goulottes et les tracés de conduit avec leurs colliers. TOUT L'APPAREILLAGE DE LA PAROI EST EST À y = 2,60 M, soit 0,20 m du bord de la baie de la porte de service : tracer l'aplomb au fil avant de percer un seul trou, la garde étant faible. LA GOULOTTE GL-02 SE TRACE JOINTIVE AU PLAFOND, entre 2,66 et 2,75 m : sur la paroi est depuis GL-01 jusqu'à l'angle nord-est, puis sur la paroi nord jusqu'à x = 4,50 m, à l'est de la fenêtre. Percer alors les trous de cheville, puis LES DEUX TRAVERSÉES DE PAROI, en biais vers le bas, aux emplacements de PC-01 et PC-03 — elles se percent maintenant parce que les boîtiers qui les couvriront ne sont pas encore posés. ATTENTION, LES DEUX NE SONT PAS SUR LA MÊME PAROI : celle de PC-01 franchit la PAROI EST, celle de PC-03 franchit la PAROI NORD. Une traversée sort du FOND du boîtier intérieur, donc elle franchit la paroi sur laquelle ce boîtier est posé — se tromper de paroi, c'est percer là où aucun boîtier ne viendra couvrir le trou. LA GOULOTTE GL-02 ET BD-04 recevront en outre chacune une traversée dans leur fond, percée par le circuit d'éclairage : COORDONNER LES DEUX PERÇAGES, ils se font dans la même passe, avant la pose de la goulotte et de la boîte. La vue de cette étape montre chaque perçage à sa place, distingué par sa nature — traversée à la scie cloche, fixation d'objet, fixation de collier — et porte les gardes qui le contraignent. S'y reporter plutôt que de tout tenir de ce texte. SONDER AVANT DE PERCER : gaine noyée, canalisation, fer. Un trou pénètre la paroi de 5 à 8 cm."
+    },
+    {
+      "composants": [
+        "pr-oc-01",
+        "pr-oc-02",
+        "pr-ac-01",
+        "pr-bd-04",
+        "pr-bd-05"
+      ],
+      "cheminements": [
+        "pr-gl-01",
+        "pr-gl-02"
+      ],
+      "traversees": [],
+      "materiel": [
+        "Boîte de dérivation BD-04 à cinq entrées, et celle du plafond",
+        "Boîtiers de socles en saillie",
+        "Étiquettes « plusieurs circuits »",
+        "Tournevis",
+        "Goulotte 120 × 60 mm à capot démontable — 1,12 m pour GL-01",
+        "Goulotte 90 × 40 mm à capot démontable, même gamme — 6,00 m pour GL-02",
+        "Accessoires de goulotte : jonction en T réduite 120 × 60 / 90 × 40, angle intérieur 90 × 40, embouts",
+        "Coude de conduit IRL 20 pour le départ en face avant",
+        "Chevilles adaptées au béton",
+        "Supports de bornes à fixer au fond de la goulotte — bornes IP2X conducteurs en place si le capot se dépose sans outil"
+      ],
+      "dependances": [
+        "pr-percage"
+      ],
+      "id": "pr-boites",
+      "phase": "boites",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Poser les deux boîtes de dérivation sur les chevilles déjà percées, et repérer les DEUX ORGANES DE CONNEXION, tous PARTAGÉS avec le circuit d'éclairage : OC-01 dans la goulotte GL-01 à 2,60 m, là où l'éclairage part vers la paroi sud, et OC-02 dans la goulotte GL-02 au-dessus de la porte de service, où se font les connexions de la jonction principale — ce sont les EMPLACEMENTS DES CONNEXIONS SOUS CAPOT : les bornes s'y fixent au fond du profilé, sans boîtier, et chacun porte un repère lisible sans déposer le capot ; BD-04 à 1,10 m qui loge aussi la commande intérieure de l'éclairage, et BD-05 au plafond au droit du socle du moteur, où l'éclairage part vers le nord. POSER AUSSI LES QUATRE BOÎTIERS DE SOCLES, ceux de PC-01 et PC-03 par-dessus la traversée déjà percée. REPÉRER CHAQUE BOÎTE ET CHAQUE ORGANE COMME ENVELOPPE À PLUSIEURS CIRCUITS, de façon lisible sans l'ouvrir : consigner un seul des circuits n'y met pas les autres hors tension. SUR LES DEUX GOULOTTES, LE REPÉRAGE DOIT NOMMER LA BORNE et porter que la consignation des TROIS circuits est exigée pour y intervenir — son câble y court en 10 mm² sous 32 A, et n'est coupé ni par la consignation des prises, ni par celle de l'éclairage, ni par l'ouverture de l'interrupteur du tableau. Le réseau est alors entièrement en place et VIDE : aucun fil n'a encore été tiré. Poser GL-01, la goulotte de 120 × 60 mm, À L'APLOMB ET AU-DESSUS DU TABLEAU, centrée sur lui, du dessus du coffret jusqu'au plafond — soit environ 1,12 m. SON EXTRÉMITÉ BASSE DOIT JOINDRE LE DESSUS DU TABLEAU sans laisser d'intervalle ; c'est par là que passent tous les conducteurs du tronc, et il n'y a AUCUN CONDUIT entre les deux. NE PAS LA FAIRE DÉVERSER DANS LE TABLEAU : la paroi est froide, la condensation y est tenue pour probable, et une goulotte verticale conduit l'eau vers le bas. Percer sa partie basse pour évacuation, ou l'arrêter de façon que rien ne tombe dans le coffret. Poser ensuite GL-02, UN PROFILÉ PLUS PETIT, DE 90 × 40 MM, COLLÉ AU PLAFOND ET À PLAT SUR LA PAROI, de 2,66 à 2,75 m : depuis GL-01, qu'elle rejoint EN T sous le plafond par une JONCTION RÉDUITE 120 × 60 / 90 × 40, le long de la paroi est jusqu'à l'angle nord-est — un ANGLE INTÉRIEUR —, puis le long de la paroi nord jusqu'à x = 4,50 m, soit 6,00 m. Elle passe 16 cm au-dessus du linteau de la porte de service. POSÉE À L'HORIZONTALE SUR UNE PAROI FROIDE, ELLE RETIENT L'EAU EN PARTIE BASSE : percer son fond pour évacuation, ou lui donner une légère pente vers l'angle nord-est, et que rien ne coule vers GL-01 et le tableau. Prévoir ses entrées PAR LE DESSOUS : à y = 2,60 m pour la descente vers BD-04, sur la paroi nord à x = 5,45 m pour la descente vers PC-03, et à x = 4,50 m pour la ligne de la borne. POSER ENFIN AC-01, ACCESSOIRE DE CONDUIT en coude à 90° entre la FACE AVANT de GL-02, à y = 2,60 m, et le plafond : c'est le départ du parcours de plafond vers BD-05. Ce n'est PAS une boîte de dérivation, AUCUNE CONNEXION NE S'Y FAIT et il n'y a pas de bornes à y chercher. Il ne porte pas le repérage multi-circuits des boîtes, et aucune consignation n'a à y être vérifiée."
+    },
+    {
+      "composants": [],
+      "cheminements": [
+        "pr-ch-03",
+        "pr-ch-05",
+        "pr-ch-06",
+        "pr-ch-07",
+        "pr-ch-08"
+      ],
+      "traversees": [],
+      "materiel": [
+        "Conduit IRL 25 pour la descente CH-05, qui porte neuf conducteurs — la condition de remplissage s'y vérifie à l'achat",
+        "Conduit IRL 20 pour le parcours de plafond CH-07 et les branches propres — VÉRIFIER LE DIAMÈTRE INTÉRIEUR À L'ACHAT : CH-07 porte sept conducteurs, dont quatre de 2,5 mm²",
+        "Colliers de fixation",
+        "Chevilles adaptées au béton",
+        "Coudes et accessoires de conduit"
+      ],
+      "dependances": [
+        "pr-boites"
+      ],
+      "id": "pr-cheminement",
+      "phase": "cheminement",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Poser les conduits en saillie. ATTENTION AUX DEUX CALIBRES. Le tronc partagé avec le circuit d'éclairage court DANS LES GOULOTTES, déjà posées : montée du tableau par GL-01, puis GL-02 au plafond le long de la paroi est. Il en sort à y = 2,60 m par deux conduits : la descente CH-05 PAR LE DESSOUS de GL-02 jusqu'à BD-04 à 1,10 m, EN IRL 25, et le parcours de plafond CH-07 PAR LA FACE AVANT, depuis le coude AC-01, 2,86 m DROIT VERS L'OUEST jusqu'à BD-05, en IRL 20, d'un trait. Les branches propres aux prises sont en IRL 20 : la descente vers PC-03, qui sort PAR LE DESSOUS de GL-02 sur la paroi nord à x = 5,45 m, la descente de BD-04 vers PC-01, et les 0,15 m de BD-05 VERS L'OUEST jusqu'à PC-05. ATTENTION AU SENS : PC-05 est à l'OUEST de BD-05, jamais au sud. Au sud son boîtier mordrait dans le rail, qui monte jusqu'au plafond ; au nord il se superposerait à la montée de l'éclairage vers BL-01. Les trois conduits de BD-05 partent dans trois directions, et c'est ce qui les fait tenir."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Conducteurs 2,5 mm²",
+        "Aiguille de tirage",
+        "Lubrifiant de tirage"
+      ],
+      "dependances": [
+        "pr-cheminement"
+      ],
+      "id": "pr-tirage",
+      "phase": "tirage",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Tirer les trois conducteurs de 2,5 mm² — phase, neutre, protection — du tableau jusqu'à chaque boîte, en une seule passe et sans coupure dans les conduits. DANS LE TRONC PARTAGÉ, TIRER EN MÊME TEMPS LES CONDUCTEURS DE L'ÉCLAIRAGE : avec ceux de l'automatisation, jusqu'à dix conducteurs passent ensemble dans les goulottes, neuf dans CH-05 et sept dans CH-07, et tirer un second jeu plus tard dans un tube déjà occupé est beaucoup plus difficile. Dans les goulottes, les conducteurs se COUCHENT sous le capot : les y ranger à plat, sans croiser le câble de la borne. CH-05 EST LE TUBE LE PLUS CHARGÉ DE L'INSTALLATION. Prévoir de l'aiguille et du lubrifiant de tirage. Coordonner cette étape avec celle de l'éclairage."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Bornes automatiques",
+        "Pince à dénuder"
+      ],
+      "dependances": [
+        "pr-tirage"
+      ],
+      "id": "pr-connexions",
+      "phase": "connexions",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Faire TOUTES les connexions des boîtes de dérivation et des organes de connexion OC-01 et OC-02, en bornes à levier WAGO 221 — référence et nombre sur la fiche de chaque boîte —, puis refermer les couvercles et les capots. UN CONDUCTEUR QUI NE FAIT QUE TRAVERSER UNE BOÎTE N'Y EST PAS COUPÉ. Les boîtes doivent RESTER ACCESSIBLES après la pose : ne pas les condamner derrière un rangement. Laisser 10 à 15 cm de réserve de conducteur dans chaque boîte. NE PAS DÉRANGER LES CONDUCTEURS DE L'ÉCLAIRAGE NI LE CÂBLE DE LA BORNE, qui courent dans ces mêmes goulottes : la borne ne doit recevoir AUCUNE connexion ici, son câble passe sans être coupé et n'entre dans aucun organe de connexion."
+    },
+    {
+      "composants": [
+        "pr-pc-01",
+        "pr-pc-03",
+        "pr-pc-05",
+        "pr-pc-02",
+        "pr-pc-04"
+      ],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Socles 2P+T en saillie",
+        "Tournevis",
+        "Pince à dénuder"
+      ],
+      "dependances": [
+        "pr-connexions"
+      ],
+      "id": "pr-appareillage",
+      "phase": "appareillage",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "Poser et raccorder les socles 2P+T en saillie, conducteur de protection raccordé à chacun sans exception. PC-01 et PC-03 sont des points de REPIQUAGE : leurs bornes reçoivent le conducteur entrant et le conducteur sortant vers le socle extérieur qui leur fait dos. Vérifier que chaque borne accepte les deux conducteurs de 2,5 mm² sans contrainte. Refermer les boîtiers extérieurs et vérifier que le couvercle se rabat sur un cordon branché."
+    },
+    {
+      "composants": [
+        "pr-td-01"
+      ],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Tableau divisionnaire",
+        "Protection du circuit",
+        "Étiquettes de repérage",
+        "Chevilles béton"
+      ],
+      "dependances": [
+        "pr-appareillage"
+      ],
+      "id": "pr-tableau",
+      "phase": "tableau",
+      "nature": "pose",
+      "sousTension": false,
+      "instruction": "CÂBLER LES DÉPARTS EN DERNIER, quand tout le reste est en place. Fixer le tableau divisionnaire sur la paroi est si ce n'est pas déjà fait, à 0,70 m de l'angle sud-est, axe à 1,50 m du sol. Poser la protection du circuit des prises, raccorder le départ, et repérer le circuit de façon durable et lisible. Faire une dernière vérification visuelle de l'ensemble avant les essais."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Contrôleur d'installation"
+      ],
+      "dependances": [
+        "pr-tableau"
+      ],
+      "id": "pr-continuite",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "continuite-pe",
+      "sousTension": false,
+      "instruction": "Mesurer la continuité du conducteur de protection depuis le tableau jusqu'à CHACUN des cinq points, un par un — PC-01, PC-02, PC-03, PC-04, PC-05 — et consigner les cinq valeurs. Le garage n'a pas de prise de terre propre : la terre arrive par le PE du 3G16 depuis l'habitation, et cette mesure point par point est la seule parade à cette dépendance. Une mesure globale au tableau ne vaut pas."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Telluromètre"
+      ],
+      "dependances": [
+        "pr-tableau"
+      ],
+      "id": "pr-terre",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "resistance-terre",
+      "sousTension": false,
+      "instruction": "Mesurer la résistance de la prise de terre et consigner la valeur. En régime TT, la condition est R ≤ 50/IΔn : 1 667 Ω pour un différentiel de 30 mA, mais 100 Ω si un dispositif de 500 mA existe en amont. C'est la branche la plus contraignante qui commande."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Mégohmmètre"
+      ],
+      "dependances": [
+        "pr-tableau"
+      ],
+      "id": "pr-isolement",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "isolement",
+      "sousTension": false,
+      "instruction": "Mesurer l'isolement du circuit, conducteurs déconnectés de tout récepteur. Consigner la valeur."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Tournevis dynamométrique"
+      ],
+      "dependances": [
+        "pr-tableau"
+      ],
+      "id": "pr-serrage",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "serrage",
+      "sousTension": false,
+      "instruction": "Contrôler le serrage de toutes les connexions : au tableau, dans OC-01, OC-02, BD-04 et BD-05 et derrière chacun des cinq socles. Les parois sont froides et la condensation est tenue pour probable — une connexion desserrée y chauffe et s'oxyde."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [],
+      "dependances": [
+        "pr-tableau"
+      ],
+      "id": "pr-reperage",
+      "phase": "essais-hors-tension",
+      "nature": "verification",
+      "verification": "concordance-reperage",
+      "sousTension": false,
+      "instruction": "Vérifier que le repérage du tableau correspond à la réalité du circuit, point par point : couper la protection et constater que les cinq points sont bien ceux qui s'éteignent."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [],
+      "dependances": [
+        "pr-continuite",
+        "pr-terre",
+        "pr-isolement",
+        "pr-serrage",
+        "pr-reperage"
+      ],
+      "id": "pr-levee",
+      "phase": "levee-consignation",
+      "nature": "levee-consignation",
+      "sousTension": false,
+      "instruction": "Retirer la condamnation et remettre l'installation sous tension. À partir d'ici, toute intervention ultérieure exige une nouvelle consignation. ET RETENIR QUE QUATRE ENVELOPPES PORTENT DEUX CIRCUITS — OC-01, OC-02, BD-04 et BD-05. AC-01 n'en est pas : c'est un accessoire de conduit, rien ne s'y connecte : y consigner le seul circuit des prises ne met PAS l'éclairage hors tension, ni l'inverse. Le repérage posé à l'étape des boîtes est là pour le rappeler à celui qui ouvrira le couvercle."
+    },
+    {
+      "composants": [],
+      "cheminements": [],
+      "traversees": [],
+      "materiel": [
+        "Contrôleur de différentiel"
+      ],
+      "dependances": [
+        "pr-levee"
+      ],
+      "id": "pr-differentiels",
+      "phase": "essais-sous-tension",
+      "nature": "verification",
+      "verification": "declenchement-differentiels",
+      "sousTension": true,
+      "instruction": "Actionner le bouton test du dispositif différentiel et vérifier que les cinq points sont effectivement coupés. Consigner le résultat. Attention : ce test vérifie le mécanisme de déclenchement, non l'adéquation du TYPE de différentiel aux charges, qui ne se constate pas au bouton test."
+    }
+  ]
+}

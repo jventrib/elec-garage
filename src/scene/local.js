@@ -122,15 +122,31 @@ export function construireLocal(local, presentation) {
         m1.name = `paroi-${paroi}`;
         groupe.add(m1, aretes(m1, presentation));
       }
-      // Linteau : seulement si la hauteur de la baie est relevée. Une hauteur
-      // inconnue laisse l'ouverture pleine hauteur plutôt que d'inventer un
-      // linteau plausible (FR-007).
-      if (baie.hauteur !== null && baie.hauteur < gabarit.h) {
-        const l = morceau(gabarit, seg.min, seg.max, baie.hauteur, gabarit.h);
-        const ml = boite(l[0], l[1], materiaux);
-        if (ml) {
-          ml.name = `linteau-${baie.id}`;
-          groupe.add(ml, aretes(ml, presentation));
+
+      // Allège : la maçonnerie sous l'ouverture. Nulle pour une porte, qui part
+      // du sol ; une fenêtre en a une, et l'omettre laisserait un trou jusqu'au sol.
+      const allege = baie.allege ?? 0;
+      if (allege > 0) {
+        const a = morceau(gabarit, seg.min, seg.max, 0, allege);
+        const ma = boite(a[0], a[1], materiaux);
+        if (ma) {
+          ma.name = `allege-${baie.id}`;
+          groupe.add(ma, aretes(ma, presentation));
+        }
+      }
+
+      // Linteau : seulement si la hauteur de l'ouverture est relevée. Une hauteur
+      // inconnue laisse l'ouverture montante plutôt que d'inventer un linteau
+      // plausible (FR-007).
+      if (baie.hauteur !== null) {
+        const haut = allege + baie.hauteur;
+        if (haut < gabarit.h) {
+          const l = morceau(gabarit, seg.min, seg.max, haut, gabarit.h);
+          const ml = boite(l[0], l[1], materiaux);
+          if (ml) {
+            ml.name = `linteau-${baie.id}`;
+            groupe.add(ml, aretes(ml, presentation));
+          }
         }
       }
       curseur = seg.max;

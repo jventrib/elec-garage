@@ -1,0 +1,48 @@
+schema: spec-driven
+
+context: |
+  Language: French
+  All artifacts must be written in French.
+
+  Projet : installation électrique d'un garage isolé de 31,4 m² (œuvre 5,60 × 5,60 m,
+  hauteur 2,75 m, parois béton 0,20 m), et maquette 3D navigateur qui sert de livrable de
+  conception et de guide de montage à l'installateur.
+
+  Deux natures de livrable coexistent :
+  - `maquette/*` — le logiciel : JavaScript sans dépendance, bundle statique `dist/garage.html`,
+    données dans `data/apports/*.json`, tests dans `tests/`. Aucun serveur, aucun service tiers.
+  - `installation/*` — les travaux physiques : circuits, protections, cheminements, points
+    d'utilisation. Rien n'est posé à ce jour.
+
+  GOUVERNANCE — `openspec/constitution.md` (v1.15.0) prime sur toute spécification. Ses six
+  principes, dont les deux premiers sont NON NÉGOCIABLES :
+  I.   Conformité NF C 15-100 — toute exigence rattachée à sa clause ; une règle citée sans
+       référence n'est pas opposable.
+  II.  Sécurité des personnes et protection différentielle — 30 mA au maximum, et le *type*
+       justifié au regard des charges, pas seulement la sensibilité.
+  III. Dimensionnement calculé et justifié — le mode de pose est une donnée d'entrée du calcul,
+       jamais une variable d'ajustement.
+  IV.  Circuit de recharge dédié et indépendant — la dédicace s'étend au conduit, non à la boîte.
+  V.   Documentation avant travaux, vérification avant mise sous tension — un essai non consigné
+       est réputé non fait.
+  VI.  Visualisation 3D navigateur, livrable de conception et guide de montage.
+
+  RÈGLES DE TRAVAIL, tirées des principes et non négociables dans les artefacts :
+  - Ne JAMAIS renseigner une valeur normative de mémoire. Toute valeur NF C 15-100 est confirmée
+    sur le texte par le maître d'ouvrage, ou reste inconnue.
+  - Une cote non relevée s'écrit comme inconnue, jamais comme une valeur plausible. Un majorant
+    déduit se déclare comme majorant : il ne démontre qu'un dégagement, jamais une collision.
+  - Les décisions du maître d'ouvrage se consignent avec leur date et leur motif, y compris
+    lorsqu'elles vont contre l'avis de la note de calcul.
+  - Repères de projet : PC-01..05 (prises), EL-01..03 (points lumineux), CM-01..05 (commandes),
+    BR-01 (borne), BD-xx (boîtes), CH-xx (cheminements), TV-xx (traversées).
+
+  HISTORIQUE : ce projet a été mené sous Spec Kit jusqu'au 2026-09-22. Les exigences portent
+  leur origine (`FR-0xx` de la fonctionnalité d'origine) en ligne de provenance.
+
+  LE DOSSIER : `dossier/00N-*/` porte les documents de travail que les spécifications ne
+  reprennent pas — notes de calcul, nomenclatures, implantations, recherches, modèles de
+  données et scénarios de recette. Ce sont des documents VIVANTS, cités par des tâches
+  ouvertes, et non une archive. `dossier/fournitures.md` est généré par `npm run fournitures`
+  et ne se modifie pas à la main. Les artefacts Spec Kit proprement dits — `spec.md`,
+  `plan.md`, `tasks.md`, `checklists/` — sont supprimés : `openspec/specs/` les remplace.

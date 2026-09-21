@@ -16,7 +16,20 @@
     --alerte: #a3231b;
     --avertissement: #8a5a00;
     --cible: 64px;
+    /* Hauteur FIXE du pied de page. Sans elle, sa hauteur suit la longueur de
+       l'instruction de l'étape courante : le viewport 3D change de taille à
+       chaque pas, et la vue paraît sauter alors que la caméra n'a pas bougé.
+       Une notice se parcourt étape par étape — le cadre doit rester immobile
+       pendant que le contenu défile dedans. */
+    --pied: clamp(150px, 22dvh, 240px);
+    /* Pied replié : l'en-tête de l'étape — rang, phase, SOUS TENSION — et les
+       commandes de navigation, rien d'autre. Hauteur fixe elle aussi : c'est le
+       geste de l'utilisateur qui change le cadre, jamais le contenu. */
+    --pied-replie: 96px;
   }
+  body.etape-repliee { --pied: var(--pied-replie); }
+  body.etape-repliee #etape .instruction,
+  body.etape-repliee #etape .bloc { display: none; }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; }
   body {
@@ -24,18 +37,18 @@
     color: var(--texte);
     background: var(--fond);
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto 1fr var(--pied);
     height: 100dvh;
     overflow: hidden;
-    font-size: 17px;
+    font-size: 15px;
   }
   header {
     display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-    padding: 8px 12px; border-bottom: 2px solid var(--bord);
+    padding: 6px 10px; border-bottom: 2px solid var(--bord);
   }
-  header h1 { font-size: 1.05rem; margin: 0 12px 0 0; }
+  header h1 { font-size: .95rem; margin: 0 10px 0 0; }
   header button {
-    min-height: 44px; padding: 0 14px; font-size: 0.95rem;
+    min-height: 36px; padding: 0 10px; font-size: .85rem;
     border: 2px solid var(--bord); border-radius: 8px; background: #fff;
     color: var(--texte); cursor: pointer;
   }
@@ -47,60 +60,94 @@
   #scene canvas { width: 100%; height: 100%; }
 
   #fiche {
-    position: absolute; top: 10px; right: 10px; width: min(340px, calc(100% - 20px));
+    position: absolute; top: 10px; right: 10px; width: min(290px, calc(100% - 20px));
     background: #fff; border: 2px solid var(--bord); border-radius: 10px;
-    padding: 12px 14px; max-height: calc(100% - 20px); overflow: auto;
+    padding: 10px 12px; max-height: calc(100% - 20px); overflow: auto;
+    font-size: .9rem;
     box-shadow: 0 6px 20px rgba(0,0,0,.18);
   }
-  #fiche h2 { margin: 0 0 8px; font-size: 1.15rem; }
-  #fiche h3 { margin: 14px 0 6px; font-size: .9rem; text-transform: uppercase; color: var(--texte-faible); }
-  .ligne { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; border-bottom: 1px solid #eef1f3; }
+  #fiche h2 { margin: 0 0 6px; font-size: 1.05rem; }
+  #fiche h3 { margin: 10px 0 4px; font-size: .8rem; text-transform: uppercase; color: var(--texte-faible); }
+  .ligne { display: flex; justify-content: space-between; gap: 10px; padding: 3px 0; border-bottom: 1px solid #eef1f3; }
   .libelle { color: var(--texte-faible); }
   .valeur { font-weight: 600; text-align: right; }
   /* Une valeur non déterminée se voit comme telle, jamais comblée (FR-007). */
+  .pastille { display: inline-block; width: 0.75em; height: 0.75em; border-radius: 50%; margin-right: 0.35em; vertical-align: -0.05em; }
   .valeur.inconnu { color: var(--avertissement); font-style: italic; font-weight: 500; }
   .avertissement { font-size: .85rem; color: var(--texte-faible); margin: 10px 0 0; }
-  #fiche .fermer { margin-top: 10px; min-height: 44px; width: 100%; border: 2px solid var(--bord);
-    border-radius: 8px; background: #fff; font-size: 1rem; cursor: pointer; }
+  #fiche .fermer { margin-top: 8px; min-height: 36px; width: 100%; border: 2px solid var(--bord);
+    border-radius: 8px; background: #fff; font-size: .9rem; cursor: pointer; }
 
-  #bandeau, #incertains {
+  #bandeau {
     position: absolute; left: 10px; right: 10px; top: 10px; z-index: 5;
     border-radius: 10px; padding: 10px 14px; font-size: .95rem;
   }
-  #incertains { top: auto; bottom: 10px; background: #fff6e5; border: 2px solid var(--avertissement); color: #4a3200; }
+  /* Les cotes manquantes ne s'affichent plus sur la maquette : un bouton dans
+     l'en-tête en donne le compte, et la fiche latérale le détail au clic. Un
+     avertissement qui recouvre ce qu'on est venu regarder finit par être ignoré. */
+  #cotes.reserve { border-color: var(--avertissement); color: var(--avertissement); font-weight: 600; }
+  #cotes.alerte { border-color: var(--alerte); color: #fff; background: var(--alerte); font-weight: 700; }
+  #cotes::before { content: '⚠ '; }
+
+  /* Le tableau des cotes manquantes, rendu dans la fiche. */
+  #fiche table { border-collapse: collapse; width: 100%; font-size: .85rem; margin: 4px 0 10px; }
+  #fiche th, #fiche td { text-align: left; padding: 5px 6px; border-bottom: 1px solid #eef1f3; }
+  #fiche th { font-size: .72rem; text-transform: uppercase; color: var(--texte-faible); }
   .bandeau.bloquant { background: #fdecea; border: 2px solid var(--alerte); color: #5a120d; }
   .bandeau.avertissement { background: #fff6e5; border: 2px solid var(--avertissement); color: #4a3200; }
   #bandeau ul { margin: 6px 0 0; padding-left: 20px; }
 
-  footer { border-top: 2px solid var(--bord); display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 10px 12px; }
-  @media (max-width: 720px) { footer { grid-template-columns: 1fr; } }
+  footer {
+    border-top: 2px solid var(--bord); display: grid; gap: 8px; padding: 8px 10px;
+    grid-template-columns: 1fr auto;
+    min-height: 0;
+    align-items: stretch;
+  }
+  /* En une seule colonne, les commandes passent sous l'étape : elles gardent leur
+     hauteur naturelle, l'étape prend le reste. */
+  @media (max-width: 720px) {
+    :root { --pied: clamp(200px, 34dvh, 320px); --pied-replie: 140px; }
+    footer { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; }
+  }
 
-  #etape .entete { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px; }
-  #etape .rang { font-weight: 700; font-size: 1.05rem; }
+  #etape .entete { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  #etape .rang { font-weight: 700; font-size: 1rem; }
+  /* Coin haut droit du panneau, et qui y reste pendant que l'étape défile. */
+  #etape .replier {
+    float: right; position: sticky; top: 0; margin: 0 0 4px 8px;
+    width: 36px; height: 36px; padding: 0; display: grid; place-items: center;
+    border: 2px solid var(--bord); border-radius: 8px; background: #fff; color: var(--texte-faible);
+    cursor: pointer; touch-action: manipulation;
+  }
+  #etape .replier:hover { border-color: var(--accent); color: var(--accent); }
+  #etape .replier svg { transition: transform .15s ease; }
+  body.etape-repliee #etape .replier svg { transform: rotate(180deg); }
   #etape .phase, #etape .nature {
-    font-size: .8rem; text-transform: uppercase; letter-spacing: .03em;
-    border: 1px solid var(--bord); border-radius: 999px; padding: 2px 10px; color: var(--texte-faible);
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .03em;
+    border: 1px solid var(--bord); border-radius: 999px; padding: 1px 8px; color: var(--texte-faible);
   }
   #etape .tension {
-    font-size: .8rem; font-weight: 700; letter-spacing: .05em;
-    background: var(--alerte); color: #fff; border-radius: 999px; padding: 3px 12px;
+    font-size: .75rem; font-weight: 700; letter-spacing: .05em;
+    background: var(--alerte); color: #fff; border-radius: 999px; padding: 2px 10px;
   }
-  #etape .instruction { font-size: 1.15rem; line-height: 1.45; margin: 6px 0; }
+  #etape .instruction { font-size: .9rem; line-height: 1.4; margin: 4px 0; }
   #etape .bloc { margin-top: 6px; }
-  #etape h3 { font-size: .8rem; text-transform: uppercase; color: var(--texte-faible); margin: 6px 0 2px; }
+  #etape h3 { font-size: .72rem; text-transform: uppercase; color: var(--texte-faible); margin: 6px 0 2px; }
   #etape ul { margin: 0; padding-left: 20px; }
-  #etape, footer > div { max-height: 34dvh; overflow: auto; }
+  /* C'est l'étape qui défile, pas la page. min-height: 0 est indispensable pour
+     qu'un enfant de grille puisse être plus petit que son contenu. */
+  #etape { min-height: 0; height: 100%; overflow-y: auto; overscroll-behavior: contain; }
 
-  #controles { display: flex; gap: 10px; align-items: center; }
+  #controles { display: flex; gap: 8px; align-items: center; }
   /* Cibles largement au-delà des minima : elles sont actionnées avec des gants. */
   #controles .nav {
-    min-height: var(--cible); min-width: 150px; font-size: 1.1rem; font-weight: 600;
+    min-height: var(--cible); min-width: 120px; font-size: 1rem; font-weight: 600;
     border: 3px solid var(--accent); border-radius: 12px; background: #fff; color: var(--accent);
     cursor: pointer; touch-action: manipulation;
   }
   #controles .nav:disabled { border-color: var(--bord); color: #97a3ab; cursor: default; }
-  #controles .saut { display: flex; flex-direction: column; font-size: .8rem; color: var(--texte-faible); }
-  #controles input { min-height: 44px; width: 90px; font-size: 1.1rem; text-align: center;
+  #controles .saut { display: flex; flex-direction: column; font-size: .75rem; color: var(--texte-faible); }
+  #controles input { min-height: 44px; width: 76px; font-size: 1rem; text-align: center;
     border: 2px solid var(--bord); border-radius: 8px; }
 </style>
 </head>
@@ -108,13 +155,15 @@
   <header>
     <h1>Garage — maquette et guide de montage</h1>
     <div id="vues"></div>
+    <button type="button" id="mode-camera" aria-pressed="false"></button>
     <button type="button" id="ouvrants">Ouvrants</button>
+    <button type="button" id="tracage">Cotes de tracé</button>
+    <button type="button" id="cotes" hidden></button>
   </header>
 
   <main>
     <div id="scene"></div>
     <div id="bandeau" class="bandeau" hidden></div>
-    <div id="incertains" hidden></div>
     <aside id="fiche" hidden></aside>
   </main>
 

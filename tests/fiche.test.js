@@ -38,9 +38,12 @@ test('aucune caractéristique inconnue ne porte de valeur de remplacement', () =
 });
 
 test('une valeur connue est rendue avec son unité', () => {
-  const lignes = caracteristiques(trouver('pc-01'), apport.circuits, VOCA);
-  assert.equal(lignes.find((l) => l.libelle === "Hauteur d'axe").texte, '1.2 m');
-  assert.equal(lignes.find((l) => l.libelle === "Hauteur d'axe").inconnu, false);
+  const composant = trouver('pc-01');
+  const ligne = caracteristiques(composant, apport.circuits, VOCA).find(
+    (l) => l.libelle === "Hauteur d'axe",
+  );
+  assert.equal(ligne.texte, `${composant.hauteurAxe} m`, 'la valeur affichée vient des données');
+  assert.equal(ligne.inconnu, false);
 });
 
 test('la face extérieure est nommée comme telle', () => {

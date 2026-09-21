@@ -26,7 +26,22 @@
   ],
   "epaisseurDalle": 0.08,
   "toleranceRaccordement": 0.01,
-  "diametreConduitConventionnel": 0.02,
+  "sectionConventionnelle": {
+    "circulaire": {
+      "diametre": 0.012
+    },
+    "rectangulaire": {
+      "largeur": 0.06,
+      "profondeur": 0.03
+    }
+  },
+  "deniveleConventionnel": 0.04,
+  "trajets": {
+    "diametre": 0.01,
+    "ecart": 0.016,
+    "assombrissementOrdre": 0.45,
+    "note": "Conventions de dessin des trajets de conducteurs : un fil n'a pas de diamètre à l'échelle de la maquette, et ces cotes ne sont que lisibles. Un tronçon où passe un fil d'ordre prend la couleur de son circuit assombrie de assombrissementOrdre."
+  },
   "opacites": {
     "arete": 0.35,
     "obstacle": 0.28,
@@ -37,7 +52,7 @@
     "hemispherique": {
       "ciel": "#ffffff",
       "sol": "#9aa5ad",
-      "intensite": 2.0
+      "intensite": 2
     },
     "directionnel": {
       "couleur": "#ffffff",
@@ -54,14 +69,33 @@
     "proche": 0.05,
     "lointain": 200,
     "rayonMin": 0.8,
-    "rayonMax": 40
+    "rayonMax": 40,
+    "vitesseDeplacement": 2.5,
+    "vitesseRotation": 0.004,
+    "pitchMin": 0.05,
+    "pitchMax": 3.09,
+    "bornesVol": {
+      "min": {
+        "x": -6.0,
+        "y": -6.0,
+        "z": -1.0
+      },
+      "max": {
+        "x": 11.6,
+        "y": 11.6,
+        "z": 9.0
+      }
+    },
+    "dureeTransition": 0.55,
+    "lissageTransition": 2,
+    "margeCadrage": 3.2
   },
   "vueInitiale": "trois-quarts",
   "vues": [
     {
       "id": "trois-quarts",
       "libelle": "Trois quarts",
-      "theta": -0.785398,
+      "theta": 2.356194,
       "phi": 1.047198,
       "rayon": 14
     },
@@ -105,6 +139,26 @@
     "faces": {
       "interieur": "intérieur",
       "exterieur": "extérieur"
+    },
+    "rendus": {
+      "baie": "contour de la baie",
+      "majorant": "majorant déduit",
+      "aucun": "non dessiné"
+    },
+    "etatsObstacle": {
+      "releve": "relevé",
+      "borne": "borné, non mesuré",
+      "inconnu": "non relevé"
+    },
+    "baies": {
+      "porte-sectionnelle": "la porte sectionnelle",
+      "porte-service": "la porte de service",
+      "fenetre-nord": "la fenêtre nord"
+    },
+    "obstacles": {
+      "rail-sectionnelle": "du rail de la porte sectionnelle",
+      "rail-sectionnelle-ouvert": "du rail de la porte sectionnelle"
     }
-  }
+  },
+  "porteeDeCote": 0.5
 }

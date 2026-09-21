@@ -154,7 +154,7 @@ test('V15 — une extrémité pendante est rejetée', () => {
     reference: 'CH-PENDANT',
     circuits: ['c-demo'],
     segments: [{ face: 'est', de: pt(5.6, 1.5, 0.8), a: pt(5.6, 2.0, 0.8) }],
-    diametre: null,
+    section: { forme: 'circulaire', diametre: null },
   });
   a.etapes.find((e) => e.id === 'd-cheminement').cheminements.push('ch-pendant');
   const d = defautsDe(a);
@@ -177,8 +177,9 @@ test('V17 — un piquage hors boîte est rejeté', () => {
     id: 'ch-piquage',
     reference: 'CH-PIQUAGE',
     circuits: ['c-demo'],
-    segments: [{ face: 'est', de: pt(5.6, 4.0, 2.5), a: pt(5.6, 4.0, 1.8) }],
-    diametre: null,
+    // Sur l'antenne, à z = 2,60 : voir la note de tests/graphe.test.js.
+    segments: [{ face: 'est', de: pt(5.6, 4.0, 2.6), a: pt(5.6, 4.0, 1.8) }],
+    section: { forme: 'circulaire', diametre: null },
   });
   a.etapes.find((e) => e.id === 'd-cheminement').cheminements.push('ch-piquage');
   const d = defautsDe(a);
@@ -239,8 +240,93 @@ test('STRUCT — une traversée de sens inconnu est rejetée', () => {
 });
 
 test('STRUCT — un obstacle sans baie est accepté', () => {
-  // Le gabarit de manœuvre du véhicule ne se rattache à aucune ouverture.
+  // Une zone libre du local — un gabarit de véhicule, par exemple — ne se rattache
+  // à aucune ouverture. Le cas se construit, pour ne pas dépendre du relevé.
   const local = LOCAL();
-  assert.ok(local.obstacles.some((o) => o.baie === undefined));
+  local.obstacles.push({ id: 'zone-libre', libelle: 'Zone libre', etat: 'ferme', volume: null, incertain: true });
   assert.deepEqual(validerLocal(local), []);
+});
+
+/* ---------------- V19 : un conduit ne traverse pas une baie ---------------- */
+
+const conduitNord = (z, de, a) => ({
+  id: 'ch-nord',
+  reference: 'CH-NORD',
+  circuits: ['c-demo'],
+  segments: [{ face: 'nord', de: pt(de, 5.6, z), a: pt(a, 5.6, z) }],
+  section: { forme: 'circulaire', diametre: null },
+});
+
+const avecConduitNord = (conduit) => {
+  const a = copie(DEMO());
+  a.cheminements.push(conduit);
+  a.etapes.find((e) => e.id === 'd-cheminement').cheminements.push(conduit.id);
+  return a;
+};
+
+// Les hauteurs d'essai se DÉDUISENT du relevé au lieu de le recopier. Trois
+// corrections de cotes ont déjà fait échouer des tests qui figeaient la bande de
+// la fenêtre du jour : ce que V19 doit garantir, c'est une relation entre un
+// conduit et une baie, jamais une altitude particulière.
+const FENETRE = LOCAL().baies.find((b) => b.id === 'fenetre-nord');
+const BAS = FENETRE.allege;
+const HAUT = FENETRE.allege + FENETRE.hauteur;
+const MILIEU = (BAS + HAUT) / 2;
+const BORD_OUEST = FENETRE.debut;
+const BORD_EST = FENETRE.debut + FENETRE.largeur;
+// Un tracé qui dépasse les deux trumeaux, donc franchement en travers.
+const enTravers = (z) => conduitNord(z, BORD_OUEST - 0.3, BORD_EST + 0.2);
+
+test('V19 — un conduit en travers de la fenêtre est rejeté', () => {
+  const d = defautsDe(avecConduitNord(enTravers(MILIEU)));
+  assert.ok(regles(d).includes('V19'));
+  assert.ok(d.some((x) => /traverse la baie « fenetre-nord »/.test(x.message)));
+});
+
+test('V19 — un conduit passant au-dessus de la fenêtre est accepté', () => {
+  const d = defautsDe(avecConduitNord(enTravers(HAUT + 0.2)));
+  assert.equal(regles(d).includes('V19'), false);
+});
+
+test('V19 — un conduit sous l’allège est accepté', () => {
+  const d = defautsDe(avecConduitNord(enTravers(BAS - 0.6)));
+  assert.equal(regles(d).includes('V19'), false);
+});
+
+test('V19 — un conduit affleurant le bord haut de la fenêtre est accepté', () => {
+  // Longer exactement le bord n'est pas traverser.
+  const d = defautsDe(avecConduitNord(enTravers(HAUT)));
+  assert.equal(regles(d).includes('V19'), false);
+});
+
+test('V19 — un conduit affleurant l’allège est accepté', () => {
+  // L'autre bord, pour la même raison. C'est le cas qu'un conduit posé au ras de
+  // l'allège rencontre réellement.
+  const d = defautsDe(avecConduitNord(enTravers(BAS)));
+  assert.equal(regles(d).includes('V19'), false);
+});
+
+test('V19 — un conduit latéral, hors de la largeur de la fenêtre, est accepté', () => {
+  const d = defautsDe(avecConduitNord(conduitNord(MILIEU, 0.2, BORD_OUEST)));
+  assert.equal(regles(d).includes('V19'), false);
+});
+
+test('V19 — la règle vaut aussi pour les portes, qui partent du sol', () => {
+  const a = copie(DEMO());
+  // Un conduit à 1 m en travers de la porte de service, sur la paroi est.
+  a.cheminements.push({
+    id: 'ch-porte',
+    reference: 'CH-PORTE',
+    circuits: ['c-demo'],
+    segments: [{ face: 'est', de: pt(5.6, 1.0, 1.0), a: pt(5.6, 2.8, 1.0) }],
+    section: { forme: 'circulaire', diametre: null },
+  });
+  a.etapes.find((e) => e.id === 'd-cheminement').cheminements.push('ch-porte');
+  const d = defautsDe(a);
+  assert.ok(regles(d).includes('V19'));
+  assert.ok(d.some((x) => /porte-service/.test(x.message)));
+});
+
+test('le jeu de démonstration ne traverse aucune baie', () => {
+  assert.equal(regles(defautsDe(DEMO())).includes('V19'), false);
 });

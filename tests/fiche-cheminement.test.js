@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SOCLE, DEMO } from './_aides.js';
 import { fusionner } from '../src/donnees/chargement.js';
+import { longueurCheminement } from '../src/geometrie/cheminement.js';
 import {
   caracteristiquesCheminement,
   caracteristiquesTraversee,
@@ -20,19 +21,33 @@ test('un diamètre non arrêté ressort « inconnu » et jamais le diamètre de 
   assert.equal(d.texte, INCONNU);
   assert.equal(d.inconnu, true);
   // Le diamètre conventionnel sert à dessiner, pas à renseigner.
-  assert.notEqual(d.texte, `${socle.presentation.diametreConduitConventionnel} m`);
+  assert.notEqual(d.texte, `${Math.round(socle.presentation.sectionConventionnelle.circulaire.diametre * 1000)} mm`);
 });
 
-test('un diamètre arrêté est affiché avec son unité', () => {
+test('un diamètre arrêté est affiché en millimètres', () => {
   const d = ligne(caracteristiquesCheminement(ch('ch-01'), modele.circuits), 'Diamètre');
-  assert.equal(d.texte, '0.025 m');
+  assert.equal(d.texte, '20 mm', 'un conduit se désigne en millimètres, pas en mètres');
   assert.equal(d.inconnu, false);
 });
 
+test('le diamètre de dessin reste distinct de tout diamètre réel', () => {
+  // Sans cet écart, un conduit non dimensionné se dessinerait exactement comme un
+  // IRL 20 réel, et l'inconnue cesserait d'être visible (FR-007).
+  const dessin = socle.presentation.sectionConventionnelle.circulaire.diametre;
+  const reels = modele.cheminements.map((c) => c.section.diametre).filter((x) => x !== null);
+  assert.ok(reels.length > 0, 'le jeu doit contenir au moins un diamètre arrêté');
+  for (const reel of reels) {
+    assert.notEqual(dessin, reel, `le diamètre de dessin ${dessin} coïncide avec un réel`);
+    assert.ok(dessin < reel, 'le diamètre de dessin doit se lire comme « pas encore dimensionné »');
+  }
+});
+
 test('la longueur est dérivée des segments et non saisie', () => {
-  const l = ligne(caracteristiquesCheminement(ch('ch-01'), modele.circuits), 'Longueur');
-  assert.equal(l.texte, '3.3 m');
-  assert.equal('longueur' in ch('ch-01'), false);
+  const cible = ch('ch-01');
+  const attendue = Math.round(longueurCheminement(cible) * 100) / 100;
+  const l = ligne(caracteristiquesCheminement(cible, modele.circuits), 'Longueur');
+  assert.equal(l.texte, `${attendue} m`);
+  assert.equal('longueur' in cible, false, 'aucune longueur ne figure dans les données');
 });
 
 test('les circuits portés sont nommés par leur libellé', () => {

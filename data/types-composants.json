@@ -12,7 +12,8 @@
         "largeur": 0.09,
         "hauteur": 0.09,
         "profondeur": 0.04
-      }
+      },
+      "role": "appareillage"
     },
     {
       "id": "socle-double",
@@ -21,7 +22,8 @@
         "largeur": 0.16,
         "hauteur": 0.09,
         "profondeur": 0.04
-      }
+      },
+      "role": "appareillage"
     },
     {
       "id": "tableau",
@@ -30,7 +32,8 @@
         "largeur": 0.36,
         "hauteur": 0.26,
         "profondeur": 0.11
-      }
+      },
+      "role": "appareillage"
     },
     {
       "id": "luminaire",
@@ -39,7 +42,8 @@
         "largeur": 0.3,
         "hauteur": 0.3,
         "profondeur": 0.08
-      }
+      },
+      "role": "appareillage"
     },
     {
       "id": "commande",
@@ -48,7 +52,8 @@
         "largeur": 0.09,
         "hauteur": 0.09,
         "profondeur": 0.03
-      }
+      },
+      "role": "appareillage"
     },
     {
       "id": "borne",
@@ -57,7 +62,8 @@
         "largeur": 0.3,
         "hauteur": 0.45,
         "profondeur": 0.18
-      }
+      },
+      "role": "appareillage"
     },
     {
       "id": "boite-derivation",
@@ -66,8 +72,39 @@
         "largeur": 0.1,
         "hauteur": 0.1,
         "profondeur": 0.05
-      }
+      },
+      "role": "jonction"
+    },
+    {
+      "id": "module-commande",
+      "libelle": "module de commande",
+      "gabarit": {
+        "largeur": 0.045,
+        "hauteur": 0.04,
+        "profondeur": 0.02
+      },
+      "role": "appareillage"
+    },
+    {
+      "id": "organe-connexion",
+      "libelle": "organe de connexion",
+      "gabarit": {
+        "largeur": 0.06,
+        "hauteur": 0.06,
+        "profondeur": 0.035
+      },
+      "role": "jonction"
+    },
+    {
+      "id": "accessoire-conduit",
+      "libelle": "accessoire de conduit",
+      "gabarit": {
+        "largeur": 0.05,
+        "hauteur": 0.05,
+        "profondeur": 0.03
+      },
+      "role": "accessoire"
     }
   ],
-  "note": "Gabarits d'encombrement pour le rendu, et libellés lisibles. Ce ne sont pas des références commerciales : la maquette vise la lisibilité, pas le photo-réalisme. La boîte de dérivation y figure comme tout autre type : c'est un composant de plein droit, pas un accessoire implicite du tracé."
+  "note": "Gabarits d'encombrement pour le rendu, et libellés lisibles. Ce ne sont pas des références commerciales : la maquette vise la lisibilité, pas le photo-réalisme. Chaque type déclare en outre son ROLE : « appareillage » enveloppe ses propres connexions ; « jonction » est une enveloppe de cheminement, seule à porter dimensions et entrees ; « accessoire » ne reçoit aucune connexion et ne doit pas être ouvert pour y chercher des bornes. Le rôle de la goulotte n'apparaît pas ici : elle abrite sans envelopper, et c'est un cheminement, pas un composant."
 }

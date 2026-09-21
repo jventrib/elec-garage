@@ -1,0 +1,287 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://elec-garage.local/contracts/local.schema.json",
+  "title": "Relevé géométrique du local",
+  "description": "Transcription unique du relevé consigné dans la constitution. Propriété du socle. Aucune fonctionnalité électrique n'écrit dans ce fichier.",
+  "type": "object",
+  "required": [
+    "oeuvre",
+    "hauteurSousPlafond",
+    "epaisseurParois",
+    "repere",
+    "baies",
+    "obstacles",
+    "provenance"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "oeuvre": {
+      "description": "Dimensions intérieures en œuvre, en mètres. L'emprise extérieure n'est pas déclarée : elle se calcule.",
+      "type": "object",
+      "required": [
+        "x",
+        "y"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Largeur est-ouest"
+        },
+        "y": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Profondeur sud-nord"
+        }
+      }
+    },
+    "hauteurSousPlafond": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "epaisseurParois": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "repere": {
+      "description": "Convention fixée par la constitution. Déclarée pour être vérifiable, jamais recalculée.",
+      "type": "object",
+      "required": [
+        "origine",
+        "axeX",
+        "axeY",
+        "axeZ",
+        "unite"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "origine": {
+          "const": "angle-sud-ouest-interieur-sol-fini"
+        },
+        "axeX": {
+          "const": "est"
+        },
+        "axeY": {
+          "const": "nord"
+        },
+        "axeZ": {
+          "const": "haut"
+        },
+        "unite": {
+          "const": "metre"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "description": "Documents normatifs dont ce fichier dérive (FR-009). La maquette n'est pas la source normative : en cas de divergence, ces documents l'emportent.",
+      "required": [
+        "schemaUnifilaire",
+        "noteDeCalcul"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schemaUnifilaire": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Version ou date du schéma unifilaire. null tant qu'il n'existe pas."
+        },
+        "noteDeCalcul": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Version ou date de la note de calcul. null tant qu'elle n'existe pas."
+        },
+        "releve": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Date du relevé géométrique dont proviennent les cotes."
+        }
+      }
+    },
+    "baies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/baie"
+      }
+    },
+    "obstacles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/obstacle"
+      }
+    }
+  },
+  "$defs": {
+    "paroi": {
+      "enum": [
+        "sud",
+        "nord",
+        "est",
+        "ouest"
+      ]
+    },
+    "baie": {
+      "type": "object",
+      "required": [
+        "id",
+        "paroi",
+        "debut",
+        "allege",
+        "largeur",
+        "hauteur",
+        "incertain"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "paroi": {
+          "$ref": "#/$defs/paroi"
+        },
+        "debut": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Abscisse du bord de la baie le long de la paroi, depuis l'origine du repère"
+        },
+        "allege": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Hauteur d'allège : altitude du bord bas de la baie, en mètres. Vaut 0 pour une porte, qui part du sol. Une fenêtre en a une, et sans ce champ son ouverture serait indiscernable de celle d'une porte."
+        },
+        "largeur": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "hauteur": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0,
+          "description": "Hauteur de l'ouverture elle-même, mesurée depuis l'allège. La baie occupe donc les altitudes de `allege` à `allege + hauteur`. null lorsque la cote n'est pas relevée ; jamais une valeur plausible."
+        },
+        "incertain": {
+          "type": "boolean",
+          "description": "true si une cote de la baie ou de son ouvrant manque. Impose l'affichage explicite du doute."
+        }
+      }
+    },
+    "obstacle": {
+      "type": "object",
+      "required": [
+        "id",
+        "etat",
+        "volume",
+        "incertain",
+        "libelle"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "libelle": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Désignation lisible de l'obstacle, telle qu'elle s'affiche à l'installateur. L'identifiant est un nom de machine ; ce libellé est ce qu'un humain lit dans le panneau d'incertitudes. Il vit dans les données et non dans le code."
+        },
+        "baie": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Facultatif. Identifiant d'une baie déclarée, lorsque l'obstacle est l'ouvrant de cette baie. Un obstacle SANS baie décrit un volume libre du local — gabarit de manœuvre du véhicule, débattement des portières, zone de stationnement."
+        },
+        "etat": {
+          "enum": [
+            "ouvert",
+            "ferme"
+          ]
+        },
+        "volume": {
+          "description": "Boîte englobante dans le repère du local. null tant que la cote manque.",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "min",
+                "max"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "min": {
+                  "$ref": "#/$defs/point"
+                },
+                "max": {
+                  "$ref": "#/$defs/point"
+                }
+              }
+            }
+          ]
+        },
+        "volumeMajorant": {
+          "description": "Facultatif. MAJORANT de l'encombrement, lorsque celui-ci n'est pas relevé mais se trouve borné par des cotes qui le sont. Ce n'est pas une estimation : chaque borne DOIT dériver d'une cote du relevé. Exclusif de « volume » — un encombrement est relevé, ou seulement borné — et impose incertain à true. Un segment disjoint de ce volume est « conforme », le dégagement étant démontré ; un segment qui le recoupe reste « non concluant », l'obstacle réel y étant contenu, et NE DOIT JAMAIS produire « en collision ».",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "min",
+                "max"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "min": {
+                  "$ref": "#/$defs/point"
+                },
+                "max": {
+                  "$ref": "#/$defs/point"
+                }
+              }
+            }
+          ]
+        },
+        "incertain": {
+          "type": "boolean"
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Connaissance partielle de l'obstacle, lorsque certaines cotes sont relevées et d'autres pas. Consignée pour ne pas être perdue, sans autoriser à en déduire un volume."
+        }
+      },
+      "description": "Volume qui contraint l'implantation. Peut être l'ouvrant d'une baie, ou un volume libre du local. Trois formes, et non deux : « volume » relevé avec incertain à false autorise les deux verdicts ; « volumeMajorant » seul n'autorise que « conforme » ; l'absence des deux n'autorise que « non concluant ». Un volume à null et incertain à true signifie que l'encombrement n'est pas relevé : le contrôle de collision rend alors « non concluant », jamais « conforme »."
+    },
+    "point": {
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}
