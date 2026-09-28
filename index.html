@@ -54,6 +54,12 @@
   }
   header button:hover { border-color: var(--accent); }
   #vues { display: flex; gap: 6px; flex-wrap: wrap; }
+  /* Les deux bascules sont voisines mais INDEPENDANTES : aucun « bouton radio », aucun
+     regroupement qui ferait croire que l'une annule l'autre. On montre l'état par le
+     fond plutôt que par le texte, pour que le libellé reste stable et lisible. */
+  #couches { display: flex; gap: 6px; flex-wrap: wrap; }
+  #couches button { background: #fff; }
+  #couches button[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
 
   main { position: relative; min-height: 0; }
   #scene { position: absolute; inset: 0; }
@@ -158,6 +164,7 @@
     <button type="button" id="mode-camera" aria-pressed="false"></button>
     <button type="button" id="ouvrants">Ouvrants</button>
     <button type="button" id="tracage">Cotes de tracé</button>
+    <div id="couches" role="group" aria-label="Couches d'affichage"></div>
     <button type="button" id="cotes" hidden></button>
   </header>
 

@@ -18,42 +18,10 @@ import {
   Vector3,
   Line,
   LineDashedMaterial,
-  Sprite,
-  SpriteMaterial,
-  CanvasTexture,
 } from '../../vendor/three/three.module.js';
 import { coterCheminement, coterComposant, coterTraversee, libelleDeCote } from '../geometrie/cotes.js';
-
-/** L'étiquette, peinte sur un canevas : aucune police à charger, aucun réseau. */
-function etiquette(texte, couleur) {
-  const echelle = 2;
-  const canevas = document.createElement('canvas');
-  const ctx = canevas.getContext('2d');
-  const police = `${13 * echelle}px system-ui, sans-serif`;
-  ctx.font = police;
-  const largeur = Math.ceil(ctx.measureText(texte).width) + 12 * echelle;
-  const hauteur = 20 * echelle;
-  canevas.width = largeur;
-  canevas.height = hauteur;
-
-  ctx.font = police;
-  ctx.fillStyle = 'rgba(255,255,255,0.92)';
-  ctx.fillRect(0, 0, largeur, hauteur);
-  ctx.strokeStyle = couleur;
-  ctx.lineWidth = echelle;
-  ctx.strokeRect(0, 0, largeur, hauteur);
-  ctx.fillStyle = couleur;
-  ctx.textBaseline = 'middle';
-  ctx.fillText(texte, 6 * echelle, hauteur / 2);
-
-  const materiau = new SpriteMaterial({ map: new CanvasTexture(canevas), depthTest: false, transparent: true });
-  const sprite = new Sprite(materiau);
-  // Taille en mètres : l'étiquette doit rester lisible sans écraser le local.
-  const h = 0.11;
-  sprite.scale.set((h * largeur) / hauteur, h, 1);
-  sprite.renderOrder = 10;
-  return sprite;
-}
+import { GENRES_POSABLES } from '../sequence/etat.js';
+import { etiquette } from './etiquette.js';
 
 export function construireCotes(modele) {
   const groupe = new Group();
@@ -123,7 +91,9 @@ export function construireCotes(modele) {
    */
   function appliquerEtat(partition) {
     for (const n of parObjet.values()) n.visible = false;
-    for (const genre of ['composants', 'cheminements', 'traversees']) {
+    // La liste des genres posables est lue, pas recopiée : une seconde liste
+    // divergerait au prochain apport, et les cotes manqueraient à un objet posé.
+    for (const genre of GENRES_POSABLES) {
       for (const o of partition[genre]?.ajoutes ?? []) {
         const n = parObjet.get(o.id);
         if (n) n.visible = true;

@@ -209,12 +209,26 @@ export function construireCheminements(modele) {
     }
   }
 
+  const visibles = (parId) => (groupe.visible ? [...parId.values()] : []).filter((e) => e.noeud.visible);
   const meshes = () => [
-    ...[...parId.values()].flatMap((e) => e.meshes.map((m) => m.mesh)),
-    ...[...traverseesParId.values()].map((e) => e.noeud.children[0]),
+    ...visibles(parId).flatMap((e) => e.meshes.map((m) => m.mesh)),
+    ...visibles(traverseesParId).map((e) => e.noeud.children[0]),
   ];
   const cheminementDe = (objet) => objet?.userData?.cheminement ?? null;
   const traverseeDe = (objet) => objet?.userData?.traversee ?? null;
 
-  return { groupe, appliquerEtat, souligner, meshes, cheminementDe, traverseeDe, collisions, traverseesParId };
+/**
+   * Couper une couche. La bascule porte sur le GROUPE, jamais sur chaque objet :
+   * un objet masqué individuellement resterait désignable au rayon, et c'est le
+   * défaut que three.js ne protège pas de lui-même.
+   *
+   * Elle n'appelle PAS `appliquerEtat` : masquer une couche ne fige pas la pose,
+   * et la réafficher ne la recalcule pas. Le calcul de pose ne dépend pas de ce que
+   * l'écran montre.
+   */
+  function basculer(visible) {
+    groupe.visible = visible;
+  }
+
+  return { groupe, appliquerEtat, basculer, souligner, meshes, cheminementDe, traverseeDe, collisions, traverseesParId };
 }

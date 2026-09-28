@@ -148,6 +148,7 @@ export function fusionner(socle, apports) {
   const cheminements = [];
   const traversees = [];
   const etapes = [];
+  const rangements = [];
   for (const apport of tries) {
     const nom = apport.fonctionnalite;
     for (const c of apport.circuits ?? []) circuits.push({ ...c, apport: nom });
@@ -155,6 +156,9 @@ export function fusionner(socle, apports) {
     for (const c of apport.cheminements ?? []) cheminements.push({ ...c, apport: nom });
     for (const t of apport.traversees ?? []) traversees.push({ ...t, apport: nom });
     for (const e of apport.etapes ?? []) etapes.push({ ...e, apport: nom });
+    // Le rangement est le seul genre qui ne serve à aucun calcul électrique : il
+    // n'entre ni dans V11 ni dans V16, et n'apporte donc aucune étape.
+    for (const r of apport.rangements ?? []) rangements.push({ ...r, apport: nom });
   }
   return {
     local,
@@ -166,6 +170,7 @@ export function fusionner(socle, apports) {
     cheminements,
     traversees,
     etapes,
+    rangements,
     apports: tries.map((a) => a.fonctionnalite),
     provenance: local.provenance,
   };

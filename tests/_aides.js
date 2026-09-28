@@ -24,6 +24,48 @@ export const BORNE = () => lireJson('data/apports/004-borne-recharge.json');
 // et la dérivation retombe sur le majorant — comme elle le doit.
 export const AUTOMATISATION = () => lireJson('data/apports/005-automatisation-locale.json');
 
+// Le rangement est le premier apport qui ne touche pas au circuit : il ne déclare
+// ni composant, ni cheminement, ni étape, et n'entre dans aucun contrôle
+// électrique. Il se lit donc seul — ce qui rend ses tests possibles sans les
+// trois apports précédents.
+export const RANGEMENT = () => lireJson('data/apports/006-rangement.json');
+
+/**
+ * Un canevas minimal, pour les étiquettes peintes de la maquette.
+ *
+ * Les étiquettes sont des sprites dont la texture est peinte sur un `<canvas>`, et
+ * les constructeurs de scène qui les emploient ne dessinent **rien** d'autre que
+ * cela. Leur exclure des tests laisserait le cas le plus visible — une étiquette
+ * absente, ou mal posée — sans couverture, alors que c'est le seul défaut qu'un
+ * utilisateur verrait immédiatement. On ne mesure pas le texte : une largeur fixe
+ * suffit, et garde le test indépendant de la police du poste.
+ */
+export function avecCanevas(f) {
+  const ancien = globalThis.document;
+  globalThis.document = {
+    createElement: () => ({
+      width: 0,
+      height: 0,
+      getContext: () => ({
+        font: '',
+        fillStyle: '',
+        strokeStyle: '',
+        lineWidth: 1,
+        textBaseline: '',
+        measureText: (t) => ({ width: t.length * 7 }),
+        fillRect() {},
+        strokeRect() {},
+        fillText() {},
+      }),
+    }),
+  };
+  try {
+    return f();
+  } finally {
+    globalThis.document = ancien;
+  }
+}
+
 /** Le socle : les quatre fichiers de données du projet, aucun facultatif. */
 export const SOCLE = () => ({
   local: lireJson('data/local.json'),

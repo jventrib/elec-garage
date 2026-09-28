@@ -289,6 +289,85 @@ function etendue(volume) {
 }
 
 /**
+ * Caractéristiques d'un rangement : ce qu'il est, ce qu'on dessine, et ce qu'on ne
+ * sait pas.
+ *
+ * Trois règles, et chacune répond à une tentation précise.
+ *
+ *  1. **L'encombrement retenu est celui du GABARIT, et il le dit.** Le volume affiché
+ *     n'est pas une mesure : c'est une convention de dessin. Une fiche qui presenterait
+ *     « 1,44 m de haut » sans le qualifier ferait passer une convention pour un relevé.
+ *  2. **Chaque cote porte son origine ET son état.** Une contradiction n'est pas un
+ *     manque : c'est une affirmation du fabricant qui s'oppose à une autre. Les confondre
+ *     enverrait l'installateur mesurer ce qui est déjà documenté, deux fois.
+ *  3. **Le document source est nommé.** « Relevé sur place » et « fiche fabricant »
+ *     n'ont pas le même poids, et la fiche doit permettre de les distinguer d'un coup
+ *     d'œil.
+ *
+ * `vocabulaire.rangement` porte tous les libellés : aucun mot n'est figé ici.
+ */
+export function caracteristiquesRangement(rangement, vocabulaire = {}) {
+  const r = vocabulaire.rangement ?? {};
+  const etats = vocabulaire.etatsCote ?? {};
+  const origines = vocabulaire.originesCote ?? {};
+  const cotes = rangement.cotes ?? {};
+  const noms = Object.keys(cotes);
+
+  const lignes = [
+    { libelle: 'Désignation', ...valeur(rangement.libelle) },
+    { libelle: 'Repère', ...valeur(rangement.reference) },
+    {
+      libelle: 'Implantation',
+      ...valeur([vocabulaire.parois?.[rangement.paroi], vocabulaire.faces?.[rangement.face]].filter(Boolean).join(', ') || null),
+    },
+    { libelle: 'Encombrement retenu', ...etendue(rangement.gabarit?.volume) },
+    { libelle: r.origine ?? 'Origine', ...valeur(origines[rangement.gabarit?.origine] ?? null) },
+  ];
+
+  // La mention du gabarit n'est pas une remarque facultative : c'est elle qui empêche
+  // de lire le volume dessiné comme un encombrement connu.
+  if (rangement.gabarit?.mention) {
+    lignes.push({ libelle: 'Mention', ...valeur(rangement.gabarit.mention) });
+  }
+  if (noms.length === 0) {
+    lignes.push({ libelle: r.titreCotes ?? 'Cotes', ...valeur(r.aucuneCote ?? 'aucune') });
+  } else {
+    for (const nom of noms) {
+      const c = cotes[nom] ?? {};
+      const mesure = typeof c.valeur === 'number' ? `${c.valeur} ${c.unite ?? 'm'}` : (r.valeurAbsente ?? 'non déterminée');
+      lignes.push({ libelle: `  ${nom}`, ...valeur(mesure) });
+      lignes.push({ libelle: `    ${r.etat ?? 'État'}`, ...valeur(etats[c.etat] ?? null) });
+      lignes.push({ libelle: `    ${r.origine ?? 'Origine'}`, ...valeur(origines[c.origine] ?? null) });
+    }
+  }
+
+  // Les contradictions sont le cœur de cette fiche : elles portent les deux termes
+  // du conflit, pas seulement le mot « contradictoire ».
+  const contradictoires = noms.filter((n) => cotes[n]?.etat === 'contradictoire');
+  const inconnues = noms.filter((n) => cotes[n]?.etat === 'inconnu');
+  if (contradictoires.length > 0) {
+    lignes.push({ libelle: `${etats.contradictoire ?? 'Contradictoires'} (${contradictoires.length})`, texte: contradictoires.join(', '), inconnu: false });
+    for (const nom of contradictoires) {
+      for (const reserve of cotes[nom].reserves ?? []) {
+        lignes.push({ libelle: `  ${nom}`, texte: reserve, inconnu: false });
+      }
+    }
+  }
+  if (inconnues.length > 0) {
+    lignes.push({ libelle: `${etats.inconnu ?? 'Inconnues'} (${inconnues.length})`, texte: inconnues.join(', '), inconnu: true });
+  }
+
+  if (rangement.fixation) {
+    const fix = rangement.fixation;
+    lignes.push({ libelle: r.fixation ?? 'Fixation', ...valeur(fix.etat === 'inconnu' ? (r.fixationInconnue ?? 'non résolue') : (fix.methode ?? null)) });
+  }
+  if (rangement.fabricant || rangement.referenceProduit) {
+    lignes.push({ libelle: 'Produit', ...valeur([rangement.fabricant, rangement.referenceProduit].filter(Boolean).join(' ')) });
+  }
+  return lignes;
+}
+
+/**
  * Caractéristiques d'un obstacle, et surtout **ce qui n'en est pas connu**.
  *
  * C'est la fiche qui manquait : les obstacles n'étaient pas sélectionnables, et
@@ -397,6 +476,22 @@ export function creerFiche(element, { surFermeture = null } = {}) {
         `<p class="avertissement">${avertissement}</p>` +
         lignes(caracteristiquesObstacle(obstacle, incertitude, vocabulaire, controles)) +
         (obstacle.note ? `<h3>Note du relevé</h3><p class="avertissement">${obstacle.note}</p>` : '') +
+        `<button type="button" class="fermer" data-fermer>Fermer</button>`;
+      element.querySelector('[data-fermer]').addEventListener('click', () => this.vider());
+    },
+
+    afficherRangement(rangement, vocabulaire = {}) {
+      element.hidden = false;
+      const cotes = rangement.cotes ?? {};
+      const contradictoires = Object.values(cotes).filter((c) => c.etat === 'contradictoire');
+      const avertissement = contradictoires.length > 0
+        ? `${contradictoires.length} cote(s) en conflit dans la source. L'encombrement affiché est un gabarit de dessin, pas une mesure : il ne permet pas de conclure sur le poseur.`
+        : "L'encombrement affiché est un gabarit de dessin, pas une mesure.";
+      element.innerHTML =
+        `<h2>${rangement.reference ?? rangement.id}</h2>` +
+        `<p class="avertissement">${avertissement}</p>` +
+        lignes(caracteristiquesRangement(rangement, vocabulaire)) +
+        (rangement.source ? `<h3>Source</h3><p class="avertissement">${rangement.source}</p>` : '') +
         `<button type="button" class="fermer" data-fermer>Fermer</button>`;
       element.querySelector('[data-fermer]').addEventListener('click', () => this.vider());
     },

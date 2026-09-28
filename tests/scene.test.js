@@ -100,15 +100,21 @@ test('un encombrement borné se distingue d’un encombrement inconnu', () => {
 test('les composants se construisent — un marqueur par composant', () => {
   const c = construireComposants(modele);
   assert.equal(c.groupe.children.length, modele.composants.length);
-  assert.equal(c.meshes().length, modele.composants.length);
   for (const composant of modele.composants) {
     assert.ok(c.parId.has(composant.id), `${composant.reference} absent de la scène`);
   }
+  // `meshes()` ne retourne que ce qui est visible : rien n'est posé avant la
+  // première étape, et un composant non posé ne doit pas être désignable.
+  assert.equal(c.meshes().length, 0);
+  c.appliquerEtat(etatParGenre(sequence, modele, sequence.total).composants);
+  assert.equal(c.meshes().length, modele.composants.length);
 });
 
 test('les cheminements se construisent — un nœud par cheminement et par traversée', () => {
   const ch = construireCheminements(modele);
   assert.equal(ch.groupe.children.length, modele.cheminements.length + modele.traversees.length);
+  assert.equal(ch.meshes().length, 0);
+  ch.appliquerEtat(etatParGenre(sequence, modele, sequence.total));
   assert.ok(ch.meshes().length >= modele.cheminements.length);
 });
 

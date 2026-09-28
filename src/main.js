@@ -22,6 +22,8 @@ import { couleurDeCircuit } from './scene/composants.js';
 import { creerPilotageLibre, ETIQUETTES } from './ui/pilotage-libre.js';
 import { cadrageDe, distanceDeCadrage, anglesDepuisDirection } from './geometrie/cadrage.js';
 import { construireCotes } from './scene/cotes.js';
+import { construireRangements, descripteurDe } from './scene/rangement.js';
+import { COUCHES, GROUPES } from './scene/couches.js';
 import { creerPanneauEtape, resumeIncertitudes } from './ui/panneau-etape.js';
 import { creerFiche, lignesTrajets } from './ui/fiche-composant.js';
 import { creerControles } from './ui/controles.js';
@@ -55,7 +57,27 @@ export async function demarrer() {
   const graphe = construireGraphe(modele);
   const pourTrajets = { graphe, derives: deriverConducteurs(modele, graphe), enveloppes: noeudsDesEnveloppes(modele, graphe) };
   const trajets = construireTrajets(modele);
-  vue.scene.add(groupeLocal, obstacles.groupe, composants.groupe, cheminements.groupe, cotes.groupe, percages.groupe, trajets.groupe);
+  const rangements = construireRangements(modele);
+  vue.scene.add(groupeLocal, obstacles.groupe, composants.groupe, cheminements.groupe, cotes.groupe, percages.groupe, trajets.groupe, rangements.groupe);
+
+  // Les bascules s'appuient sur la DÉCLARATION de `couches.js`, pas sur une liste
+  // écrite ici. `main.js` ne décide donc pas à quelle couche appartient un groupe :
+  // il ne fait que fournir le module correspondant à chaque nom déclaré. Un groupe
+  // déclaré sans module se signale à l'exécution ; un module construit sans être
+  // déclaré, c'est le test de `couches.js` qui le voit.
+  const modules = { composants, cheminements, percages, trajets, cotes, rangements, obstacles, local: groupeLocal };
+  for (const { nom } of GROUPES) {
+    if (!modules[nom]) console.warn(`[garage] couche déclarée « ${nom} » sans module : la bascule ne peut pas la piloter`);
+  }
+  // La bascule d'une couche agit sur les groupes qui la portent — et sur les
+  // `cotes` avec l'électricité, dont le calque d'annotation lui est subordonné.
+  const basculer = (couche, visible) => {
+    for (const g of GROUPES) {
+      if (g.couches.includes(couche) || (g.nom === 'cotes' && couche === 'electricite')) {
+        modules[g.nom]?.basculer?.(visible);
+      }
+    }
+  };
 
   // Le pilotage au clavier du mode libre. Il ne s'active qu'en mode libre, et ses
   // touches sont disjointes de celles de la séquence — voir `pilotage-libre.js`.
@@ -171,12 +193,48 @@ export async function demarrer() {
   });
   majTracage();
 
+  // Les deux bascules de couche.
+  //
+  // Elles sont RÉALLEMENT indépendantes : chacune ne regarde que son état, et le
+  // geste sur l'une n'écrit pas l'état de l'autre. Les faire s'exclure — un bouton
+  // radio, deux états qui se nient — donnerait l'illusion d'un choix alors qu'il
+  // reste des questions sans réponse par l'installation.
+  //
+  // Elles ne sont pas persistées : au rechargement tout revient visible. Une maquette
+  // qui se souviendrait d'un cache incomplet afficherait un écran muet, sans que rien
+  // n'explique pourquoi.
+  const etatsCouches = new Map(COUCHES.map((c) => [c, true]));
+  const boutonsCouches = new Map();
+  const majCouche = (couche) => {
+    const visible = etatsCouches.get(couche);
+    const libelles = modele.presentation.libelles.boutonsCouches;
+    const bouton = boutonsCouches.get(couche);
+    bouton.textContent = libelles[visible ? `${couche}Masquer` : `${couche}Afficher`];
+    bouton.setAttribute('aria-pressed', String(visible));
+    basculer(couche, visible);
+  };
+
+  const conteneurCouches = el('couches');
+  for (const couche of COUCHES) {
+    const bouton = document.createElement('button');
+    bouton.type = 'button';
+    bouton.dataset.couche = couche;
+    bouton.addEventListener('click', () => {
+      etatsCouches.set(couche, !etatsCouches.get(couche));
+      majCouche(couche);
+    });
+    boutonsCouches.set(couche, bouton);
+    conteneurCouches.append(bouton);
+  }
+  for (const couche of COUCHES) majCouche(couche);
+
   // Bilan des cotes manquantes : un bouton discret dans l'en-tête, et le détail
   // dans la fiche. Il occupait auparavant un bandeau posé sur la maquette, ce qui
   // masquait en permanence ce qu'on venait regarder.
   const incertitudes = resumeIncertitudes({
     obstacles: obstacles.incertains,
     collisions: cheminements.collisions,
+    rangements: modele.rangements ?? [],
     libelles: modele.presentation.libelles,
   });
   const boutonCotes = el('cotes');
@@ -231,14 +289,19 @@ export async function demarrer() {
 
     // Les obstacles sont désignables au même titre que le reste : c'est sur eux
     // que se lisent leurs propres réserves de cote.
+    // Chaque module ne retourne que ses meshes VISIBLES : un objet d'une couche
+    // masquée n'est pas dans cette liste, et le clic passe au travers. C'est le
+    // contrat que `couches.js` documente, et il est ici appliqué par construction.
     const objet = vue.objetSous(e, [
       ...composants.meshes(),
       ...cheminements.meshes(),
+      ...rangements.meshes(),
       ...obstacles.meshes(),
     ]);
     const composant = composants.composantDe(objet);
     const cheminement = cheminements.cheminementDe(objet);
     const traversee = cheminements.traverseeDe(objet);
+    const rangement = rangements.rangementDe(objet);
     const obstacle = obstacles.obstacleDe(objet);
 
     rafraichir();
@@ -276,6 +339,11 @@ export async function demarrer() {
       const lignes = montrerTrajets({ genre: 'traversee', id: traversee.id });
       fiche.afficherTraversee(traversee, modele.provenance, vocabulaire, lignes);
       focaliser(traversee, 'traversee');
+    } else if (rangement) {
+      fiche.afficherRangement(rangement, modele.presentation.libelles);
+      // Le cadrage reçoit un descripteur, pas le rangement : la forme attendue est
+      // celle d'un composant, et c'est `rangement.js` qui fait la conversion.
+      focaliser(descripteurDe(rangement), 'rangement');
     } else if (obstacle) {
       fiche.afficherObstacle(
         obstacle,

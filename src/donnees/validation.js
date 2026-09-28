@@ -76,6 +76,15 @@ const FACES = ['interieur', 'exterieur'];
 const COMMUTATIONS = ['retour-commande', 'sur-place', 'entree-module'];
 const CLES_RELEVE = ['oeuvre', 'epaisseurParois', 'hauteurSousPlafond', 'repere', 'baies', 'obstacles'];
 
+// Le rangement n'est pas un composant : il n'est ni branché, ni percé, ni séquencé.
+// Les trois vocabulaires ci-dessous ne sont pas des variantes de ceux des
+// composants — ce sont les trois questions que la constitution oblige à poser sur
+// toute cote affichée : qui l'a dit, et dans quel état elle se trouve.
+const ORIGINES_COTE = ['releve', 'declaration-fabricant', 'gabarit-catalogue'];
+const ETATS_COTE = ['releve', 'inconnu', 'contradictoire'];
+/** Parois auxquelles un rangement peut s'accrocher : jamais au plafond. */
+const PAROIS_RANGEMENT = PAROIS;
+
 const defaut = (regle, cible, message) => ({ regle, cible, message });
 
 /** Un volume est une boîte alignée sur les axes, bien ordonnée. */
@@ -248,6 +257,62 @@ export function validerApport(apport, socle) {
         d.push(defaut('STRUCT', ou, 'contigu doit être une liste non vide d’identifiants de composants.'));
       else if (c.contigu.includes(c.id))
         d.push(defaut('STRUCT', ou, 'contigu ne peut pas désigner le composant lui-même.'));
+    }
+  }
+
+  // Le rangement (006). Il ne touche à aucun calcul électrique : ce qui suit ne
+  // contrôle que ce qui sera *affiché*, parce qu'une cote fausse affichée comme
+  // juste est le seul défaut que ce genre puisse introduire.
+  for (const r of apport.rangements ?? []) {
+    const ou = r.id ?? '(sans id)';
+    if (!estTexte(r.id)) d.push(defaut('STRUCT', ou, 'Rangement sans identifiant.'));
+    if (!estTexte(r.libelle)) d.push(defaut('STRUCT', ou, 'Rangement sans libellé.'));
+    if (!PAROIS_RANGEMENT.includes(r.paroi)) d.push(defaut('STRUCT', ou, `Paroi inconnue : ${r.paroi}.`));
+    if (!FACES.includes(r.face)) d.push(defaut('STRUCT', ou, `Face inconnue : ${r.face}.`));
+
+    for (const [nom, c] of Object.entries(r.cotes ?? {})) {
+      if (!c || typeof c !== 'object') {
+        d.push(defaut('STRUCT', ou, `cotes.${nom} doit être un objet { valeur, origine, etat, reserves }.`));
+        continue;
+      }
+      // Une cote « inconnue » n'a pas d'origine : c'est sa définition. La valider
+      // quand même rendrait impossible d'exprimer la seule chose que cet état dit.
+      if (c.etat !== 'inconnu' && !ORIGINES_COTE.includes(c.origine))
+        d.push(defaut('STRUCT', ou, `cotes.${nom}.origine inconnue : ${c.origine}.`));
+      if (!ETATS_COTE.includes(c.etat))
+        d.push(defaut('STRUCT', ou, `cotes.${nom}.etat hors des trois valeurs : ${c.etat}.`));
+      if (!Array.isArray(c.reserves))
+        d.push(defaut('STRUCT', ou, `cotes.${nom}.reserves doit être une liste.`));
+      // Les trois états ne sont pas trois graduations d'un même doute : chacun
+      // implique ce que les deux autres excluent. Une cote « inconnue » qui
+      // porterait une valeur s'affiche comme mesurée ; une cote « contradictoire »
+      // sans réserve n'est plus une contradiction, c'est une affirmation.
+      if (c.etat === 'inconnu' && c.valeur !== null)
+        d.push(defaut('STRUCT', ou, `cotes.${nom} est « inconnue » mais porte une valeur : ${c.valeur}.`));
+      if (c.etat === 'inconnu' && c.origine !== null)
+        d.push(defaut('STRUCT', ou, `cotes.${nom} est « inconnue » mais déclare une origine : ${c.origine}.`));
+      if (c.etat !== 'inconnu' && !estNombreOuNul(c.valeur))
+        d.push(defaut('STRUCT', ou, `cotes.${nom}.valeur doit être un nombre pour un état « ${c.etat} ».`));
+      if (c.etat === 'releve' && (c.reserves?.length ?? 0) > 0)
+        d.push(defaut('STRUCT', ou, `cotes.${nom} est « relevée » mais porte des réserves.`));
+      if (c.etat === 'contradictoire' && (c.reserves?.length ?? 0) === 0)
+        d.push(defaut('STRUCT', ou, `cotes.${nom} est « contradictoire » sans réserve : il faut en nommer les deux termes.`));
+    }
+
+    // Le volume dessiné vient TOUJOURS du gabarit, jamais des cotes : c'est ce qui
+    // permet de dessiner un élément dont la déclaration est contradictoire sans
+    // jamais trancher à sa place.
+    const g = r.gabarit;
+    if (!g || typeof g !== 'object') {
+      d.push(defaut('STRUCT', ou, 'Rangement sans gabarit : le volume dessiné ne peut pas venir des cotes.'));
+    } else {
+      if (!ORIGINES_COTE.includes(g.origine))
+        d.push(defaut('STRUCT', ou, `gabarit.origine inconnue : ${g.origine}.`));
+      if (!estTexte(g.mention))
+        d.push(defaut('STRUCT', ou, 'gabarit.mention doit dire que le volume est conventionnel.'));
+      if (!g.volume || typeof g.volume !== 'object')
+        d.push(defaut('STRUCT', ou, 'gabarit.volume doit être une boîte alignée sur les axes, bien ordonnée.'));
+      else d.push(...defautsDeVolume(g.volume, ou, 'gabarit.volume'));
     }
   }
 
@@ -580,6 +645,11 @@ export function validerModele(modele, sequence) {
   for (const id of compte(modele.etapes)) d.push(defaut('V11', id, `Identifiant d'étape en double : ${id}.`));
   for (const id of compte(modele.cheminements ?? [])) d.push(defaut('V11', id, `Identifiant de cheminement en double : ${id}.`));
   for (const id of compte(modele.traversees ?? [])) d.push(defaut('V11', id, `Identifiant de traversée en double : ${id}.`));
+  // Les rangements partagent l'espace d'identifiants des composants : ils
+  // apparaissent dans la même vue et la même fiche, et deux objets de même
+  // référence y seraient indiscernables.
+  for (const id of compte([...(modele.composants ?? []), ...(modele.rangements ?? [])]))
+    d.push(defaut('V11', id, `Identifiant de composant ou de rangement en double : ${id}.`));
 
   // Le module d'une commande sur module existe, est un module, et du même
   // circuit : un ordre ne franchit pas la protection d'un autre circuit.

@@ -93,6 +93,16 @@ export function cadrageDe(objet, nature, catalogue = null, local = null) {
     return { cible: centreDeVolume(v), etendue: etendueDeVolume(v), direction: null };
   }
 
+  // Rangement : même forme qu'un composant, donc même branche. `main.js` lui passe
+  // un descripteur `{ id, paroi, face, volume, libelle }` — le volume étant celui du
+  // GABARIT, c'est-à-dire ce qui est réellement dessiné. Sans ce descripteur, il
+  // faudrait ici une forme de plus, et c'est exactement ce que la tâche interdit.
+  if (nature === 'rangement') {
+    const v = objet.volume;
+    if (!v) return null;
+    return { cible: centreDeVolume(v), etendue: etendueDeVolume(v), direction: directionDeVue(objet) };
+  }
+
   if (nature === 'traversee') {
     const e = local?.epaisseurParois;
     if (!(e > 0)) return null;

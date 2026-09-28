@@ -138,5 +138,14 @@ export function construireTrajets(modele) {
     return appareils;
   }
 
-  return { groupe, afficher, effacer };
+/**
+   * Couper une couche. Comme partout ailleurs, la bascule porte sur le groupe et
+   * jamais sur chaque objet : c'est le seul endroit où three.js cesse de désigner
+   * ce qui est visible.
+   */
+  function basculer(visible) {
+    groupe.visible = visible;
+  }
+
+  return { groupe, afficher, basculer, effacer };
 }

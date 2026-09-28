@@ -168,3 +168,61 @@ test('la fiche porte le bilan des contrôles propres à cet obstacle', () => {
   assert.ok(controles.conforme > 0, 'le tracé est prouvé dégagé du tablier borné');
 });
 
+
+// ─── 4.5 — contradictoire n'est pas inconnu ───────────────────────────────────
+
+/** Un rangement dont on ne contrôle que les cotes qu'on lui donne. */
+const rangementAvec = (cotes) => ({ id: 'rg-t', reference: 'RG-T', libelle: 'Test', paroi: 'ouest', face: 'interieur', cotes });
+
+const CONTRA = { valeur: 1.44, unite: 'm', origine: 'declaration-fabricant', etat: 'contradictoire', reserves: ['« 55D x 144W » contre des barres réglables de 81,3 à 121,9 cm.'] };
+const INCONNUE = { valeur: null, unite: 'm', origine: null, etat: 'inconnu', reserves: [] };
+const RELEVEE = { valeur: 0.3, unite: 'm', origine: 'releve', etat: 'releve', reserves: [] };
+
+test('une cote contradictoire et une cote inconnue ne sont pas comptées de la même façon', () => {
+  const contradictoire = resumeIncertitudes({ rangements: [rangementAvec({ largeur: CONTRA })] });
+  const inconnue = resumeIncertitudes({ rangements: [rangementAvec({ largeur: INCONNUE })] });
+
+  assert.equal(contradictoire.resume, '1 cote à préciser');
+  assert.equal(inconnue.resume, '1 cote à relever');
+  assert.notEqual(contradictoire.resume, inconnue.resume);
+});
+
+test('un conflit se demande au maître d\'ouvrage, un relevé se fait sur place', () => {
+  const r = resumeIncertitudes({ rangements: [rangementAvec({ largeur: CONTRA, hauteur: INCONNUE })] });
+  assert.match(r.detail, /précision à demander au maître d'ouvrage/);
+  assert.match(r.detail, /relevé à faire/);
+  // Et l'inverse ne doit JAMAIS apparaître : demander un relevé d'une source
+  // contradictoire enverrait l'installateur mesurer une fiche fabricant.
+  assert.doesNotMatch(
+    r.detail.replace(/précision à demander au maître d'ouvrage/g, ''),
+    /relevé à faire[\s\S]*largeur|relevé à faire[\s\S]*contradict/,
+  );
+});
+
+test('une cote relevée ne vient pas au bilan', () => {
+  const r = resumeIncertitudes({ rangements: [rangementAvec({ largeur: RELEVEE })] });
+  assert.equal(r.rien, true, 'rien à dire sur une cote établie');
+});
+
+test('le bilan compte les cotes, pas les rangements', () => {
+  // Un rack dont quatre cotes sont en conflit est un rack, pas quatre problèmes
+  // d'encombrement : les deux nombres ne se confondent pas dans le résumé.
+  const r = resumeIncertitudes({
+    rangements: [rangementAvec({ a: CONTRA, b: CONTRA, c: CONTRA, d: CONTRA })],
+  });
+  assert.equal(r.resume, '4 cotes à préciser');
+  assert.match(r.detail, /1 élément du rangement concerné/);
+});
+
+test('les deux natures de réserve s\'annoncent ensemble, sans se fusionner', () => {
+  const r = resumeIncertitudes({ rangements: [rangementAvec({ largeur: CONTRA, hauteur: INCONNUE })] });
+  assert.equal(r.resume, '1 cote à préciser, 1 cote à relever');
+});
+
+test('le bilan des cotes de rangement ne dépend pas des collisions', () => {
+  // Les obstacles peuvent n'avoir aucune réserve : leur tableau sera vide, et le
+  // bilan doit tout de même s'ouvrir sur les cotes de rangement.
+  const r = resumeIncertitudes({ obstacles: [], rangements: [rangementAvec({ largeur: CONTRA })] });
+  assert.equal(r.rien, false);
+  assert.match(r.detail, /Cotes de rangement/);
+});

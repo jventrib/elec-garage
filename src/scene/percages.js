@@ -150,5 +150,14 @@ export function construirePercages(modele, socle) {
     groupe.visible = courants.length > 0;
   }
 
-  return { groupe, afficher, percagesDeLEtape: (e) => percagesDeLEtape(modele, socle, e) };
+/**
+   * Couper une couche. Comme partout ailleurs, la bascule porte sur le groupe et
+   * jamais sur chaque objet : c'est le seul endroit où three.js cesse de désigner
+   * ce qui est visible.
+   */
+  function basculer(visible) {
+    groupe.visible = visible;
+  }
+
+  return { groupe, afficher, basculer, percagesDeLEtape: (e) => percagesDeLEtape(modele, socle, e) };
 }

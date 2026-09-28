@@ -9,9 +9,10 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { SOCLE, PRISES, ECLAIRAGE, BORNE } from './_aides.js';
+import { SOCLE, PRISES, ECLAIRAGE, BORNE, RANGEMENT } from './_aides.js';
 import { fusionner } from '../src/donnees/chargement.js';
 import { cadrageDe, distanceDeCadrage, directionDeVue, anglesDepuisDirection } from '../src/geometrie/cadrage.js';
+import { descripteurDe } from '../src/scene/rangement.js';
 
 const socle = () => SOCLE();
 const modele = () => fusionner(socle(), [PRISES(), ECLAIRAGE(), BORNE()]);
@@ -104,4 +105,73 @@ test('une direction se convertit en angles d’orbite', () => {
   const b = anglesDepuisDirection({ x: 0, y: 0, z: -1 });
   assert.ok(Math.abs(b.phi - Math.PI) < 1e-9, 'phi au nadir pour une vue par en dessous');
   assert.equal(anglesDepuisDirection(null), null);
+});
+
+// ─── Le rangement se cadre comme un composant ───────────────────────────────────
+
+/** Le modèle des rangements, distinct de `modele()` : ajouter un apport ici
+ * changerait le nombre de composants que comptent les tests ci-dessus. */
+const avecRangements = () => fusionner(SOCLE(), [PRISES(), ECLAIRAGE(), BORNE(), RANGEMENT()]);
+
+test('un rangement se cadre sur le volume de son gabarit', () => {
+  const m = avecRangements();
+  const r = m.rangements.find((x) => x.id === 'rg-01');
+  assert.ok(r, 'le rack est déclaré');
+  const d = descripteurDe(r);
+
+  // La forme est celle d'un composant : c'est ce qui permet à `cadrageDe` de ne pas
+  // connaître une deuxième fois les règles du cadrage.
+  assert.deepEqual(Object.keys(d).sort(), ['face', 'id', 'libelle', 'paroi', 'volume']);
+  assert.equal(d.id, r.id);
+  assert.equal(d.paroi, r.paroi);
+
+  const c = cadrageDe(d, 'rangement');
+  assert.ok(c, 'il se cadre');
+  const { min, max } = r.gabarit.volume;
+  assert.deepEqual(c.cible, {
+    x: (min.x + max.x) / 2,
+    y: (min.y + max.y) / 2,
+    z: (min.z + max.z) / 2,
+  });
+  assert.ok(Math.abs(c.etendue - Math.max(max.x - min.x, max.y - min.y, max.z - min.z)) < 1e-9);
+});
+
+test('le cadrage d\'un rangement regarde la paroi, de l\'intérieur', () => {
+  const m = avecRangements();
+  const d = descripteurDe(m.rangements.find((x) => x.id === 'rg-01'));
+  const c = cadrageDe(d, 'rangement');
+  // Le rack est sur la paroi ouest, face intérieure : on le regarde depuis la pièce,
+  // donc la caméra se place du côté du centre et regarde vers l'ouest.
+  assert.equal(d.paroi, 'ouest');
+  assert.deepEqual(c.direction, directionDeVue(d));
+  assert.equal(c.direction.x, 1, 'vers l\'est, c\'est-à-dire vers l\'intérieur de la pièce');
+});
+
+test('le cadrage ignore les cotes contradictoires et cadre le gabarit', () => {
+  // Le rack déclare 1,44 x 0,55 x 0,55 m, toutes trois contradictoires. Le cadre ne
+  // doit donc PAS suivre ces valeurs : il suit ce qui est dessiné, conventionnel.
+  const m = avecRangements();
+  const r = m.rangements.find((x) => x.id === 'rg-01');
+  const d = descripteurDe(r);
+  const c = cadrageDe(d, 'rangement');
+  const { min, max } = r.gabarit.volume;
+
+  // Le gabarit est bien plus HAUT que la hauteur déclarée : 1,44 m contre 0,55 m.
+  // C'est la distinction qui compte, et elle se lit sur un seul axe.
+  //
+  // L'étendue, elle, est le PLUS GRAND côté : ici 1,50 m le long de la paroi, pas la
+  // hauteur. Tester le cadrage par « la plus grande cote déclarée » donnerait 1,44 m —
+  // proche de la bonne valeur pour la mauvaise raison, et cela passerait quand même.
+  // La hauteur se vérifie donc sur l'axe, là où le gabarit et la déclaration divergent.
+  assert.equal(r.cotes.hauteur.valeur, 0.55);
+  assert.equal(max.y - min.y, 1.44);
+  assert.ok(Math.abs(max.z - min.z - 1.5) < 1e-9);
+  assert.ok(Math.abs(c.etendue - 1.5) < 1e-9, 'le cadre suit le gabarit');
+  assert.ok(c.etendue > r.cotes.hauteur.valeur * 1.5, 'et il dépasse la hauteur déclarée');
+});
+
+test('un rangement sans gabarit ne se cadre pas, plutôt que de se cadrer au hasard', () => {
+  const m = avecRangements();
+  const sansGabarit = { id: 'rg-x', paroi: 'ouest', face: 'interieur', libelle: 'sans gabarit' };
+  assert.equal(cadrageDe(descripteurDe(sansGabarit), 'rangement'), null);
 });

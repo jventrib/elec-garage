@@ -13,6 +13,8 @@
     "contourAjout": "#11181d",
     "cheminement": "#2c6e9b",
     "traversee": "#7d5ba6",
+    "rangement": "#3f7d6b",
+    "rangementGabarit": "#8a6d3b",
     "collision": "#c0392b"
   },
   "paletteCircuits": [
@@ -46,7 +48,9 @@
     "arete": 0.35,
     "obstacle": 0.28,
     "obstacleIncertain": 0.12,
-    "cheminementEnPlace": 1
+    "cheminementEnPlace": 1,
+    "rangement": 0.35,
+    "rangementGabarit": 0.22
   },
   "eclairage": {
     "hemispherique": {
@@ -149,6 +153,37 @@
       "releve": "relevé",
       "borne": "borné, non mesuré",
       "inconnu": "non relevé"
+    },
+    "couches": {
+      "electricite": "Électricité",
+      "rangement": "Rangement"
+    },
+    "boutonsCouches": {
+      "electriciteMasquer": "Masquer l'électricité",
+      "electriciteAfficher": "Afficher l'électricité",
+      "rangementMasquer": "Masquer le rangement",
+      "rangementAfficher": "Afficher le rangement"
+    },
+    "etatsCote": {
+      "releve": "relevée",
+      "inconnu": "inconnue",
+      "contradictoire": "contradictoire"
+    },
+    "originesCote": {
+      "releve": "relevé sur place",
+      "declaration-fabricant": "déclaration fabricant",
+      "gabarit-catalogue": "gabarit de catalogue"
+    },
+    "mentionGabarit": "conventionnel — non relevé",
+    "rangement": {
+      "titreCotes": "Cotes",
+      "origine": "Origine",
+      "etat": "État",
+      "reserves": "Réserves",
+      "fixation": "Fixation",
+      "fixationInconnue": "Mode de fixation non résolu",
+      "aucuneCote": "Aucune cote déclarée",
+      "valeurAbsente": "non déterminée"
     },
     "baies": {
       "porte-sectionnelle": "la porte sectionnelle",

@@ -21,15 +21,31 @@ export const CLASSE_REPLIE = 'etape-repliee';
  * relevées sans être mesuré — autorise le seul verdict favorable. Les confondre
  * ferait passer pour indécidable un dégagement démontré.
  */
-export function resumeIncertitudes({ obstacles = [], collisions = null, libelles = {} } = {}) {
+export function resumeIncertitudes({ obstacles = [], collisions = null, rangements = [], libelles = {} } = {}) {
   const bornes = obstacles.filter((o) => o.borne);
   const inconnus = obstacles.filter((o) => !o.borne);
   const sansConclusion = collisions ? collisions.nonConcluants : 0;
   const etablies = collisions ? collisions.collisions : 0;
 
+  // Les cotes contradictoires et les cotes inconnues ne se comptent pas ensemble, et
+  // surtout ne demandent pas la même chose.
+  //
+  // Une cote INCONNUE demande un relevé : personne n'a mesuré. Une cote
+  // CONTRADICTOIRE demande une PRÉCISION : la source dit deux choses, et la lever
+  // n'est pas mesurer, c'est demander laquelle des deux est la bonne. Les confondre
+  // enverrait l'installateur mesurer une fiche fabricant — et revenir avec la même
+  // réponse.
+  const cotes = rangements.flatMap((r) =>
+    Object.entries(r.cotes ?? {}).map(([nom, c]) => ({ rangement: r, nom, ...c })),
+  );
+  const contradictoires = cotes.filter((c) => c.etat === 'contradictoire');
+  const indeterminees = cotes.filter((c) => c.etat !== 'contradictoire' && c.etat !== 'releve');
+  const elementsTouches = new Set([...contradictoires, ...indeterminees].map((c) => c.rangement.id)).size;
+  const cotesTotal = contradictoires.length + indeterminees.length;
+
   // Une collision établie compte, même sans aucune incertitude par ailleurs :
   // c'est le constat le plus grave que ce contrôle sait produire.
-  if (obstacles.length === 0 && sansConclusion === 0 && etablies === 0) {
+  if (obstacles.length === 0 && cotesTotal === 0 && sansConclusion === 0 && etablies === 0) {
     return { rien: true, resume: '', detail: '', collisions: 0 };
   }
 
@@ -45,6 +61,15 @@ export function resumeIncertitudes({ obstacles = [], collisions = null, libelles
     parties.push(`${inconnus.length} ${pl(inconnus.length, 'cote')} ${pl(inconnus.length, 'manquante')}`);
   }
   if (bornes.length > 0) parties.push(`${bornes.length} ${pl(bornes.length, 'borné')}`);
+  // Le mot dit ce qu'il faut faire : « à préciser » n'est pas « à relever ». Ces
+  // deux locutions ne s'accordent pas — « cotes à précisers » n'est pas français —
+  // alors que « cotes manquantes » s'accorde. L'accord se fait au cas par cas.
+  if (contradictoires.length > 0) {
+    parties.push(`${contradictoires.length} ${pl(contradictoires.length, 'cote')} à préciser`);
+  }
+  if (indeterminees.length > 0) {
+    parties.push(`${indeterminees.length} ${pl(indeterminees.length, 'cote')} à relever`);
+  }
 
   const rendus = libelles.rendus ?? {};
   const ligne = (o) =>
@@ -65,9 +90,34 @@ export function resumeIncertitudes({ obstacles = [], collisions = null, libelles
     );
   }
 
+  // Les cotes en conflit se listent à part, avec LEUR conflit. Les réduire à un
+  // compte renverrait à la fiche, et c'est précisément la fiche qu'il faut ouvrir ;
+  // mais leur nombre doit s'annoncer ici pour qu'on sache qu'il y a quelque chose à
+  // aller voir.
+  const tableauCotes = cotesTotal > 0
+    ? `<h4>Cotes de rangement</h4>` +
+      `<table><thead><tr><th>Élément</th><th>Cote</th><th>État</th><th>Ce qu'il faut</th></tr></thead><tbody>` +
+      [...contradictoires, ...indeterminees]
+        .map((c) => {
+          const etat = (libelles.etatsCote ?? {})[c.etat] ?? c.etat;
+          const demande = c.etat === 'contradictoire'
+            ? 'précision à demander au maître d\'ouvrage'
+            : 'relevé à faire';
+          return `<tr><td>${c.rangement.libelle ?? c.rangement.reference ?? c.rangement.id}</td>` +
+            `<td>${c.nom}</td><td>${etat}</td><td>${demande}</td></tr>`;
+        })
+        .join('') +
+      `</tbody></table>` +
+      (elementsTouches > 0
+        ? `<p>${elementsTouches} ${pl(elementsTouches, 'élément')} du rangement ${pl(elementsTouches, 'concerné')}. ` +
+          `Cliquer un rangement ouvre sa fiche, cote par cote.</p>`
+        : '')
+    : '';
+
   const detail =
     `<table><thead><tr><th>Obstacle</th><th>Ce qui manque</th><th>Dessiné</th></tr></thead>` +
     `<tbody>${[...inconnus, ...bornes].map(ligne).join('')}</tbody></table>` +
+    tableauCotes +
     corps.join('');
 
   return { rien: false, resume: parties.join(', '), detail, collisions: etablies };

@@ -150,8 +150,28 @@ export function construireComposants(modele) {
     }
   }
 
-  const meshes = () => [...parId.values()].map((e) => e.mesh);
+  /**
+   * Le rayon de three.js ne teste PAS la visibilité : un mesh masqué reste
+   * désignable. `meshes()` filtre donc sur la visibilité du groupe ET de son noeud —
+   * le parent porte la bascule, l'enfant porte l'état de pose, et il faut les deux.
+   */
+  const visibles = () => (groupe.visible ? [...parId.values()] : []).filter((e) => e.noeud.visible);
+
+  const meshes = () => visibles().map((e) => e.mesh);
   const composantDe = (objet) => objet?.userData?.composant ?? null;
 
-  return { groupe, appliquerEtat, souligner, teinterExtremites, meshes, composantDe, parId };
+/**
+   * Couper une couche. La bascule porte sur le GROUPE, jamais sur chaque objet :
+   * un objet masqué individuellement resterait désignable au rayon, et c'est le
+   * défaut que three.js ne protège pas de lui-même.
+   *
+   * Elle n'appelle PAS `appliquerEtat` : masquer une couche ne fige pas la pose,
+   * et la réafficher ne la recalcule pas. Le calcul de pose ne dépend pas de ce que
+   * l'écran montre.
+   */
+  function basculer(visible) {
+    groupe.visible = visible;
+  }
+
+  return { groupe, appliquerEtat, basculer, souligner, teinterExtremites, meshes, composantDe, parId };
 }

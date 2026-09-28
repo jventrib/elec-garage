@@ -1,0 +1,218 @@
+{
+  "fonctionnalite": "006-rangement",
+  "provenance": {
+    "schemaUnifilaire": null,
+    "noteDeCalcul": null,
+    "releve": "2026-09-27"
+  },
+  "composants": [],
+  "cheminements": [],
+  "rangements": [
+    {
+      "id": "et-01",
+      "reference": "ET-01",
+      "libelle": "Étagère murale — haute",
+      "paroi": "ouest",
+      "face": "interieur",
+      "type": "etagere-murale",
+      "cotes": {
+        "largeur": {
+          "valeur": 1.2,
+          "unite": "m",
+          "origine": "gabarit-catalogue",
+          "etat": "releve",
+          "reserves": []
+        },
+        "profondeur": {
+          "valeur": 0.25,
+          "unite": "m",
+          "origine": "gabarit-catalogue",
+          "etat": "releve",
+          "reserves": []
+        },
+        "hauteur": {
+          "valeur": 0.25,
+          "unite": "m",
+          "origine": "gabarit-catalogue",
+          "etat": "releve",
+          "reserves": []
+        },
+        "hauteurMontage": {
+          "valeur": 2.0,
+          "unite": "m",
+          "origine": "gabarit-catalogue",
+          "etat": "releve",
+          "reserves": []
+        }
+      },
+      "gabarit": {
+        "origine": "gabarit-catalogue",
+        "mention": "conventionnel — non relevé",
+        "volume": {
+          "min": {
+            "x": 0,
+            "y": 0.6,
+            "z": 2.0
+          },
+          "max": {
+            "x": 0.25,
+            "y": 1.8,
+            "z": 2.25
+          }
+        }
+      },
+      "fabricant": null,
+      "referenceProduit": null,
+      "source": "Gabarit de représentation : aucun produit retenu à ce jour."
+    },
+    {
+      "id": "et-02",
+      "reference": "ET-02",
+      "libelle": "Étagère murale — basse",
+      "paroi": "ouest",
+      "face": "interieur",
+      "type": "etagere-murale",
+      "cotes": {
+        "largeur": {
+          "valeur": 1.2,
+          "unite": "m",
+          "origine": "gabarit-catalogue",
+          "etat": "releve",
+          "reserves": []
+        },
+        "profondeur": {
+          "valeur": 0.25,
+          "unite": "m",
+          "origine": "gabarit-catalogue",
+          "etat": "releve",
+          "reserves": []
+        },
+        "hauteur": {
+          "valeur": 0.25,
+          "unite": "m",
+          "origine": "gabarit-catalogue",
+          "etat": "releve",
+          "reserves": []
+        },
+        "hauteurMontage": {
+          "valeur": 1.0,
+          "unite": "m",
+          "origine": "gabarit-catalogue",
+          "etat": "releve",
+          "reserves": []
+        }
+      },
+      "gabarit": {
+        "origine": "gabarit-catalogue",
+        "mention": "conventionnel — non relevé",
+        "volume": {
+          "min": {
+            "x": 0,
+            "y": 0.6,
+            "z": 1.0
+          },
+          "max": {
+            "x": 0.25,
+            "y": 1.8,
+            "z": 1.25
+          }
+        }
+      },
+      "fabricant": null,
+      "referenceProduit": null,
+      "source": "Gabarit de représentation : aucun produit retenu à ce jour."
+    },
+    {
+      "id": "rg-01",
+      "reference": "RG-01",
+      "libelle": "Rack mural pliable à roues",
+      "paroi": "ouest",
+      "face": "interieur",
+      "type": "rack-mural-pliable",
+      "cotes": {
+        "largeur": {
+          "valeur": 1.44,
+          "unite": "m",
+          "origine": "declaration-fabricant",
+          "etat": "contradictoire",
+          "reserves": [
+            "« Item Dimensions D x W x H  55D x 144W x 55H centimetres » contre des barres de support réglables de 81,3 à 121,9 cm. La page ne rattache jamais la « length » en prose à l'un des axes D, W ou H : la contradiction peut porter sur n'importe lequel des trois."
+          ]
+        },
+        "profondeur": {
+          "valeur": 0.55,
+          "unite": "m",
+          "origine": "declaration-fabricant",
+          "etat": "contradictoire",
+          "reserves": [
+            "55 cm déclarés en D. Non rattachables : la « length » réglable de 81,3 à 121,9 cm n'est rattachée par la page à aucun axe, D compris."
+          ]
+        },
+        "hauteur": {
+          "valeur": 0.55,
+          "unite": "m",
+          "origine": "declaration-fabricant",
+          "etat": "contradictoire",
+          "reserves": [
+            "« 55H centimetres » n'est qualifié ni comme état déployé ni comme état replié, alors que le produit est « Foldable ». La page ne permet pas de conclure."
+          ]
+        },
+        "hauteurMontage": {
+          "valeur": null,
+          "unite": "m",
+          "origine": null,
+          "etat": "inconnu",
+          "reserves": [
+            "Aucune source ne déclare la hauteur de fixation. Le gabarit la fixe à 0,80 m pour représenter la figure seulement."
+          ]
+        },
+        "charge": {
+          "valeur": 136,
+          "unite": "kg",
+          "origine": "declaration-fabricant",
+          "etat": "contradictoire",
+          "reserves": [
+            "« Shelf Weight Capacity 136 Kilograms » désigne une charge par tablette ; le titre, la puce commerciale et le module fabricant attribuent les mêmes 136 kg au rack entier. La page ne dit pas non plus si la charge est statique ou dynamique."
+          ]
+        },
+        "nombreNiveaux": {
+          "valeur": 4,
+          "unite": null,
+          "origine": "declaration-fabricant",
+          "etat": "contradictoire",
+          "reserves": [
+            "« Number of Shelves 4 » et « Shelf Type Step Shelf » en prose « 4 pneus standard ». Sur un rack à gradins, 4 pneus ne remplissent pas quatre gradins : le nombre de niveaux n'est pas réconcilié."
+          ]
+        }
+      },
+      "gabarit": {
+        "origine": "gabarit-catalogue",
+        "mention": "conventionnel — non relevé",
+        "volume": {
+          "min": {
+            "x": 0,
+            "y": 2.08,
+            "z": 0.8
+          },
+          "max": {
+            "x": 0.55,
+            "y": 3.52,
+            "z": 2.3
+          }
+        }
+      },
+      "fixation": {
+        "mode": null,
+        "etat": "inconnu",
+        "reserves": [
+          "« Our product does not come with expansion bolts for installation on concrete wall ». Les parois du garage sont en béton et aucune tige n'est fournie. La nature de la paroi — creuse ou pleine — n'a pas été relevée, ce qui empêche de choisir entre scellement chimique et tiges adaptées. Aucune cote de perçage n'est produite.",
+          "Aucune donnée de fixation n'est déclarée : ni diamètre de tige, ni référence d'ancrage, ni entraxe, ni couple de serrage."
+        ]
+      },
+      "fabricant": "VEVOR",
+      "referenceProduit": "TC0513",
+      "asin": "B0DPM1TXK6",
+      "source": "Fiche Amazon.fr, consultée le 2026-09-27. Voir dossier/006-rangement/research.md."
+    }
+  ]
+}
