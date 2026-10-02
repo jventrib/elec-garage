@@ -24,7 +24,7 @@ import { FORMES, COTES_DE_FORME, calibreDe, sectionArretee } from '../geometrie/
 
 const RACCORDEMENTS = ['extremites', 'lateral'];
 import { construireGraphe, atteignablesDepuisTableau } from '../geometrie/graphe.js';
-import { pointSurProfile } from '../geometrie/cheminement.js';
+import { NATURES, estCordage, pointSurProfile } from '../geometrie/cheminement.js';
 
 /**
  * Rôle d'un type, lu au catalogue. Le code ne porte aucune liste de types :
@@ -262,7 +262,24 @@ export function validerApport(apport, socle) {
   const pilotesVus = new Map();
   for (const c of apport.composants ?? []) {
     const ou = c.id ?? '(sans id)';
+    // Les POINTS DE RACCORDEMENT. Un composant se rejoint par un point unique, son
+    // centre, tant que ce n'est pas faux. Un appareil dont les conducteurs entrent
+    // et sortent par ses EXTRÉMITÉS déclare alors `raccords` : le graphe le relie à
+    // ces points-là, et les relie entre eux. Sans cela, un tube de LED passe-montant
+    // ne pourrait être alimenté que par son milieu, et toute dérivation d'un bout à
+    // l'autre passerait par un nœud qui n'existe pas.
+    if (c.raccords !== undefined && c.raccords !== null) {
+      if (!Array.isArray(c.raccords) || c.raccords.length < 2)
+        d.push(defaut('STRUCT', ou, 'raccords doit porter au moins deux points : un seul ne ferait que redéclarer le centre.'));
+      else {
+        for (const [i, pt] of c.raccords.entries()) {
+          if (!pt || !estNombre(pt.x) || !estNombre(pt.y) || !estNombre(pt.z))
+            d.push(defaut('STRUCT', ou, `raccords[${i}] incomplet : x, y et z doivent être des nombres.`));
+        }
+      }
+    }
     const aPilote = c.pilote !== undefined && c.pilote !== null;
+
     const aCommutation = c.commutation !== undefined && c.commutation !== null;
     const aModule = c.module !== undefined && c.module !== null;
     if (!aPilote && !aCommutation && !aModule) continue;
@@ -345,11 +362,26 @@ export function validerApport(apport, socle) {
     if (!estTexte(ch.reference)) d.push(defaut('STRUCT', ou, 'Cheminement sans référence.'));
     if (!Array.isArray(ch.circuits) || ch.circuits.length === 0)
       d.push(defaut('STRUCT', ou, 'Un cheminement doit déclarer au moins un circuit porté.'));
+    // La NATURE : ce que le cheminement EST. Un conduit se pose à la colle ou à la
+    // vis, garde une section, et ne part pas en biais ; un cordage est un lien
+    // souple d'appareil à appareil, sans section de conduit. La distinguer ici
+    // plutôt que dans chaque règle est ce qui permet à V13 d'exempter le
+    // cordage — et à la liste de fournitures de ne pas le compter en mètres de
+    // tube.
+    if (ch.nature !== undefined && !NATURES.includes(ch.nature))
+      d.push(defaut('STRUCT', ou, `nature inconnue : ${ch.nature}. Admises : ${NATURES.join(', ')}.`));
+    const cordage = estCordage(ch);
     // La SECTION, discriminée par sa forme. Un cheminement n'est plus forcément
     // un tube : depuis la constitution v1.13.0 une goulotte peut tenir lieu de
     // conduit, et sa section rectangulaire ne se ramène pas à un diamètre.
+    // Un CORDAGE n'en déclare pas : le diamètre d'un câble multiconducteur n'est
+    // pas un diamètre intérieur, et le faire entrer dans cette grille inviterait à
+    // lui comparer un taux de remplissage qui n'a pas de sens.
     const sec = ch.section;
-    if (!sec || typeof sec !== 'object') {
+    if (cordage) {
+      if (sec !== undefined)
+        d.push(defaut('STRUCT', ou, 'Un cordage ne déclare pas de section : ce n’est pas un contenant.'));
+    } else if (!sec || typeof sec !== 'object') {
       d.push(defaut('STRUCT', ou, 'section absente : un cheminement doit déclarer sa forme et ses cotes.'));
     } else if (!FORMES.includes(sec.forme)) {
       d.push(defaut('STRUCT', ou, `section.forme inconnue : ${sec.forme}. Formes admises : ${FORMES.join(', ')}.`));
@@ -619,9 +651,16 @@ export function validerCheminements(modele) {
   const arrondi = (v) => Math.round(v * 1000) / 1000;
 
   // V13 et V14 — orthogonalité et appui sur une face
+  //
+  // V13 est la règle d'un CONDUIT : il ne part pas en biais parce qu'un tube se
+  // pose à la colle ou à la vis, et qu'un coude n'existe pas. Un CORDAGE n'a pas
+  // de pose de ce genre — il part de fait en biais, c'est sa géométrie même, et
+  // lui faire porter la règle reviendrait à déclarer impossible une pose qui est
+  // celle de tous les bridages d'éclairage. V14, en revanche, s'applique aux deux :
+  // un cordon repose sur son nu, il ne flotte pas.
   for (const ch of modele.cheminements ?? []) {
     for (const [i, segment] of (ch.segments ?? []).entries()) {
-      if (!estOrthogonal(segment)) {
+      if (!estCordage(ch) && !estOrthogonal(segment)) {
         d.push(
           defaut('V13', ch.id, `« ${ch.reference} » segment ${i + 1} n'est pas orthogonal : la constitution impose des parcours horizontaux ou verticaux.`),
         );
@@ -1007,6 +1046,39 @@ export function validerCheminements(modele) {
     }
     if (!sortieDeTraversee(local, t)) {
       d.push(defaut('V18', t.id, `« ${t.reference} » est déclarée sur une face sans nu extérieur.`));
+    }
+  }
+
+  // V24 — un point de raccordement déclaré tombe sur l'appareil qui le déclare
+  //
+  // `raccords` est une promesse de POSITION : « les conducteurs entrent et sortent
+  // ici ». Le graphe la prend au pied de la lettre, crée le nœud, et câble l'appareil
+  // dessus. Un point fantaisiste ne resterait donc pas inerte — il hangerait une
+  // dérivation dans le vide, à l'écart de l'appareil qu'elle prétend desservir, et
+  // aucun autre contrôle ne le verrait : le nœud serait « Correct », il serait
+  // simplement au mauvais endroit.
+  //
+  // La règle ferme cette porte en exigeant que le point tombe dans l'enveloppe de
+  // l'appareil — son gabarit de type s'il ne déclare pas ses propres dimensions.
+  // C'est l'inverse de V21, qui exigeait qu'une boîte ne reçoive pas plus d'entrées
+  // qu'elle n'en ouvre : là, on vérifie que l'entrée annoncée tombe bien dedans.
+  const tolRaccord = modele.presentation?.toleranceRaccordement ?? 0;
+  for (const c of modele.composants ?? []) {
+    if (!Array.isArray(c.raccords)) continue;
+    const avecGabarit = c.dimensions ? c : { ...c, dimensions: gabaritDeType(modele, c.type) };
+    if (!enveloppeDeBoite(local, avecGabarit)) {
+      d.push(
+        defaut('V24', c.id, `« ${c.reference} » déclare ${c.raccords.length} points de raccordement alors que son gabarit est inconnu : rien ne borne ces positions.`),
+      );
+      continue;
+    }
+    for (const [i, pt] of c.raccords.entries()) {
+      if (!pt || !estNombre(pt.x) || !estNombre(pt.y) || !estNombre(pt.z)) continue;
+      if (!pointDansBoite(local, avecGabarit, pt, tolRaccord)) {
+        d.push(
+          defaut('V24', c.id, `« ${c.reference} » raccord ${i + 1} en (${arrondi(pt.x)} ; ${arrondi(pt.y)} ; ${arrondi(pt.z)}) m tombe hors de son enveloppe : ce point n'est pas sur l'appareil.`),
+        );
+      }
     }
   }
 

@@ -46,6 +46,66 @@
       "role": "appareillage"
     },
     {
+      "id": "reglette-led",
+      "libelle": "réglette LED 120 cm",
+      "gabarit": {
+        "largeur": 1.2,
+        "hauteur": 0.065,
+        "profondeur": 0.058
+      },
+      "role": "appareillage",
+      "ficheProduit": {
+        "marque": "HOFTRONIC",
+        "reference": "Pack de 6 réglettes LED 120 cm, IP65, 36 W, 4000 K",
+        "source": "https://amzn.eu/d/08tS368c",
+        "dateSource": "2026-09-28",
+        "natureCotes": "declaration-fabricant",
+        "cotesDeclarees": {
+          "longueur": { "valeur": 1.2, "unite": "m", "origine": "declaration-fabricant" },
+          "largeur": { "valeur": 0.065, "unite": "m", "origine": "declaration-fabricant" },
+          "hauteur": { "valeur": 0.058, "unite": "m", "origine": "declaration-fabricant" }
+        },
+        "repartitionAuPlafond": {
+          "largeur": "x — longueur de la réglette",
+          "hauteur": "y — largeur de la réglette",
+          "profondeur": "z — hauteur sous plafond"
+        },
+        "montage": "contre-plafond",
+        "indices": { "etancheite": "IP65", "chocs": "IK07", "classe": "II" },
+        "caracteristiques": {
+          "puissance": "36 W",
+          "temperature": "4000 K",
+          "classeEnergetique": "E",
+          "dureeDeVie": "25000 h",
+          "temperatureDeService": "-20 °C à +40 °C",
+          "raccordement": "connectables entre elles, jusqu'à 10 selon la fiche"
+        },
+        "liaisonInterne": {
+          "declare": "réglettes reliables entre elles par un câblage interne, pré-équipé d'usine",
+          "origine": "declaration-fabricant",
+          "consequence": "Le lien qui relie deux réglettes n'est ni une gaine, ni un câble commandé : il fait partie de l'appareil. Il n'apparaît donc dans aucun métré, mais il est réel — 1,20 m par liaison, la longueur même de la réglette — et il entre dans le trajet du courant et dans la chute de tension. C'est ce qui autorise le pontage : une réglette alimentée par sa voisine, et non par un piquage."
+        },
+        "contradictions": [
+          {
+            "sujet": "Flux lumineux",
+            "valeurs": ["4230 lm (titre)", "4320 lm (descriptif)"],
+            "consequence": "Le flux n'est pas arrêté. La valeur retenue pour un calcul d'éclairement reste à confirmer sur la fiche du fabricant."
+          },
+          {
+            "sujet": "Matière du diffuseur",
+            "valeurs": ["inox (tableau de caractéristiques)", "ABS et polycarbonate (descriptif)"],
+            "consequence": "La matière n'est pas arrêtée. Aucune conséquence sur l'encombrement, que la matière ne change pas ; à confirmer sur la fiche du fabricant."
+          },
+          {
+            "sujet": "Désignation",
+            "valeurs": ["« LED Strip Lights » / « LED Fluorescent Lamp » (titre)", "« Light Fixture Form : Close to Ceiling » (tableau)"],
+            "consequence": "La dénomination commerciale évoque une réglette nue, la forme déclarée un appareil plaqué au plafond. C'est la FORME qui est retenue pour la pose ; l'encombrement 6,5 × 5,8 cm ne correspond pas à une réglette nue."
+          }
+        ],
+        "reserve": "Les cotes sont des déclarations fabricant, non des relevés. Elles servent l'implantation, pas un procès-verbal de réception."
+      }
+    },
+    {
       "id": "commande",
       "libelle": "commande",
       "gabarit": {

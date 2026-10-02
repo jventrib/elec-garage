@@ -11,10 +11,10 @@
       "libelle": "Éclairage garage",
       "couleur": "#ff7f0e",
       "conducteurs": 8,
-      "detailConducteurs": "au plus huit, dans la goulotte : phase, neutre, protection, la sortie de MC-01 vers le plafonnier, et les paires d'ordre de CM-01 et de CM-04. Six au plus dans un conduit, sur CH-05",
+      "detailConducteurs": "au plus huit, dans la goulotte : phase, neutre, protection, la sortie de MC-01 vers le plafonnier, et les paires d'ordre de CM-01 et de CM-04. Six au plus dans un conduit, sur CH-05. Aucun conducteur ne passe dans un cordage : les quatre cordages CP-1 à CP-4 ne vont que d'un connecteur de réglette à l'autre",
       "section": 1.5,
       "sensibiliteDifferentielle": 30,
-      "chuteTensionCumulee": 1.76,
+      "chuteTensionCumulee": 1.86,
       "typeDifferentiel": null,
       "calibreProtection": null,
       "courantEmploi": null
@@ -24,32 +24,176 @@
     {
       "id": "ec-el-01a",
       "reference": "EL-01a",
-      "type": "luminaire",
+      "type": "reglette-led",
       "paroi": "plafond",
       "face": "interieur",
       "position": {
-        "x": 1.4,
-        "y": 3.25,
+        "x": 1.45,
+        "y": 1.55,
         "z": 2.75
       },
+      "orientation": "x",
+      "raccords": [
+        {
+          "x": 0.85,
+          "y": 1.55,
+          "z": 2.75
+        },
+        {
+          "x": 2.05,
+          "y": 1.55,
+          "z": 2.75
+        }
+      ],
       "hauteurAxe": null,
-      "indiceProtection": null,
-      "circuit": "c-eclairage"
+      "indiceProtection": "IP65",
+      "circuit": "c-eclairage",
+      "zoneTablier": "non-concluant"
     },
     {
       "id": "ec-el-01b",
       "reference": "EL-01b",
-      "type": "luminaire",
+      "type": "reglette-led",
       "paroi": "plafond",
       "face": "interieur",
       "position": {
-        "x": 4.2,
-        "y": 3.25,
+        "x": 4.15,
+        "y": 1.55,
         "z": 2.75
       },
+      "orientation": "x",
+      "raccords": [
+        {
+          "x": 3.55,
+          "y": 1.55,
+          "z": 2.75
+        },
+        {
+          "x": 4.75,
+          "y": 1.55,
+          "z": 2.75
+        }
+      ],
       "hauteurAxe": null,
-      "indiceProtection": null,
-      "circuit": "c-eclairage"
+      "indiceProtection": "IP65",
+      "circuit": "c-eclairage",
+      "zoneTablier": "non-concluant"
+    },
+    {
+      "id": "ec-el-01c",
+      "reference": "EL-01c",
+      "type": "reglette-led",
+      "paroi": "plafond",
+      "face": "interieur",
+      "position": {
+        "x": 1.45,
+        "y": 2.9,
+        "z": 2.75
+      },
+      "orientation": "x",
+      "raccords": [
+        {
+          "x": 0.85,
+          "y": 2.9,
+          "z": 2.75
+        },
+        {
+          "x": 2.05,
+          "y": 2.9,
+          "z": 2.75
+        }
+      ],
+      "hauteurAxe": null,
+      "indiceProtection": "IP65",
+      "circuit": "c-eclairage",
+      "zoneTablier": "degage-prouve"
+    },
+    {
+      "id": "ec-el-01d",
+      "reference": "EL-01d",
+      "type": "reglette-led",
+      "paroi": "plafond",
+      "face": "interieur",
+      "position": {
+        "x": 4.15,
+        "y": 2.9,
+        "z": 2.75
+      },
+      "orientation": "x",
+      "raccords": [
+        {
+          "x": 3.55,
+          "y": 2.9,
+          "z": 2.75
+        },
+        {
+          "x": 4.75,
+          "y": 2.9,
+          "z": 2.75
+        }
+      ],
+      "hauteurAxe": null,
+      "indiceProtection": "IP65",
+      "circuit": "c-eclairage",
+      "zoneTablier": "degage-prouve"
+    },
+    {
+      "id": "ec-el-01e",
+      "reference": "EL-01e",
+      "type": "reglette-led",
+      "paroi": "plafond",
+      "face": "interieur",
+      "position": {
+        "x": 1.45,
+        "y": 4.55,
+        "z": 2.75
+      },
+      "orientation": "x",
+      "raccords": [
+        {
+          "x": 0.85,
+          "y": 4.55,
+          "z": 2.75
+        },
+        {
+          "x": 2.05,
+          "y": 4.55,
+          "z": 2.75
+        }
+      ],
+      "hauteurAxe": null,
+      "indiceProtection": "IP65",
+      "circuit": "c-eclairage",
+      "zoneTablier": "degage-prouve"
+    },
+    {
+      "id": "ec-el-01f",
+      "reference": "EL-01f",
+      "type": "reglette-led",
+      "paroi": "plafond",
+      "face": "interieur",
+      "position": {
+        "x": 4.15,
+        "y": 4.55,
+        "z": 2.75
+      },
+      "orientation": "x",
+      "raccords": [
+        {
+          "x": 3.55,
+          "y": 4.55,
+          "z": 2.75
+        },
+        {
+          "x": 4.75,
+          "y": 4.55,
+          "z": 2.75
+        }
+      ],
+      "hauteurAxe": null,
+      "indiceProtection": "IP65",
+      "circuit": "c-eclairage",
+      "zoneTablier": "degage-prouve"
     },
     {
       "id": "ec-cm-01",
@@ -67,7 +211,11 @@
       "circuit": "c-eclairage",
       "pilote": [
         "ec-el-01a",
-        "ec-el-01b"
+        "ec-el-01b",
+        "ec-el-01c",
+        "ec-el-01d",
+        "ec-el-01e",
+        "ec-el-01f"
       ],
       "commutation": "entree-module",
       "boitier": "bt-commandes",
@@ -269,8 +417,60 @@
             "z": 2.75
           },
           "a": {
-            "x": 4.2,
+            "x": 3.1,
             "y": 3.25,
+            "z": 2.75
+          }
+        },
+        {
+          "face": "plafond",
+          "de": {
+            "x": 3.1,
+            "y": 3.25,
+            "z": 2.75
+          },
+          "a": {
+            "x": 3.1,
+            "y": 4.75,
+            "z": 2.75
+          }
+        },
+        {
+          "face": "plafond",
+          "de": {
+            "x": 3.1,
+            "y": 4.75,
+            "z": 2.75
+          },
+          "a": {
+            "x": 5.0,
+            "y": 4.75,
+            "z": 2.75
+          }
+        },
+        {
+          "face": "plafond",
+          "de": {
+            "x": 5.0,
+            "y": 4.75,
+            "z": 2.75
+          },
+          "a": {
+            "x": 5.0,
+            "y": 4.55,
+            "z": 2.75
+          }
+        },
+        {
+          "face": "plafond",
+          "de": {
+            "x": 5.0,
+            "y": 4.55,
+            "z": 2.75
+          },
+          "a": {
+            "x": 4.75,
+            "y": 4.55,
             "z": 2.75
           }
         }
@@ -295,8 +495,60 @@
             "z": 2.75
           },
           "a": {
-            "x": 1.4,
+            "x": 2.3,
             "y": 3.25,
+            "z": 2.75
+          }
+        },
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.3,
+            "y": 3.25,
+            "z": 2.75
+          },
+          "a": {
+            "x": 2.3,
+            "y": 4.75,
+            "z": 2.75
+          }
+        },
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.3,
+            "y": 4.75,
+            "z": 2.75
+          },
+          "a": {
+            "x": 0.6,
+            "y": 4.75,
+            "z": 2.75
+          }
+        },
+        {
+          "face": "plafond",
+          "de": {
+            "x": 0.6,
+            "y": 4.75,
+            "z": 2.75
+          },
+          "a": {
+            "x": 0.6,
+            "y": 4.55,
+            "z": 2.75
+          }
+        },
+        {
+          "face": "plafond",
+          "de": {
+            "x": 0.6,
+            "y": 4.55,
+            "z": 2.75
+          },
+          "a": {
+            "x": 0.85,
+            "y": 4.55,
             "z": 2.75
           }
         }
@@ -324,6 +576,98 @@
             "x": 2.4,
             "y": -0.2,
             "z": 2.22
+          }
+        }
+      ]
+    },
+    {
+      "id": "ec-cp-01",
+      "reference": "CP-1",
+      "nature": "cordage",
+      "circuits": [
+        "c-eclairage"
+      ],
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.05,
+            "y": 4.55,
+            "z": 2.75
+          },
+          "a": {
+            "x": 0.85,
+            "y": 2.9,
+            "z": 2.75
+          }
+        }
+      ]
+    },
+    {
+      "id": "ec-cp-02",
+      "reference": "CP-2",
+      "nature": "cordage",
+      "circuits": [
+        "c-eclairage"
+      ],
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.05,
+            "y": 2.9,
+            "z": 2.75
+          },
+          "a": {
+            "x": 0.85,
+            "y": 1.55,
+            "z": 2.75
+          }
+        }
+      ]
+    },
+    {
+      "id": "ec-cp-03",
+      "reference": "CP-3",
+      "nature": "cordage",
+      "circuits": [
+        "c-eclairage"
+      ],
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 3.55,
+            "y": 4.55,
+            "z": 2.75
+          },
+          "a": {
+            "x": 4.75,
+            "y": 2.9,
+            "z": 2.75
+          }
+        }
+      ]
+    },
+    {
+      "id": "ec-cp-04",
+      "reference": "CP-4",
+      "nature": "cordage",
+      "circuits": [
+        "c-eclairage"
+      ],
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 3.55,
+            "y": 2.9,
+            "z": 2.75
+          },
+          "a": {
+            "x": 4.75,
+            "y": 1.55,
+            "z": 2.75
           }
         }
       ]
@@ -398,6 +742,10 @@
       "fixations": [
         "ec-el-01a",
         "ec-el-01b",
+        "ec-el-01c",
+        "ec-el-01d",
+        "ec-el-01e",
+        "ec-el-01f",
         "ec-cm-01",
         "ec-el-02",
         "ec-cm-02",
@@ -425,7 +773,7 @@
       "phase": "percage",
       "nature": "pose",
       "sousTension": false,
-      "instruction": "TRACER PUIS PERCER, avant toute fixation. Tracer l'emplacement de BL-01 au plafond en (2,70 ; 3,25), les tracés de conduit et leurs colliers. Percer les trous de cheville, puis LES TROIS TRAVERSÉES DE PAROI, en biais vers le bas. DEUX NE SE PERCENT PAS EN PLEINE PAROI : celle du point de l'accès piéton part DU FOND DE LA GOULOTTE GL-02, à y = 2,60 m, et celle de son interrupteur extérieur DU FOND DE BD-04, en (5,60 ; 2,60 ; 1,10). La première ENTRE À 2,705 M, au milieu du profilé, et SORT À 2,60 M, sous le point extérieur : 10,5 cm de pente sur l'épaisseur du mur, à tracer des deux côtés avant d'attaquer. La goulotte et la boîte ne sont pas encore posées : c'est précisément le moment de percer leur fond, et il faut COORDONNER avec le circuit des prises, qui les posera juste après. ATTENTION À LA PENTE sur celle de 1,10 m : le boîtier extérieur sera DOS À DOS avec BD-04, ce qui invite à percer horizontalement — et un percement horizontal annule la pente exigée. Pour celle de la façade sud, la bande libre ne fait que 0,25 m entre le haut de l'ouverture à 2,10 m et la sous-face du rail à 2,35 m : tracer au trait, avec 0,12 m de garde en haut et 0,13 m en bas — les deux cotes les plus serrées de la fonctionnalité. La vue de cette étape montre chaque perçage à sa place, distingué par sa nature — traversée à la scie cloche, fixation d'objet, fixation de collier — et porte les gardes qui le contraignent. S'y reporter plutôt que de tout tenir de ce texte. SONDER AVANT DE PERCER : gaine noyée, canalisation, fer. Un trou pénètre la paroi de 5 à 8 cm."
+      "instruction": "TRACER PUIS PERCER, avant toute fixation. Tracer l'emplacement de BL-01 au plafond en (2,70 ; 3,25), les deux colonnes de conduit — x = 2,30 puis 0,60 à l'ouest, x = 3,10 puis 5,00 à l'est, en traversant à 4,75 m de profondeur — et leurs colliers. TRACER AUSSI L'AXE DES QUATRE CORDAGES, sans percer : ils se posent à la main et n'appellent aucune cheville. Percer les trous de cheville, puis LES TROIS TRAVERSÉES DE PAROI, en biais vers le bas. DEUX NE SE PERCENT PAS EN PLEINE PAROI : celle du point de l'accès piéton part DU FOND DE LA GOULOTTE GL-02, à y = 2,60 m, et celle de son interrupteur extérieur DU FOND DE BD-04, en (5,60 ; 2,60 ; 1,10). La première ENTRE À 2,705 M, au milieu du profilé, et SORT À 2,60 M, sous le point extérieur : 10,5 cm de pente sur l'épaisseur du mur, à tracer des deux côtés avant d'attaquer. La goulotte et la boîte ne sont pas encore posées : c'est précisément le moment de percer leur fond, et il faut COORDONNER avec le circuit des prises, qui les posera juste après. ATTENTION À LA PENTE sur celle de 1,10 m : le boîtier extérieur sera DOS À DOS avec BD-04, ce qui invite à percer horizontalement — et un percement horizontal annule la pente exigée. Pour celle de la façade sud, la bande libre ne fait que 0,25 m entre le haut de l'ouverture à 2,10 m et la sous-face du rail à 2,35 m : tracer au trait, avec 0,12 m de garde en haut et 0,13 m en bas — les deux cotes les plus serrées de la fonctionnalité. La vue de cette étape montre chaque perçage à sa place, distingué par sa nature — traversée à la scie cloche, fixation d'objet, fixation de collier — et porte les gardes qui le contraignent. S'y reporter plutôt que de tout tenir de ce texte. SONDER AVANT DE PERCER : gaine noyée, canalisation, fer. Un trou pénètre la paroi de 5 à 8 cm."
     },
     {
       "composants": [
@@ -445,7 +793,7 @@
       "phase": "boites",
       "nature": "pose",
       "sousTension": false,
-      "instruction": "Poser BL-01 sur la cheville déjà percée : c'est la seule boîte propre à ce circuit, au plafond en (2,70 ; 3,25), et c'est la FOURCHE qui répartit vers les deux sorties du plafonnier. Les autres boîtes et organes du circuit sont partagés et posés par le circuit des prises — dont la goulotte GL-02 et BD-04, qui se posent PAR-DESSUS les traversées déjà percées dans leur fond. Poser aussi les boîtiers extérieurs des deux points de façade et celui de l'interrupteur extérieur, chacun au dos de sa traversée."
+      "instruction": "Poser BL-01 sur la cheville déjà percée : c'est la SEULE boîte propre à ce circuit, au plafond en (2,70 ; 3,25), et c'est la FOURCHE qui répartit vers les deux colonnes de réglettes. LES TROIS BOÎTES NEUVES D'AUJOURD'HUI ONT DISPARU : les réglettes se pontent entre elles par cordage, aux connecteurs d'extrémité, et n'ont plus rien à voir au milieu de la ligne. Les autres boîtes et organes du circuit sont partagés et posés par le circuit des prises — dont la goulotte GL-02 et BD-04, qui se posent PAR-DESSUS les traversées déjà percées dans leur fond. Poser aussi les boîtiers extérieurs des deux points de façade et celui de l'interrupteur extérieur, chacun au dos de sa traversée."
     },
     {
       "composants": [],
@@ -454,13 +802,18 @@
         "ec-ch-02",
         "ec-ch-03",
         "ec-ch-04",
-        "ec-ch-06"
+        "ec-ch-06",
+        "ec-cp-01",
+        "ec-cp-02",
+        "ec-cp-03",
+        "ec-cp-04"
       ],
       "traversees": [],
       "materiel": [
         "Conduit IRL 20",
         "Conduit extérieur qualifié pour 0,30 m — référence à arrêter",
         "Colliers de fixation",
+        "Attache-câbles pour bridage",
         "Chevilles adaptées au béton",
         "Coudes et accessoires de conduit"
       ],
@@ -471,7 +824,7 @@
       "phase": "cheminement",
       "nature": "pose",
       "sousTension": false,
-      "instruction": "Le tronc est POSÉ PAR LE CIRCUIT DES PRISES et partagé : montée du tableau par la goulotte GL-01, goulotte GL-02 au plafond de la paroi est, descente CH-05 aux commandes en IRL 25, et parcours de plafond CH-07 DROIT VERS L'OUEST jusqu'à BD-05, en IRL 20. Ne rien y ajouter. Ne poser ici que les branches PROPRES à l'éclairage, en IRL 20. Au plafond : depuis BD-05, VIRAGE VERS LE NORD sur 0,65 m jusqu'à BL-01, puis la FOURCHE vers les deux sorties du plafonnier — 1,50 m vers l'est, 1,30 m vers l'ouest. Ailleurs : depuis GL-01, la branche vers la façade sud, qui longe la paroi est puis la paroi sud à 2,22 m ; et la liaison extérieure de 0,30 m entre le point de façade et son détecteur. RIEN À POSER POUR LE POINT DE L'ACCÈS PIÉTON : il sort du fond de GL-02, sans conduit propre."
+      "instruction": "Le tronc est POSÉ PAR LE CIRCUIT DES PRISES et partagé : montée du tableau par la goulotte GL-01, goulotte GL-02 au plafond de la paroi est, descente CH-05 aux commandes en IRL 25, et parcours de plafond CH-07 DROIT VERS L'OUEST jusqu'à BD-05, en IRL 20. Ne rien y ajouter. Ne poser ici que les branches PROPRES à l'éclairage, en IRL 20. AU PLAFOND, TOUT SE JOINT À BL-01, en (2,70 ; 3,25). D'abord 0,65 m vers le nord pour y monter, puis LES DEUX COLONNES DE RÉGLETTES, qui partent de part et d'autre de la même fourche : celle de l'OUEST descend le long de x = 2,30 jusqu'à 4,75 m de profondeur, revient vers le mur ouest à 0,25 m du nu — en x = 0,60, soit 25 cm dégagés de la paroi — et redescend sur le connecteur d'ENTRÉE de la réglette la plus au nord, EL-01e ; 4,05 m au total. Celle de l'EST est sa miroir, en x = 3,10 puis 5,00, et descend sur EL-01f : 4,25 m. LES DEUX COLONNES PASSENT AU NORD DES RÉGLETTES, à 4,75 m : c'est ce qui permet aux CORDAGES de descendre en biais vers le sud sans jamais croiser un conduit. Ailleurs : depuis GL-01, la branche vers la façade sud, qui longe la paroi est puis la paroi sud à 2,22 m ; et la liaison extérieure de 0,30 m entre le point de façade et son détecteur. RIEN À POSER POUR LE POINT DE L'ACCÈS PIÉTON : il sort du fond de GL-02, sans conduit propre.\n\nLES QUATRE CORDAGES CP-1 À CP-4 SE POSENT APRÈS LES COLONNES, ET SANS PERÇAGE. Ce sont des LIENS SOUPLES, pas des tubes : ni section, ni collier, ni coude. Chacun va d'un connecteur à l'autre et se pose à la main, avec deux attaches-câbles au plafond pour le tenir, jamais plus — un cordage tendu travaille et casse au bout. CP-1 part du bout est d'EL-01e pour arriver au bout ouest d'EL-01c, 2,04 m ; CP-2 du bout est d'EL-01c au bout ouest d'EL-01a, 1,81 m ; CP-3 du bout ouest d'EL-01f au bout est d'EL-01d, 2,04 m ; CP-4 du bout ouest d'EL-01d au bout est d'EL-01b, 1,81 m. ILS NE SE CROISENT NI ENTRE EUX NI AVEC LES COLONNES : leur passage au nord, à 4,75 m, en est la raison."
     },
     {
       "composants": [],
@@ -488,7 +841,7 @@
       "phase": "tirage",
       "nature": "pose",
       "sousTension": false,
-      "instruction": "Tirer les conducteurs de 1,5 mm² : phase, neutre, protection, et le RETOUR COMMANDÉ du point de l'accès piéton. Le point de façade n'en appelle aucun : il est alimenté en permanence et commuté sur place par son détecteur. LA PHASE VA À LA GOULOTTE, où MC-01 la reçoit, à BD-04 pour l'interrupteur extérieur, et au point de façade ; ELLE NE VA PAS À CM-01. Le retour de l'accès piéton naît aux bornes de l'interrupteur extérieur, rentre par le fond de BD-04, remonte CH-05 jusqu'à la goulotte GL-02 et ressort par son fond vers le point de l'accès piéton. LE PLAFONNIER ET CM-01 NE SE CÂBLENT PAS ICI : la sortie de MC-01 vers le plafonnier et la paire d'ordre de CM-01 se tirent à l'étape de tirage de l'automatisation. DANS LE TRONC PARTAGÉ, TIRER EN MÊME TEMPS QUE LES CONDUCTEURS DES PRISES : avec ceux de l'automatisation, jusqu'à dix conducteurs passent ensemble dans les goulottes, neuf dans CH-05 et sept dans CH-07, et les faire passer en deux fois est beaucoup plus difficile. CH-05 EST LE TUBE LE PLUS CHARGÉ DE L'INSTALLATION. Prévoir de l'aiguille, du lubrifiant de tirage, et ne pas forcer sur un conducteur seul."
+      "instruction": "Tirer les conducteurs de 1,5 mm² : phase, neutre, protection, et le RETOUR COMMANDÉ du point de l'accès piéton. Le point de façade n'en appelle aucun : il est alimenté en permanence et commuté sur place par son détecteur. LA PHASE VA À LA GOULOTTE, où MC-01 la reçoit, à BD-04 pour l'interrupteur extérieur, et au point de façade ; ELLE NE VA PAS À CM-01. Le retour de l'accès piéton naît aux bornes de l'interrupteur extérieur, rentre par le fond de BD-04, remonte CH-05 jusqu'à la goulotte GL-02 et ressort par son fond vers le point de l'accès piéton. LE PLAFONNIER ET CM-01 NE SE CÂBLENT PAS ICI : la sortie de MC-01 vers le plafonnier et la paire d'ordre de CM-01 se tirent à l'étape de tirage de l'automatisation. DANS LE TRONC PARTAGÉ, TIRER EN MÊME TEMPS QUE LES CONDUCTEURS DES PRISES : avec ceux de l'automatisation, jusqu'à dix conducteurs passent ensemble dans les goulottes, neuf dans CH-05 et sept dans CH-07, et les faire passer en deux fois est beaucoup plus difficile. CH-05 EST LE TUBE LE PLUS CHARGÉ DE L'INSTALLATION. Prévoir de l'aiguille, du lubrifiant de tirage, et ne pas forcer sur un conducteur seul. DANS LES COLONNES, TIRER JUSQU'AUX DEUX BOUTS : le câble entre par un connecteur d'extrémité et ressort par l'autre, c'est ce qui permet le pontage de réglette en réglette. LES QUATRE CORDAGES, EUX, NE REÇOIVENT AUCUN CONDUCTEUR À TIRER : ils vont d'un connecteur à l'autre et sont posés à l'étape de cheminement."
     },
     {
       "composants": [],
@@ -505,12 +858,16 @@
       "phase": "connexions",
       "nature": "pose",
       "sousTension": false,
-      "instruction": "Faire les connexions de BL-01, la fourche du plafonnier, et celles de l'éclairage dans OC-01, OC-02 et les boîtes partagées BD-04 et BD-05, en bornes à levier WAGO 221 — référence et nombre sur la fiche de chaque boîte. Un conducteur qui ne fait que traverser une boîte n'y est pas coupé. À BL-01, c'est la SORTIE DE MC-01 qui se sépare vers les deux sorties du plafonnier. Refermer les couvercles ; les boîtes doivent RESTER ACCESSIBLES. Laisser 10 à 15 cm de réserve dans chaque boîte. DANS LES ENVELOPPES PARTAGÉES, NE PAS DÉRANGER LES CONDUCTEURS DES PRISES NI LE CÂBLE DE LA BORNE : les premiers restent sous tension si seul l'éclairage est consigné, le second ne doit recevoir aucune connexion."
+      "instruction": "Faire les connexions dans OC-01, OC-02 et dans BL-01, en bornes à levier WAGO 221 ; référence et nombre sur la fiche de la boîte. Un conducteur qui ne fait que traverser une boîte n'y est pas coupé. À BL-01, c'est la SORTIE DE MC-01 qui se sépare : deux conducteurs partent, un par colonne, et plus rien d'autre n'y est raccordé — c'est la seule boîte du circuit qui ne soit pas partagée. DANS LES RÉGLETTES, AUCUNE CONNEXION AU MILIEU : chacune se raccorde par ses DEUX EXTRÉMITÉS, sur le connecteur qu'elle a en face de la colonne pour l'entrée et sur l'autre pour la sortie. Les six points sont distincts et tous sur le même circuit, commandés ensemble par MC-01. REFERMER LES COUVERCLES ; BL-01 DOIT RESTER ACCESSIBLE, c'est la seule de ce circuit. Laisser 10 à 15 cm de réserve dedans. DANS LES ENVELOPPES PARTAGÉES, NE PAS DÉRANGER LES CONDUCTEURS DES PRISES NI LE CÂBLE DE LA BORNE : les premiers restent sous tension si seul l'éclairage est consigné, le second ne doit recevoir aucune connexion. NE PAS LAISSER DE RÉSERVE DANS LES RÉGLETTES : leur comprimento intérieur est celui de leur propre câblage, et une boucle de réserve s'y logerait dans l'enveloppe, entre les deux connecteurs."
     },
     {
       "composants": [
         "ec-el-01a",
         "ec-el-01b",
+        "ec-el-01c",
+        "ec-el-01d",
+        "ec-el-01e",
+        "ec-el-01f",
         "ec-cm-01",
         "ec-el-02",
         "ec-cm-02",
@@ -532,7 +889,7 @@
       "phase": "appareillage",
       "nature": "pose",
       "sousTension": false,
-      "instruction": "Poser et raccorder les sorties d'éclairage et les commandes, conducteur de protection raccordé à chacune sans exception — y compris les deux points extérieurs et le détecteur. Les deux sorties du plafonnier sont sur l'axe décalé au nord, à 3,25 m, de part et d'autre de la fourche BL-01 : elles forment UN SEUL point lumineux et s'allument ensemble. CM-01, dans BD-04 à 1,10 m, commande le plafonnier depuis l'intérieur, et ce boîtier transite le circuit des prises. CM-01 EST UN INTERRUPTEUR SUR L'ENTRÉE DE MC-01 : il ne coupe aucune puissance. Lui raccorder sa paire d'ordre et le PE — ni phase ni neutre. L'INTERRUPTEUR DU POINT DE L'ACCÈS PIÉTON EST DEHORS, au dos de cette même boîte, à 1,10 m : il commande depuis l'extérieur, là où l'on se trouve quand on en a besoin. Son indice de protection doit tenir l'exposition directe, MANŒUVRE COMPRISE. Le point de l'accès piéton lui-même se pose AU DOS DE SA TRAVERSÉE, à 2,60 m sur le même aplomb, alimenté par le fond de la goulotte GL-02 ; son retour commandé naît aux bornes de l'interrupteur extérieur, rentre par le fond de BD-04 et remonte le tronc."
+      "instruction": "Poser et raccorder les six réglettes et les commandes, conducteur de protection raccordé à chacune sans exception — y compris le détecteur. Les six réglettes sont en DEUX COLONNES de trois, à 1,45 m et 4,15 m de l'axe médian, sur trois rangs en profondeur : 1,55 m sous le tablier remonté pour le rang sud, 2,90 m et 4,55 m pour les deux rangs dégagés. ELLES SE PONTENT ENTRE ELLES, chaque colonne par deux cordages enchaînés du nord au sud : EL-01e alimente EL-01c, qui alimente EL-01a ; EL-01f alimente EL-01d, qui alimente EL-01b. C'est ce qui supprime les trois boîtes neuves du milieu de ligne — une réglette qui se pontait par son centre aurait exigé d'y ouvrir un boîtier qui n'a pas de place. Les six sont sur le même circuit et s'allument ensemble, mais elles forment SIX points lumineux distincts : les compter un par un à la réception. CM-01 commande l'ensemble depuis BD-04 à 1,10 m, à l'intérieur, et ce boîtier transite le circuit des prises. CM-01 EST UN INTERRUPTEUR SUR L'ENTRÉE DE MC-01 : il ne coupe aucune puissance. Lui raccorder sa paire d'ordre et le PE — ni phase ni neutre. L'INTERRUPTEUR DU POINT DE L'ACCÈS PIÉTON EST DEHORS, au dos de cette même boîte, à 1,10 m : il commande depuis l'extérieur, là où l'on se trouve quand on en a besoin. Son indice de protection doit tenir l'exposition directe, MANŒUVRE COMPRISE. Le point de l'accès piéton lui-même se pose AU DOS DE SA TRAVERSÉE, à 2,60 m sur le même aplomb, alimenté par le fond de la goulotte GL-02 ; son retour commandé naît aux bornes de l'interrupteur extérieur, rentre par le fond de BD-04 et remonte le tronc. ⚠ EL-01a ET EL-01b SONT SOUS LE TABLIER REMONTÉ : leur dégagement n'est PAS établi, leur épaisseur étant non relevée. Les mesurer en place avant de les fixer, et les décaler si elles frotent."
     },
     {
       "composants": [],
@@ -566,7 +923,7 @@
       "nature": "verification",
       "verification": "continuite-pe",
       "sousTension": false,
-      "instruction": "Mesurer la continuité du conducteur de protection depuis le tableau jusqu'à CHACUNE des quatre sorties et jusqu'au détecteur — EL-01a, EL-01b, EL-02, EL-03, CM-02 — et consigner les cinq valeurs. Le garage n'a pas de prise de terre propre : cette mesure point par point est la seule parade."
+      "instruction": "Mesurer la continuité du conducteur de protection depuis le tableau jusqu'à CHACUNE des six réglettes et jusqu'aux autres points qui en portent un — EL-01a, EL-01b, EL-01c, EL-01d, EL-01e, EL-01f, EL-02, EL-03 et le détecteur — et consigner les neuf valeurs. Le garage n'a pas de prise de terre propre : cette mesure point par point est la seule parade. LES SIX RÉGLETTES SE MESURENT À CHACUNE : un pontage par cordage n'est visible que de l'extérieur si l'on suit le PE de bout en bout."
     },
     {
       "composants": [],
@@ -617,7 +974,7 @@
       "nature": "verification",
       "verification": "serrage",
       "sousTension": false,
-      "instruction": "Contrôler le serrage de toutes les connexions : au tableau, dans OC-01, OC-02 et les deux boîtes partagées BD-04 et BD-05, dans BL-01 à la fourche, derrière chaque sortie et dans le boîtier de la commande intérieure et dans celui de l'interrupteur extérieur. LA FOURCHE BL-01 mérite une attention particulière : c'est là que la sortie de MC-01 se sépare vers les deux sorties du plafonnier. Les bornes de EL-01a et EL-01b ne portent chacune qu'un conducteur par pôle : il n'y a PAS de repiquage entre les deux sorties. Dans BD-04, vérifier les bornes de CM-01 : sa paire d'ordre seule, et le PE. Dans GL-02 et dans BD-04, vérifier aussi le DÉPART EN FOND vers l'extérieur : celui de la goulotte va au point de l'accès piéton, celui de BD-04 à son interrupteur. Dans les boîtes partagées, ne pas déranger les conducteurs du circuit des prises, qui y transitent et restent sous tension si seul l'éclairage est consigné."
+      "instruction": "Contrôler le serrage de toutes les connexions : au tableau, dans OC-01, OC-02 et les deux boîtes partagées BD-04 et BD-05, dans BL-01 à la fourche, derrière chaque sortie et dans le boîtier de la commande intérieure et dans celui de l'interrupteur extérieur. LA FOURCHE BL-01 mérite une attention particulière : c'est là que la sortie de MC-01 se sépare vers les deux colonnes. DANS LES RÉGLETTES, VÉRIFIER LES DEUX CONNECTEURS D'EXTRÉMITÉ DE CHACUNE, et NE PAS LES RELIER ENTRE EUX : chaque borne ne porte que SON conducteur : le courant passe de l'une à l'autre par le cordage, jamais par une jonction cachée dans l'appareil. Dans BD-04, vérifier les bornes de CM-01 : sa paire d'ordre seule, et le PE. Dans GL-02 et dans BD-04, vérifier aussi le DÉPART EN FOND vers l'extérieur : celui de la goulotte va au point de l'accès piéton, celui de BD-04 à son interrupteur. Dans les boîtes partagées, ne pas déranger les conducteurs du circuit des prises, qui y transitent et restent sous tension si seul l'éclairage est consigné."
     },
     {
       "composants": [],

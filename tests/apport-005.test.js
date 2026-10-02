@@ -88,13 +88,31 @@ test('une goulotte de 1,12 m ne raccourcit aucune longueur dimensionnante', () =
   const g = construireGraphe(m);
   const par = (circuit) => longueursDepuisTableau(g, m, circuit).plusLong;
 
-  assert.equal(par('c-eclairage').reference, 'EL-01b', 'le point dimensionnant ne change pas');
+  // Le point dimensionnant a changé le 2026-09-26 pour une cause géométrique et non
+  // d'une dérive : le plafond est passé à six réglettes, et la colonne ouest était
+  // alors plus longue de 20 cm que la colonne est. EL-01a avait pris la place
+  // d'EL-01b.
+  //
+  // Il est revenu à l'EST le 2026-10-01, avec le pontage par cordage, et pour une
+  // raison qui tient en un nombre : BL-01 décroche à x = 2,70 alors que l'axe médian
+  // de l'œuvre est à 2,80. La fourche est 10 cm à l'ouest du milieu, donc la colonne
+  // est part à 3,10 et court 1,90 m jusqu'à 5,00, là où l'ouest part à 2,30 et n'en
+  // court que 1,70. EL-01b, le plus éloigné de la chaîne, dimensionne à 17,17 m.
+  assert.equal(par('c-eclairage').reference, 'EL-01b', 'le point dimensionnant est la colonne est');
   const proche = (v, attendu, quoi) =>
     assert.ok(Math.abs(v - attendu) < 0.02, `${quoi} : ${v.toFixed(4)} au lieu de ${attendu}`);
-  // Depuis la goulotte de la paroi est, les conducteurs courent sous son capot, sur
-  // l'axe, avant d'en sortir par une face : 8,18 m pour EL-01b (8,20 avant), 10,61 m
-  // pour BR-01 (10,48 avant), qui monte à mi-hauteur du profilé avant de redescendre.
-  proche(par('c-eclairage').longueur, 8.175, 'EL-01b');
+  // EL-01b est la plus longue des six colonnes, à 18,37 m. EL-01a, qui les partageait
+  // presque, en est à 17,17 m : les 20 cm qui les séparent sont l'effet de la
+  // fourche décalée, et non une différence de matériel. EL-02, à l'ouest lui aussi
+  // mais près du tableau, ne les suit pas de loin.
+  //
+  // Ces 18,37 m se lisent 1,20 m AU-DESSUS du 17,17 m que donne l'itinéraire, et ce
+  // n'est pas une imprécision : ici on mesure le point le plus LOIN de la réglette,
+  // là-bas le point où l'itinéraire y entre. Une réglette pontée a deux connecteurs,
+  // distants de son câblage interne — 1,20 m, montés d'usine. La question « jusqu'où
+  // va le réseau » et la question « par où le fil passe » n'ont pas la même réponse,
+  // et les deux chiffres sont justes. C'est le second qui majore la chute de tension.
+  proche(par('c-eclairage').longueur, 18.372, 'EL-01b');
   proche(par('c-borne').longueur, 10.61, 'BR-01');
 
   // Et la chute déclarée de la borne reste celle que le tracé redonne.
@@ -195,8 +213,11 @@ test('le tronc porte ce que la dérivation dit, et le conduit trop chargé est e
   }
 
   // Ce qui décide du calibre restant en IRL 20 : aucun conduit de ce calibre ne
-  // porte plus de huit conducteurs.
-  const irl20 = m.cheminements.filter((c) => c.section.forme === 'circulaire' && c.section.diametre === 0.02);
+  // porte plus de huit conducteurs. Les CORDAGES n'entrent pas dans ce décompte :
+  // ils n'ont pas de section, ils ont un gabarit — le filtre les écarte donc sur le
+  // `c.section` absent, pas sur leur nature, pour rester exact si un cordage
+  //eletre se mettait un jour à déclarer une section.
+  const irl20 = m.cheminements.filter((c) => c.section?.forme === 'circulaire' && c.section.diametre === 0.02);
   assert.ok(Math.max(...irl20.map((c) => occ.get(c.id).total)) <= 8);
 });
 

@@ -58,10 +58,19 @@ export function gabarit(composant, catalogue) {
       return { dims: [g.l, g.p, g.h], decalage: [0, (sens * g.p) / 2, 0] };
     case 'sud':
       return { dims: [g.l, g.p, g.h], decalage: [0, (-sens * g.p) / 2, 0] };
+    // Au plafond, les deux axes dans le plan sont x et y, et chacun porte UNE cote
+    // : la largeur sur x, la hauteur sur y — exactement ce que fait
+    // `enveloppeDeBoite`, dont la normalisation sert V22 sur TOUS les composants.
+    // La largeur y était comptée deux fois et la hauteur ignorée, si bien qu'un objet
+    // allongé au plafond ne s'exprimait pas : un tube de 1,20 m se dessinait en
+    // carré de 1,20 m avec `largeur: 1,20`, et en 6,5 cm avec `largeur: 0,065`.
+    // L'erreur était invisible tant que les gabarits de plafond étaient carrés, et
+    // ne l'était plus dès qu'un ne l'était pas — MC-02, 45 × 40, se dessinait
+    // 45 × 45. C'est la règle écrite deux fois qui avait divergé, pas la donnée.
     case 'plafond':
-      return { dims: [g.l, g.l, g.p], decalage: [0, 0, -g.p / 2] };
+      return { dims: [g.l, g.h, g.p], decalage: [0, 0, -g.p / 2] };
     default:
-      return { dims: [g.l, g.l, g.p], decalage: [0, 0, 0] };
+      return { dims: [g.l, g.h, g.p], decalage: [0, 0, 0] };
   }
 }
 

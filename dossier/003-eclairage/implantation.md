@@ -1,6 +1,14 @@
 # Implantation cotée — éclairage du garage
 
 **Fonctionnalité**: `003-eclairage` | **Date**: 2026-09-21
+| Dernière révision | **2026-10-01** — six réglettes **pontées**
+
+> **En une ligne** : le plafond porte **six réglettes HOFTRONIC** en deux colonnes de trois, et
+> elles sont **pontées deux à deux** par quatre cordages. Une seule boîte les distribue,
+> **BL-01** au degré 3, là où la distribution en étoile en exigeait quatre. Le point
+> dimensionnant est **EL-01b**, à 17,17 m au point d'utilisation. **EL-01a et EL-01b
+> sont sous le tablier remonté et leur dégagement n'est pas établi** : à mesurer avant fixation —
+> et ce sont les deux seules réglettes **alimentées par cordage**.
 
 Repère de la constitution : origine à l'angle sud-ouest de l'œuvre intérieure au sol fini,
 x vers l'est, y vers le nord, z vers le haut, unité le mètre.
@@ -21,22 +29,28 @@ tronc** : il emprunte celui des prises, en calibre supérieur, et n'a aucune bo�
 | CH-05 | BD-01 | BD-04 (5,60 / **2,60** / 1,10) | descente à la commande | 1,50 m | **deux** |
 | CH-07 | BD-03 | BD-05 (2,70 / **2,60** / 2,75) | plafond **droit vers l'ouest**, **commun avec le socle du moteur** | **2,90 m** | **deux** |
 
-**7,95 m de conduit commun, en IRL 20**, déclarés et posés par `002-prises-de-courant`. Les
+**7,96 m de conduit commun, en IRL 20**, déclarés et posés par `002-prises-de-courant`. Les
 quatre boîtes sont partagées. L'éclairage part ensuite de trois d'entre elles :
 
 | Boîte | Ce que l'éclairage y prend |
 |-------|---------------------------|
 | BD-02 | la branche vers la façade sud — EL-02 et son détecteur |
-| BD-05 | le virage vers le nord, puis la fourche du plafonnier — et la desserte du socle du moteur vers l'**ouest** |
+| BD-05 | le virage vers le nord, puis la **fourche BL-01** qui alimente les six réglettes — et la desserte du socle du moteur vers l'**ouest** |
 | BD-04 | ses deux commandes, et la remontée vers le point de l'accès piéton |
 
 ### Le calibre du tronc, et la condition qu'il laisse ouverte
 
-**CH-05 seul** porte **huit** conducteurs : les trois des prises et les cinq de l'éclairage —
-phase, neutre, protection, et deux retours commandés. Les quatre autres conduits du tronc en
-portent **six** : la phase non commutée s'arrête aux commandes, et le retour de l'interrupteur
-extérieur ne monte pas au plafond. *Ce décompte conduit par conduit date du 2026-09-22 ; avant
-lui, le dossier appliquait huit partout, ce qui était un majorant présenté comme un décompte.*
+**CH-05 seul** porte **six** conducteurs de l'éclairage : phase, neutre, protection et la paire
+d'ordre de CM-01, plus le retour de CM-03. **CH-L2, CH-L3, CH-L4, CH-L6 et les quatre cordages
+CP-1 à CP-4 en portent trois chacun** — phase, neutre, protection, rien d'autre, puisque la
+commande est centralisée sur MC-01 en amont. *Ce décompte a été révisé le 2026-09-26 avec les six
+réglettes : il ne décrit plus un plafonnier, il décrit une distribution individuelle. Avant lui,
+le dossier appliquait un maximum partout, ce qui était un majorant présenté comme un décompte.*
+
+**Un cordage porte trois conducteurs, et non deux.** Chaque paire pontée a besoin de sa phase, de
+son neutre et de son **PE** entre les deux réglettes ; sans le PE, le pontage serait un défaut de
+terre en série. C'est la raison pour laquelle CP-1 à CP-4 ne sont pas des câbles d'alimentation
+à deux fils.
 
 La règle du tiers s'écrit `D ≥ d·√24` pour huit, soit un diamètre intérieur d'au moins
 **14,69 mm** ; pour six, environ **13 mm**.
@@ -68,21 +82,99 @@ la descente au lieu de la franchir (R4).
    le Principe III impose dès qu'un conduit en porte plusieurs. La note de calcul des prises
    portait « Groupement sans objet : conduit dédié » ; cette ligne était devenue fausse et a été
    remplacée par une case à confirmer. **T006 bloque désormais les deux circuits.**
-2. Les **quatre boîtes portent deux circuits**. Consigner l'éclairage n'y met pas les prises hors
-   tension, ni l'inverse. Voir la section 5.
+2. Les **quatre boîtes du tronc portent deux circuits**. Consigner l'éclairage n'y met pas les
+   prises hors tension, ni l'inverse. Voir la section 5.
 3. Les **commandes remontent** au droit de la descente partagée : voir la section 2.
 
-## 2. Le plafonnier et sa commande
+## 2. Les six réglettes et leur commande
+
+> **Révision du 2026-10-01 — les six réglettes se pontent.** Cette section décrit aujourd'hui
+> **EL-01a à EL-01f** en deux colonnes de trois, **pontées deux à deux** par quatre cordages, et
+> distribuées par **une seule boîte**, BL-01. Elle remplaçait un plafonnier à **deux sorties** sur
+> un seul point lumineux, fedéré par CH-L2, CH-L3 et CH-L4 avec sa fourche unique BL-01 ; puis,
+> le 2026-09-26, six réglettes **en étoile**, chacune avec son propre trio remontant de la
+> fourche. Le raisonnement du décalage d'axe, en contrebas, est conservé tel qu'il a fondé la
+> cote de 4,05 m.
 
 | Repère | Type | Position | Alimenté par |
 |--------|------|----------|--------------|
 | BL-01 | boîte de dérivation, **la fourche** | 2,70 / 3,25 / 2,75 | CH-L2, depuis BD-05, **0,65 m** |
-| EL-01a | sortie d'éclairage, plafond | 1,40 / **3,25** / 2,75 | CH-L4, branche ouest |
-| EL-01b | sortie d'éclairage, plafond | 4,20 / **3,25** / 2,75 | CH-L3, branche est |
+| **EL-01e** | réglette LED 120 cm, plafond | 1,45 / **4,55** / 2,75 | **CH-L4**, depuis BL-01 — *extrémité nord de la colonne ouest* |
+| **EL-01f** | réglette LED 120 cm, plafond | 4,15 / **4,55** / 2,75 | **CH-L3**, depuis BL-01 — *extrémité nord de la colonne est* |
+| **EL-01c** | réglette LED 120 cm, plafond | 1,45 / **2,90** / 2,75 | **CP-1**, depuis EL-01e |
+| **EL-01d** | réglette LED 120 cm, plafond | 4,15 / **2,90** / 2,75 | **CP-3**, depuis EL-01f |
+| **EL-01a** | réglette LED 120 cm, plafond | 1,45 / **1,55** / 2,75 | **CP-2**, depuis EL-01c — ⚠️ **sous le tablier** |
+| **EL-01b** | réglette LED 120 cm, plafond | 4,15 / **1,55** / 2,75 | **CP-4**, depuis EL-01d — ⚠️ **sous le tablier** |
 | CM-01 | commande | 5,60 / 3,08 / 1,10 | boîtier partagé `bt-commandes`, porté par BD-04 |
 
-**Un seul point lumineux, deux sorties.** CM-01 les allume et les éteint **ensemble**, d'un seul
-geste (FR-008, FR-034, SC-014).
+**Deux conduites seulement, et quatre cordages.** Le courant descend de réglette en réglette, du
+nord vers le sud : à l'ouest **EL-01e →CP-1→ EL-01c →CP-2→ EL-01a**, à l'est **EL-01f →CP-3→
+EL-01d →CP-4→ EL-01b**. Les deux réglettes les plus au sud ne reçoivent **aucun conduit** : leur
+voisine les alimente. C'est ce qui leur vaut deux points d'alimentation, et c'est ce qu'exige V24.
+
+**Le graphe les traite comme des liaisons réelles.** Chaque réglette déclare ses `raccords`, et les
+deux points d'une réglette pontée sont reliés par une **arête interne de 1,20 m** — la longueur
+du câble fourni dans le corps. Elle est réelle pour la chute de tension, et **absente du métré** :
+elle n'est pas achetée, elle est dans l'appareil. Un point d'arrivée unique, en revanche, n'existe
+pas : **V24 le refuse**, et `raccords` existe précisément pour cela.
+
+**BL-01 est la seule boîte du plafond, au degré 3** : CH-L2 y arrive du sud, CH-L3 repart vers
+l'est, CH-L4 vers l'ouest. Le 2026-09-26 elle était au degré 4, et trois boîtes l'encadraient.
+
+**Six points lumineux distincts, un seul circuit.** CM-01 les allume et les éteint **ensemble**,
+d'un seul geste (FR-008, FR-034, SC-014). Mais à la pose et à la réception, **les six se comptent
+une par une** : c'est le même bouton, pas le même point.
+
+### Deux colonnes, trois rangs, et pourquoi ce n'est pas symétrique en longueur
+
+L'implantation est **symétrique en position** — deux colonnes à 1,45 m et 4,15 m, trois rangs à
+1,55 / 2,90 / 4,55 m — et **asymétrique en longueur de conducteur**. La goulotte descend au sud,
+et l'itinéraire par la colonne ouest est **20 cm plus long** qu'à l'est. *Avec la distribution en
+étoile, cela faisait d'EL-01a le point dimensionnant, à 11,73 m devant EL-01b à 11,53 m.*
+Depuis le pontage, **le point dimensionnant est EL-01b**, à 17,17 m au point d'utilisation
+— et l'écart vient de la **géométrie des colonnes**, non du pontage, qui est un éclairage de
+fin de ligne et ne touche pas au trajet du tableau. *C'est le même test qu'appliquait l'ancien
+document à l'hypothèse d'une symétrie de parcours : il porte ici sur le tracé, non sur la
+géométrie.*
+
+### La chaîne série a été abandonnée — puis le pontage l'a relevée sous une autre forme
+
+Six réglettes HOFTRONIC sont **connectables entre elles** jusqu'à 10 selon la fiche. La solution
+évidente — les six en série, une seule descente, un seul retour — a été **examinée puis écartée**
+le 2026-09-26 : le presse-étoupe PG11 de la réglette est intermédiaire, il ne se trouve **pas** sur
+le chemin du courant. Chaque traversée de corps de luminaire ajoute une dérivation et un contact
+mâle sans économiser un seul conduit. **Six points distincts valent mieux qu'un point unique à six
+dénominations.**
+
+**Le pontage du 2026-10-01 ne la réintroduit pas : il en prend l'autre moitié.** Ce n'est pas la
+chaîne série — un appareil qui relaie celui du voisin dans son corps — mais le **liaisonnement
+par cordage**, où le câble passe **d'une réglette à l'autre, d'un point à l'autre**. La distinction
+n'est pas cosmétique : dans la chaîne série, le presse-étoupe ne conduit pas le courant, et il faut
+un dérivateur par appareil ; dans le pontage, chaque paire a **son propre câble**, qui est une
+liaison franche entre deux points déclarés. C'est ce que la fiche Allows, et c'est ce que le modèle
+sait décrire. Le métré est passé de 104,89 m à **108,92 m** : plus court qu'en étoile de 3,97 m,
+et plus long que les 69,34 m des deux sorties — **six points restent six points**.
+
+### Les deux réglettes du rang sud ne sont pas prouvées dégagées
+
+EL-01a et EL-01b, à y = 1,55 m, tombent **sous le tablier remonté**, dont le majorant occupe
+y de 0 à 2,15 m jusqu'à 2,75 m de haut. **L'épaisseur du panneau n'a jamais été relevée** : le
+dessus du volume est pris au plafond, ce qui est un majorant, non une mesure.
+
+**Aucun segment de conduit n'est plus en cause.** Trois l'étaient : **CH-L10** segment 3, qui
+descendait vers EL-01b, et **CH-L13** segments 2 et 3, qui longeaient le bord ouest avant de
+rejoindre EL-01a. Ces trois cheminements appartenaient aux colonnes de la distribution en étoile,
+et le pontage les a supprimés.
+
+La réserve **porte donc sur les deux points eux-mêmes**, non plus sur un tracé : EL-01a et
+EL-01b sont les deux seules réglettes **alimentées par cordage**, et leur dégagement ne peut pas
+être démontré par un conduit. Elles portent `zoneTablier: "non-concluant"` dans le modèle — le
+statut est là, il ne se déduit pas d'un segment. Les quatre autres sont **prouvées dégagées**.
+
+**Décision du maître d'ouvrage, 2026-09-26** : les deux réglettes sont **posées à y = 1,55 m**
+malgré cette réserve, et **l'épaisseur du panneau est déclarée comme cote à relever**. Elles
+seront **mesurées en place avant fixation**, et décalées si elles frotent. C'est un arbitrage
+explicite, pas un oubli.
 
 ### Le tracé raconte le décalage : commun, virage, fourche
 
@@ -99,7 +191,11 @@ Décision du maître d'ouvrage du 2026-09-21. Le conduit se lit en trois temps, 
    et son coude — et entraîne le socle du moteur à y = 2,60, desservi vers l'**ouest**.*
 2. **Virage vers le nord** à BD-05 : **0,65 m** jusqu'à BL-01. C'est ce
    segment qui matérialise le décalage de l'axe lumineux. Ce n'est pas un détour.
-3. **Fourche** à BL-01 : 1,50 m vers l'est jusqu'à EL-01b, 1,30 m vers l'ouest jusqu'à EL-01a.
+3. **Fourche** à BL-01, puis **deux colonnes** : CH-L4 vers l'ouest et CH-L3 vers l'est. Chacune
+   remonte d'abord au nord à y = 4,75, puis traverse vers la paroi — x = 0,60 à l'ouest, x = 5,00 à
+   l'est — avant de redescendre sur le flanc extérieur de la réglette qu'elle alimente ; le
+   reste descend par cordage. *Cette fourche n'est plus dichotomique depuis le 2026-09-26, et elle
+   n'a plus que deux sorties au lieu de six depuis le 2026-10-01.*
 
 ### L'axe est au centre du plafond utilisable, non du local
 
@@ -111,9 +207,11 @@ Décision du maître d'ouvrage du 2026-09-21. Le conduit se lit en trois temps, 
 > **8,20 m**. Le raisonnement qui
 > suit, celui du centre de la bande utilisable, est conservé tel qu'il a fondé la cote de 4,05 m.
 
-L'axe est à **y = 4,05 m**. Les sorties restent aux **quarts de la largeur**, 1,40 m et 4,20 m,
+*État du 2026-09-23, conservé pour le raisonnement.* L'axe est à **y = 4,05 m**. Les sorties
+restent aux **quarts de la largeur**, 1,40 m et 4,20 m,
 donc symétriques à 1,40 m de part et d'autre de l'axe médian nord-sud — une cote unique répétée,
-ce qu'exige SC-016.
+ce qu'exige SC-016. **Depuis le 2026-09-26**, les deux colonnes sont à **1,45 m et 4,15 m**, et
+elles desservent trois rangs chacune au lieu d'une sortie unique.
 
 **Pourquoi 4,05 et non le centre du local.** Le tablier ouvert interdit la moitié sud du plafond
 jusqu'à y = 2,50 m. La bande où une sortie peut être posée va donc de **2,50 à 5,60 m**, et son
@@ -131,12 +229,26 @@ conduits a disparu**. L'axe à 2,80 m franchissait la descente des prises vers l
 en (2,70 ; 2,80 ; 2,75). L'éclairage part désormais **de** ce point au lieu de le traverser.
 T007 est résolue (R4).
 
-**Ce que le décalage a coûté en longueur** : le chemin le plus long passe de 7,95 à **9,00 m**, le
+*État du 2026-09-23, conservé pour le raisonnement.* **Ce que le décalage a coûté en longueur** :
+le chemin le plus long passe de 7,95 à **9,00 m**, le
 conduit allant chercher le droit du socle du moteur avant de remonter. La chute terminale passe
 de 0,108 % à 0,122 %, et la marge reste de 1,23 point sur 3 %. Sans conséquence.
 
-**Vérifié** : les deux sorties sont à **1,55 m** au nord de la borne du tablier ouvert — trois
-fois la garde qu'elles avaient.
+**⚠ Ce que le 2026-09-26 a changé** : le chemin le plus long n'est plus 8,18 m mais **11,73 m** —
+EL-01a, la colonne ouest. La chute terminale passe de 0,111 % à **0,144 %** et la cumulée de
+1,76 % à **1,79 %**. La marge passe de 1,24 à **1,21 point**.
+
+**⚠ Ce que le pontage du 2026-10-01 a changé, à son tour** : le chemin le plus long n'est plus
+11,73 m mais **17,17 m**, pour EL-01b, au point d'utilisation. La
+chute terminale passe de 0,144 % à **0,210 %**, la cumulée de 1,79 % à **1,86 %**, et la marge de
+1,21 à **1,14 point**. *Le point dimensionnant a changé de lettre : ce n'est pas le pontage qui l'a fait, mais
+la colonne est, plus longue de 20 cm. Le pontage est un éclairage de fin de ligne et ne touche
+pas au trajet du tableau au plafond.*
+
+**Les deux sorties sont à 1,55 m de la borne du tablier — ce qui n'est plus la même chose qu'en
+2026-09-23.** Elles sont désormais **sous** le tablier remonté, et non au nord de sa borne, parce
+que le volume relevé est plus profond qu'on ne le croyait : y jusqu'à 2,15 m. **Leur dégagement
+n'est pas établi** et le segment qui descend vers EL-01b est `non-concluant`. Voir la section 2.
 
 ### Les commandes ont remonté, puis sont redescendues — et il n'en reste qu'une
 
@@ -338,7 +450,7 @@ deux contrôles négatifs.
 
 ### Ce qui ne se vérifie que de nuit
 
-**CM-03 agit sur EL-03 seul**, sans effet sur EL-02 ni sur le plafonnier (SC-015). C'est la
+**CM-03 agit sur EL-03 seul**, sans effet sur EL-02 ni sur les six réglettes du plafond (SC-015). C'est la
 vérification la plus importante de cette histoire, et la seule qu'aucune mesure ne remplace :
 **une inversion de câblage entre deux commandes est invisible au contrôle de continuité**. Elle
 se constate en regardant, de nuit, depuis l'extérieur.
@@ -351,10 +463,11 @@ permet. À confirmer sur place.
 
 **À lire avant toute intervention ultérieure — deux situations, non une.**
 
-### Les quatre boîtes portent deux circuits
+### Cinq boîtes portent plus d'un circuit
 
 Depuis la mutualisation du 2026-09-21, BD-01 à BD-04 portent le circuit des prises **et** celui
-de l'éclairage. **Consigner l'un n'y met pas l'autre hors tension.**
+de l'éclairage. **Consigner l'un n'y met pas l'autre hors tension.** Deux s'y ajoutent depuis le
+pontage, qui a supprimé trois des six de la version précédente.
 
 | Boîte | Position | Ce qu'elle contient |
 |-------|----------|---------------------|
@@ -362,6 +475,13 @@ de l'éclairage. **Consigner l'un n'y met pas l'autre hors tension.**
 | BD-01 | 5,60 / **2,60** / 2,60 | les deux circuits, **plus la traversée vers EL-03 dans son fond** |
 | BD-03 | 5,60 / **2,60** / 2,75 | les deux circuits |
 | BD-04 | 5,60 / **2,60** / 1,10 | les deux circuits, **plus CM-01 et la traversée vers CM-03 dans son fond** |
+| **BD-05** | 2,70 / **2,60** / 2,75 | les deux circuits — **et le départ de CH-L2 vers la fourche BL-01** |
+| **BD-06** | 5,40 / 0 / 2,22 | les deux circuits — **l'organe de connexion du mur sud**, sur le passage vers EL-02 |
+
+*Les deux dernières ont rejoint la liste le 2026-10-01 : en étoile, l'éclairage rejoignait le
+tronc par ses sept colonnes et ne touchait donc pas BD-05 ni BD-06. Ponté, il n'a plus que deux
+descentes au plafond, et la seconde passe par le sud.* **OC-01** et **OC-02**, les organes de
+connexion du tableau, portent également plusieurs circuits.
 
 Chacune DOIT être **repérée comme telle**, de façon lisible sans l'ouvrir — la constitution
 l'exige depuis sa v1.10.0. Le motif de cette règle est exactement cette situation : une

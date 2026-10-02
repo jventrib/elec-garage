@@ -1,6 +1,20 @@
 # Nomenclature — éclairage du garage
 
 **Fonctionnalité**: `003-eclairage` | **Date**: 2026-09-21
+| Dernière révision | **2026-10-01** — six réglettes pontées
+
+> **Ce qui a changé le 2026-09-26** : le plafond passe de deux sorties à **six réglettes**
+> HOFTRONIC. La nomenclature suit : **4 boîtes** au lieu de 1 (BL-01, BD-07, BD-08, BD-09),
+> **6 points lumineux** au lieu d'un seul, **104,89 m** de 1,5 mm² au lieu de 69,34 m,
+> **18,91 m** de conduit propre au lieu de 8,13 m, **11 coudes** au lieu de 2.
+> Le tableau des fournitures généré fait foi sur les longueurs.
+>
+> **Ce qui a changé le 2026-10-01** : les six réglettes sont **pontées deux à deux** par quatre
+> cordages. La nomenclature suit : **1 boîte** propre à l'éclairage au lieu de 4 — BL-01 seule,
+> les trois autres ayant disparu avec les colonnes qu'elles desservaient —, **108,92 m** de
+> 1,5 mm² au lieu de 104,89 m, **12,56 m** de conduit propre au lieu de 18,91 m, et **7,69 m**
+> de **cordage**, qui n'est pas du conduit. Les **coudes propres** restent **8**, mais le total
+> du projet passe de 11 à **13** — voir le détail ci-dessous. Le tableau généré fait foi.
 
 Quantités déduites du tracé de [data-model.md](./data-model.md) et de
 `data/apports/003-eclairage.json`. Les longueurs de conduit sont des **métrés de tracé** : elles
@@ -10,13 +24,14 @@ ne comprennent ni chute, ni cintrage, ni réserve de raccordement.
 
 | Article | Quantité | Précision |
 |---------|----------|-----------|
-| Conduit **propre à l'éclairage**, IRL 20 | **8,13 m** de tracé | Métré exact des branches qui n'appartiennent qu'à ce circuit. Porté de l'IRL 16 à l'**IRL 20** le 2026-09-22, décision du maître d'ouvrage : **une seule référence de tube** pour tout le projet hors borne. CH-L5 a disparu le 2026-09-21 : EL-03 emprunte le tube vertical déjà posé sur l'aplomb de PC-01 (FR-046) |
-| Conduit **partagé** avec les prises, IRL 20 | **7,95 m** — compté à la nomenclature de `002` | Tronc commun aux deux circuits depuis le 2026-09-21, ramené de l'IRL 25 à l'**IRL 20** le 2026-09-22 sur décision du maître d'ouvrage. ⚠️ **CH-05 exige un intérieur ≥ 14,69 mm** : condition d'achat, voir note de calcul § 3.2 |
+| Conduit **propre à l'éclairage**, IRL 20 | **12,56 m** de tracé | Les deux colonnes **CH-L3** (4,25 m) et **CH-L4** (4,05 m) plus les deux branches courtes **CH-L2** (0,65 m) et **CH-L6** (0,30 m). Porté de l'IRL 16 à l'**IRL 20** le 2026-09-22, décision du maître d'ouvrage : **une seule référence de tube** pour tout le projet hors borne. **Revu le 2026-10-01** : 18,91 m avant le pontage, 12,56 m après — le pontage, et non une réduction du besoin |
+| **Cordages**, entre réglettes | **4** — CP-1 à CP-4, **7,69 m** au total | Voir la section ci-dessous. **N'est pas du conduit** : ni section, ni taux de remplissage, ni pièce d'assemblage |
+| Conduit **partagé** avec les prises, IRL 20 | **7,96 m** — compté à la nomenclature de `002` | Tronc commun aux deux circuits depuis le 2026-09-21, ramené de l'IRL 25 à l'**IRL 20** le 2026-09-22 sur décision du maître d'ouvrage. ⚠️ **CH-L1 exige un intérieur ≥ 14,69 mm** : condition d'achat, voir note de calcul § 3.2 |
 | dont parcours **extérieur** | **0,30 m** — CH-L6, entre le point de façade et son détecteur | Voir la réserve ci-dessous : l'IRL d'intérieur n'est pas présumé qualifié pour l'exposition directe |
 | Diamètre intérieur des conduits | Condition `D ≥ 3·d` sur les branches propres (trois conducteurs, dérivés). Le **tronc** relève de `D ≥ d·√24` sur CH-05 seul, soit **≥ 14,69 mm**, et d'environ 13 mm sur les quatre autres | Condition exacte, à lire sur les fiches produit **avant commande**. Voir § 3.1 et § 3.2 de la note de calcul |
 | Colliers de fixation | à raison de l'entraxe préconisé par le fabricant | Donnée produit, non cote de projet |
 | **Chevilles adaptées au béton** | une par collier, plus les fixations d'appareillage | Voir ci-dessous |
-| Coudes et accessoires | **2 changements de direction, tous sur CH-L1** — l'angle sud-est de la paroi, puis la descente à 2,22 m. Les autres branches sont rectilignes, les changements de direction se faisant **dans les boîtes** : BD-05 pour le virage vers le nord, BL-01 pour la fourche | Un changement de direction se traite par accessoire, jamais par pincement du tube. Recompté le 2026-09-21 : la liste antérieure citait CH-L5 et CH-L7, qui n'existent plus |
+| Coudes et accessoires | **8** propres à l'éclairage — CH-L3 (4) et CH-L4 (4) | Un changement de direction se traite par accessoire, jamais par pincement du tube. Le projet total en compte **13**, dont 5 sur des tronçons partagés ou appartenant à d'autres circuits (CH-L1, GL-02, CH-B3). Décompte complet dans [fournitures.md](../fournitures.md). **Aucun cordage n'est compté** : un câble se pose à la main, il ne se cintre pas par accessoire |
 
 ### La place à réserver, et pourquoi elle est comptée ici
 
@@ -40,12 +55,41 @@ actionne plusieurs fois par jour.
 
 Perçage au perforateur, mèche béton, sans percussion à proximité immédiate d'un conduit posé.
 
+## Cordages — ce que le pontage achète, et ce qu'il ne'achète pas
+
+Quatre liaisons souples relient les six réglettes deux à deux : **CP-1** et **CP-2** dans la
+colonne ouest (2,04 m et 1,81 m), **CP-3** et **CP-4** dans la colonne est (2,04 m et 1,81 m),
+soit **7,69 m** au total. Ce sont des **câbles**, et les écrire à la ligne du conduit serait
+trois erreurs en une : un câble n'a pas de diamètre intérieur, donc pas de taux de
+remplissage ; il ne se pose ni en saillie du plafond ni dans une goulotte ; et il ne se
+commande pas chez le même fournisseur que l'IRL 20.
+
+Ce que le pontage **achète** : quatre câbles, et la poignée de fixations qui les tiennent.
+Ce qu'il **n'achète pas** : le **câblage interne** des réglettes. HOFTRONIC les livre
+pré-équipées, connectables entre elles jusqu'à dix selon la fiche — le lien qui relie deux
+réglettes fait partie de l'appareil, au même titre que son diffuseur. Ces 1,20 m par
+liaison n'apparaissent donc dans aucun métré.
+
+Ce qu'il ne faut pas en déduire : que ces mètres n'existent pas. C'est du cuivre, parcouru par le
+courant, et il compte dans le trajet : c'est lui qui allonge le chemin de la réglette voisine quand
+le courant la traverse en transit. La convention de chute retenue s'arrête au **point d'utilisation**
+de chaque réglette : **1,86 %** au total. *Compter en plus le lien interne de la cible porterait à
+1,88 % — un majorant, écarté.* Un câble qu'on ne paie pas et qu'on oublie dans le calcul est le genre
+d'économie qui se voit dans l'allumage saccadé.
+
+| Article | Quantité | Précision |
+|---------|----------|-----------|
+| Câble de liaison entre réglettes | **4** — CP-1 à CP-4 | **7,69 m** au total. **Section et référence à arrêter** : elle dépend du courant de la colonne, et le pontage l'a fait passer de trois conducteurs par colonne à un seul trio |
+| Fixations de cordage | à raison d'une par demi-mètre, plus une par aboutisseur | Le câble **pend** : il ne s'appuie pas sur le plafond, et sa flèche est une donnée de pose, pas un défaut de pose |
+| **Câblage interne des réglettes** | **6 × 1,20 m**, montées d'usine | **Déjà dans les réglettes.** Ni à commander, ni à poser, ni à facturer |
+
 ## Boîtes, traversées, appareillage
 
 | Article | Quantité | Précision |
 |---------|----------|-----------|
-| Boîtes de dérivation | **1** — BL-01, la fourche du plafonnier | Les cinq autres boîtes du circuit — BD-01 à BD-05 — sont **partagées** avec les prises et comptées à la nomenclature de `002`. Elles DOIVENT être **repérées comme boîtes à plusieurs circuits** (constitution v1.10.0) |
-| Sorties d'éclairage, **intérieures** | **2** — EL-01a, EL-01b | Au plafond. Elles forment **un seul point lumineux** à deux sorties |
+| Boîtes de dérivation, **propres à l'éclairage** | **1** — BL-01, la fourche des deux colonnes | **Revu le 2026-10-01** : il y en avait 4 avant le pontage. Chaque colonne étant alimentée par un trio unique, il n'y a plus rien à redistribuer au plafond — la boîte qui faisait le travail de trois boîtes disparaît avec eux. Les boîtes **partagées** avec les prises — BD-04, BD-05 — sont comptées à la nomenclature de `002`. Elles DOIVENT être **repérées comme boîtes à plusieurs circuits** (constitution v1.10.0) |
+| **Réglettes LED 120 cm, plafond** | **6** — EL-01a à EL-01f | En **deux colonnes de trois**, à 1,45 m et 4,15 m de l'axe médian. Six points lumineux **distincts**, un seul circuit. HOFTRONIC, pack de 6 : **120 × 65 × 58 mm**, **36 W**, **4000 K**, **IP65**, **IK07**, **classe II**, **25 000 h** |
+| ⚠️ dont **sous le tablier remonté** | **2** — EL-01a, EL-01b | À y = 1,55 m. **Dégagement NON établi** : l'épaisseur du panneau n'a jamais été relevée. **Mesurer en place avant de fixer**, décaler si elles frotent |
 | Sorties d'éclairage, **extérieures** | **2** — EL-02, EL-03 | Façade sud et paroi est. Indice de protection à arrêter |
 | **Boîtier à deux postes** | **1** — pour CM-01 et CM-03 | Les deux mécanismes DOIVENT être **distinguables au toucher** (FR-032) : c'est ce qui évite d'allumer l'extérieur par méprise, dans le noir |
 | Interrupteurs en saillie | **2** — CM-01, CM-03 | Dans le boîtier ci-dessus |
@@ -67,14 +111,28 @@ restant immobile verra la lumière s'éteindre.
 
 | Article | Quantité | Précision |
 |---------|----------|-----------|
-| Conducteur **1,5 mm²** | **5 × 15,13 m** au maximum — 10,08 m en propre plus 5,05 m de tronc partagé — soit **75,65 m**, à réduire sur les branches terminales | Phase, neutre, protection, et **deux retours commandés** |
-| dont retours commandés | 2 — un pour le plafonnier, un pour l'accès piéton | Le point de façade n'en appelle **aucun** : alimenté en permanence, commuté sur place |
+| Conducteur **1,5 mm²** | **108,92 m**, métré **dérivé** sur le tracé réel | Le tableau de [fournitures.md](../fournitures.md) fait foi. **Revu le 2026-10-01** : 104,89 m avant le pontage — **+4,03 m**, et c'est le pontage qui les coûte |
+| dont retours commandés | 2 — un pour le **plafond**, un pour l'accès piéton | Le point de façade n'en appelle **aucun** : alimenté en permanence, commuté sur place |
 | Repérage de circuit | 1 jeu | Contrôlé à l'étape de concordance du repérage |
 
-**Le quantitatif ci-dessus est un majorant.** Cinq conducteurs ne courent que sur le tronc ;
-au-delà des boîtes, chaque branche n'en porte que ce qui lui est utile. Le métré exact par
-tronçon se déduit du tracé et ne mérite pas d'être recopié ici — il changerait au premier
-ajustement.
+**Le métré ci-dessus n'est plus un majorant : c'est une mesure.** Il est calculé par le socle
+sur le tracé réel, et non estimé. Le détail par tronçon est dans `fournitures.md`, généré par
+`npm run fournitures` — ne pas le recopier ici, il changerait au premier ajustement du tracé.
+
+**Ce qui a changé le 2026-09-26**, puis **le 2026-10-01**. Le 26 septembre, le métré passe
+de 69,34 m à 104,89 m, soit +51 % : six réglettes destinées à des points distincts ne
+peuvent pas partager un retour de commande unique, et chaque colonne porte son trio
+phase/neutre/PE. Le 1er octobre, le **pontage** rend les colonnes économiques : le trio unique qui
+descend remplace les deux, et le câble du cordage prend le relais. Le métré **remonte
+pourtant** à 108,92 m — les cordages pèsent 7,69 m de câble, et 4,03 m de +
+1,5 mm² les remplacent sur les colonnes. C'est le prix du pontage, et il est **inférieur**
+à celui d'une distribution individuelle complète.
+
+Trois conducteurs seulement montent par colonne — phase, neutre, PE. Les cordages, eux,
+portent le **PE, le neutre et la sortie de module**, jamais la phase : une phase qui
+traverse un câble de liaison n'alimenterait qu'une moitié de la chaîne et laisserait
+l'autre morte. C'est pourquoi le décompte des conducteurs du circuit reste à huit, inchangé
+depuis le 26 septembre.
 
 ## Protection au tableau
 

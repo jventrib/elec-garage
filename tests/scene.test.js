@@ -9,6 +9,8 @@ import { construireObstacles } from '../src/scene/obstacles.js';
 import { construireComposants, couleurDeCircuit, gabarit } from '../src/scene/composants.js';
 import { construireCheminements } from '../src/scene/cheminements.js';
 import * as encombrement from '../src/geometrie/section.js';
+import { enveloppeDeBoite } from '../src/geometrie/enveloppe.js';
+import { Color } from '../vendor/three/three.module.js';
 
 /*
  * Ces constructeurs n'emploient que des classes pures de three.js — géométries,
@@ -183,6 +185,61 @@ test('le décalage sort le marqueur du bon côté du nu', () => {
   assert.ok(dehors.decalage[0] > 0);
 });
 
+test('au plafond, chaque axe du plan porte UNE cote — la hauteur n\'est pas ignorée', () => {
+  // La largeur était comptée sur x ET sur y, et la hauteur jamais. Un objet
+  // allongé au plafond n'avait donc aucune façon de s'exprimer : `largeur: 1,20`
+  // donnait un carré de 1,20 m, `largeur: 0,065` donnait 6,5 cm. Le tube de
+  // plafond rendait le défaut bloquant ; MC-02, 45 × 40, le rendait déjà
+  // mesurable — il se dessinait 45 × 45.
+  const tube = {
+    type: 'inexistant',
+    paroi: 'plafond',
+    face: 'interieur',
+    dimensions: { largeur: 1.2, hauteur: 0.065, profondeur: 0.058 },
+  };
+  assert.deepEqual(gabarit(tube, modele.types).dims, [1.2, 0.065, 0.058], '1,20 × 6,5 × 5,8 cm');
+
+  // Le même objet tourné d'un quart de tour ne demande aucun code de plus : la
+  // longueur est portée par la largeur ou par la hauteur, selon la direction.
+  const tourne = { ...tube, dimensions: { largeur: 0.065, hauteur: 1.2, profondeur: 0.058 } };
+  assert.deepEqual(gabarit(tourne, modele.types).dims, [0.065, 1.2, 0.058], 'la longueur porte y');
+
+  const mc02 = gabarit(
+    { type: 'inexistant', paroi: 'plafond', face: 'interieur', dimensions: { largeur: 0.045, hauteur: 0.04, profondeur: 0.02 } },
+    modele.types,
+  );
+  assert.deepEqual(mc02.dims, [0.045, 0.04, 0.02], '45 × 40, et non 45 × 45 — le cas de MC-02');
+});
+
+test('le marqueur et l\'enveloppe de collision ne peuvent plus diverger', () => {
+  // Deux copies de la même règle, l'une pour le dessin, l'autre pour V22, et
+  // aucune qui les rapproche : rien n'aurait signalé qu'elles se séparent. On
+  // compare donc les deux, sur TOUS les composants, parois comprises.
+  const enveloppe = (composant) => {
+    const declare = modele.types.types.find((t) => t.id === composant.type);
+    const avecVolume = { ...composant, dimensions: composant.dimensions ?? declare?.gabarit };
+    return enveloppeDeBoite(modele.local, avecVolume);
+  };
+  const compare = (composant) => {
+    const e = enveloppe(composant);
+    if (!e) return; // paroi inconnue ou volume absent : rien à comparer
+    const g = gabarit(composant, modele.types);
+    const c = {
+      x: composant.position.x + g.decalage[0],
+      y: composant.position.y + g.decalage[1],
+      z: composant.position.z + g.decalage[2],
+    };
+    for (const [axe, i] of [['x', 0], ['y', 1], ['z', 2]]) {
+      assert.ok(
+        Math.abs(e.min[axe] - (c[axe] - g.dims[i] / 2)) < 1e-9 &&
+          Math.abs(e.max[axe] - (c[axe] + g.dims[i] / 2)) < 1e-9,
+        `${composant.reference} : le marqueur et l'enveloppe divergent sur ${axe}`,
+      );
+    }
+  };
+  for (const composant of modele.composants) compare(composant);
+});
+
 test('couleurDeCircuit exige sa présentation et ne la devine pas', () => {
   assert.equal(couleurDeCircuit(modele.circuits, 'c-demo', modele.presentation), '#1f77b4');
   assert.equal(
@@ -331,4 +388,73 @@ test('la vue initiale regarde l’angle sud-est', () => {
   assert.ok(regard.x > 0, 'le regard va vers l’est');
   assert.ok(regard.y < 0, 'et vers le sud');
   assert.ok(Math.abs(regard.x + regard.y) < 1e-6, 'à égale distance des deux, droit sur l’angle');
+});
+
+test('un cordage se dessine en câble qui pend, pas en tube en saillie', () => {
+  // Un cordage sans section n'a pas de gabarit intérieur, et la boîte en saillie
+  // du conduit n'a alors plus rien à mesurer : on retomberait sur la section
+  // conventionnelle de repli, c'est-à-dire un tube de 12 mm posé contre le
+  // plafond, DROIT. Ce serait un double mensonge — le diamètre, qui n'est pas
+  // arrêté, et la souplesse, qui est la seule raison d'avoir choisi un câble.
+  //
+  // Ce test vérifie les trois différences visibles, et le contraste avec un conduit
+  // du même projet, parce qu'un cordage dessiné comme un conduit passerait tous les
+  // contrôles de compilation.
+  const m = fusionner(SOCLE(), [PRISES(), ECLAIRAGE(), BORNE()]);
+  const { groupe } = construireCheminements(m);
+  const noeudDe = (reference) => {
+    const ch = m.cheminements.find((c) => c.reference === reference);
+    assert.ok(ch, `${reference} doit exister au modèle`);
+    return groupe.children.find((n) => n.name === ch.id);
+  };
+
+  const convention = m.presentation.cordage;
+  assert.ok(convention.diametre > 0 && convention.fleche > 0, 'le socle déclare un diamètre et une flèche');
+
+  // Un tube, du bon rayon, et surtout pas de liseré : un contour_borderait_ le
+  // câble comme une gaine, ce qu'il n'est pas.
+  const cp = noeudDe('CP-1');
+  assert.ok(cp.children.length > 0, 'le cordage a un maillage');
+  for (const mesh of cp.children) {
+    assert.equal(mesh.geometry.type, 'TubeGeometry', 'un tube, pas une boîte');
+    assert.ok(
+      Math.abs(mesh.geometry.parameters.radius - convention.diametre / 2) < 1e-12,
+      `rayon ${mesh.geometry.parameters.radius} m, soit un diamètre de ${mesh.geometry.parameters.radius * 2} m`,
+    );
+  }
+  assert.ok(
+    !cp.children.some((o) => o.isLineSegments),
+    'aucun contour : un liseré dirait « gaine »',
+  );
+
+  // Et il PEND. La flèche est nulle aux deux aboutisseurs — le câble reste accroché
+  // aux points que la donnée déclare — et maximale au milieu. C'est mesurable sur
+  // la géométrie : le point le plus bas est sous le segment, d'environ la flèche.
+  const segment = m.cheminements.find((c) => c.reference === 'CP-1').segments[0];
+  const sousLeSegment = Math.min(segment.de.z, segment.a.z);
+  const position = cp.children[0].geometry.parameters.path.getPoint(0.5);
+  assert.ok(
+    position.z < sousLeSegment - convention.fleche * 0.9,
+    `le milieu du câble est à ${position.z.toFixed(4)} m, sous les aboutisseurs à ${sousLeSegment.toFixed(4)} m`,
+  );
+  for (const t of [0, 1]) {
+    const aboutisseur = cp.children[0].geometry.parameters.path.getPoint(t);
+    assert.ok(
+      Math.abs(aboutisseur.z - (t === 0 ? segment.de.z : segment.a.z)) < 1e-9,
+      `l’aboutisseur t=${t} est exactement sur le raccord déclaré`,
+    );
+  }
+
+  // La couleur : un cordage garde la sienne dans les trois registres. Un conduit, lui,
+  // prend celle du cheminement dès qu'il est ajouté — lui rendre la sienne serait
+  // mentir sur sa nature.
+  const couleurs = m.presentation.couleurs;
+  assert.notEqual(couleurs.cordage, couleurs.cheminement, 'le socle distingue les deux natures');
+  assert.equal(cp.children[0].material.color.getHex(), new Color(couleurs.cordage).getHex());
+
+  // Le contraste, pour que le test ne passe pas par défaut : un conduit du même
+  // projet reste une boîte en saillie, avec son liseré.
+  const gl = noeudDe('GL-02');
+  assert.ok(gl.children.some((o) => o.geometry.type === 'BoxGeometry'), 'un conduit reste une boîte');
+  assert.ok(gl.children.some((o) => o.isLineSegments), 'et garde son contour');
 });

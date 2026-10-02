@@ -22,7 +22,7 @@ import { validerTout } from '../src/donnees/validation.js';
 import { construireGraphe, atteignablesDepuisTableau, longueursDepuisTableau } from '../src/geometrie/graphe.js';
 import { cheminDePhase, occupationParCheminement } from '../src/geometrie/conducteurs.js';
 import { controlerCollisions, VERDICTS } from '../src/geometrie/collision.js';
-import { memePoint, pointSurProfile } from '../src/geometrie/cheminement.js';
+import { memePoint, pointSurProfile, estCordage } from '../src/geometrie/cheminement.js';
 
 const CIRCUIT = 'c-eclairage';
 const apports = () => [PRISES(), ECLAIRAGE(), AUTOMATISATION()];
@@ -83,21 +83,34 @@ test('tout appareil hors conduit est rattaché par le boîtier qu’il déclare'
   // l'intérieur. Compter les commandes était la mauvaise idée : ce n'est pas leur
   // nombre qui est un invariant, c'est le mécanisme.
   //
-  // L'invariant est celui-ci : un appareil qui n'est l'extrémité d'AUCUN conduit
-  // doit être rattaché par un membre du boîtier qu'il déclare, et ce membre doit
-  // lui-même être desservi. Aucun appareil ne doit rester orphelin par une autre
-  // voie — la proximité, par exemple, qui ne prouve rien.
+  // L'invariant est celui-ci : un appareil que RIEN ne déclare — ni conduit,
+  // ni cordage, ni traversée — doit être rattaché par un membre du boîtier qu'il
+  // déclare, et ce membre doit lui-même être desservi. Aucun appareil ne doit rester
+  // orphelin par une autre voie — la proximité, par exemple, qui ne prouve rien.
+  //
+  // « Quelque chose le déclare » est plus large que « un conduit » : une
+  // commande au dos d'une traversée EST desservie, et exiger d'elle un boîtier
+  // serait faux. C'est ce qui reste vrai après le pontage des réglettes, et c'est
+  // ce que la suite vérifie.
+  //
+  // Le pontage a changé la MANIÈRE dont les six réglettes sont desservies — par des
+  // cordages, à leurs extrémités — mais pas le principe : elles ne sont pas
+  // devenues des appareils orphelins, elles sont devenues des appareils dont on a
+  // déclaré le point de raccordement. Le test qui le prouve est celui d'après,
+  // « les six réglettes se pontent par leurs extrémités ».
   const m = modeleDe();
   const graphe = construireGraphe(m);
-  const surConduit = (c) => (graphe.noeudAu(c.position)?.aretes ?? []).length > 0;
+  // Un composant peut se raccorder par plusieurs points : on le cherche par CEUX
+  // qu'il déclare, et non par son centre, dont l'absence est alors la norme.
+  const desservi = (c) => graphe.noeudsDeComposant(c.id).some((n) => n.aretes.length > 0);
 
-  const horsConduit = m.composants.filter((c) => c.circuit === CIRCUIT && !surConduit(c));
-  assert.ok(horsConduit.length > 0, 'le cas doit exister dans les données, sinon ce test ne prouve rien');
+  const orphelins = m.composants.filter((c) => c.circuit === CIRCUIT && !desservi(c));
+  assert.ok(orphelins.length > 0, 'le cas doit exister dans les données, sinon ce test ne prouve rien');
 
-  for (const c of horsConduit) {
-    assert.ok(c.boitier, `${c.reference} n'est sur aucun conduit : il DOIT déclarer son boîtier`);
-    const ancre = m.composants.find((x) => x.boitier === c.boitier && surConduit(x));
-    assert.ok(ancre, `le boîtier « ${c.boitier} » doit avoir un membre desservi par un conduit`);
+  for (const c of orphelins) {
+    assert.ok(c.boitier, `${c.reference} n'est desservi par rien : il DOIT déclarer son boîtier`);
+    const ancre = m.composants.find((x) => x.boitier === c.boitier && desservi(x));
+    assert.ok(ancre, `le boîtier « ${c.boitier} » doit avoir un membre desservi`);
     assert.equal(
       ancre.type,
       'boite-derivation',
@@ -106,7 +119,7 @@ test('tout appareil hors conduit est rattaché par le boîtier qu’il déclare'
   }
 
   const acces = atteignablesDepuisTableau(graphe, m, CIRCUIT);
-  for (const c of horsConduit) assert.ok(acces.atteignables.has(c.id), `${c.reference} doit être atteignable`);
+  for (const c of orphelins) assert.ok(acces.atteignables.has(c.id), `${c.reference} doit être atteignable`);
   assert.deepEqual(acces.orphelins, []);
 });
 
@@ -141,51 +154,80 @@ test('la commande extérieure est desservie par une traversée, sans conduit pro
     assert.ok(boite, `« ${t.reference} » doit sortir du fond d'une boîte, et non d'un point de paroi nu`);
   }
 });
-test('les deux sorties du plafonnier sont symétriques et à même profondeur', () => {
-  // SC-016 et FR-002. Formulé sur la symétrie, non sur les abscisses : déplacer la
-  // paire ne doit pas faire échouer ce test, la désaligner doit le faire échouer.
+test('les six réglettes de plafond forment deux colonnes symétriques', () => {
+  // SC-016 et FR-002, étendus le 2026-09-26 au plafond à six réglettes. Formulé
+  // sur la symétrie, non sur les abscisses : déplacer la paire ne doit pas faire
+  // échouer ce test, la désaligner doit le faire échouer.
   const m = modeleDe();
   const plafond = m.composants.filter(
-    (c) => c.circuit === CIRCUIT && c.type === 'luminaire' && c.paroi === 'plafond',
+    (c) => c.circuit === CIRCUIT && c.type === 'reglette-led' && c.paroi === 'plafond',
   );
-  assert.equal(plafond.length, 2, 'le plafonnier a exactement deux sorties');
-  const [a, b] = plafond;
-  assert.ok(Math.abs(a.position.y - b.position.y) < 1e-9, 'même profondeur : un axe est-ouest');
+  assert.equal(plafond.length, 6, 'le plafond porte les six réglettes commandées');
   const median = m.local.oeuvre.x / 2;
-  assert.ok(
-    Math.abs(Math.abs(a.position.x - median) - Math.abs(b.position.x - median)) < 1e-9,
-    'symétriques par rapport à l’axe médian nord-sud',
-  );
-  assert.ok(Math.abs(a.position.x - b.position.x) > 1e-6, 'et distinctes, non superposées');
+
+  // Deux colonnes, chacune symétrique de l'autre par rapport à l'axe médian, et
+  // distinctes. C'est l'invariant de SC-016, il ne s'est pas relâché en passant
+  // de deux points à six.
+  for (const y of [...new Set(plafond.map((c) => c.position.y))]) {
+    const rangee = plafond.filter((c) => Math.abs(c.position.y - y) < 1e-9);
+    assert.equal(rangee.length, 2, `la rangée y = ${y} porte deux réglettes`);
+    const [a, b] = rangee;
+    assert.ok(
+      Math.abs(Math.abs(a.position.x - median) - Math.abs(b.position.x - median)) < 1e-9,
+      `la rangée y = ${y} est symétrique par rapport à l’axe médian nord-sud`,
+    );
+    assert.ok(Math.abs(a.position.x - b.position.x) > 1e-6, 'et distinctes, non superposées');
+  }
+
+  // Trois profondeurs distinctes : sans cela, une rangée dupliquée en profondeur
+  // passerait le test précédent en simulant deux colonnes.
+  const profondeurs = [...new Set(plafond.map((c) => c.position.y))].sort((a, b) => a - b);
+  assert.equal(profondeurs.length, 3, 'trois profondeurs, une par rangée');
 });
 
-test('les sorties de plafond dégagent le majorant du tablier ouvert', () => {
-  // FR-003 et SC-002 portent sur les deux SORTIES, et la garde qu'elles doivent
+test('les sorties de plafond : quatre dégagées, deux sous le panneau déclaré', () => {
+  // FR-003 et SC-002 portaient sur les deux SORTIES, et la garde qu'elles doivent
   // prendre est en profondeur : au nord de la course du rail.
   //
   // Une version antérieure de ce test englobait aussi les boîtes de dérivation et
   // ne contrôlait que l'ordonnée. Elle échouait sur BL-02, qui est à y = 0,40 —
   // alors que cette boîte est à x = 5,60, donc à l'EST du majorant, qui s'arrête à
   // la largeur de la baie. Le dégagement d'un volume ne se juge pas sur un axe.
+  //
+  // RÉÉCRIT le 2026-09-26. L'invariant « aucun composant du circuit n'est dans le
+  // majorant du tablier » n'est plus tenable, et l'a été volontairement : le maître
+  // d'ouvrage a décidé de laisser les deux réglettes de la porte, EL-01a et EL-01b,
+  // à y = 1,55 m, sous le panneau remonté. L'épaisseur de ce panneau n'est pas
+  // relevée, donc ce qu'il occupe ne peut être ni prouvé libre ni prouvé occupé.
+  // Ce qui reste vrai, et que ce test vérifie, c'est que le doute est EXPLICITE et
+  // CIRCONSCRIT : exactement deux réglettes sont sous le panneau, quatre en sont
+  // prouvées dégagées, et aucune boîte n'y entre.
   const m = modeleDe();
   const tablier = m.local.obstacles.find((o) => o.id === 'tablier-sectionnelle-ouvert');
   const maj = tablier?.volumeMajorant;
   assert.ok(maj, 'le tablier ouvert doit porter un majorant');
-
-  const sorties = m.composants.filter(
-    (c) => c.circuit === CIRCUIT && c.type === 'luminaire' && c.paroi === 'plafond',
-  );
-  assert.equal(sorties.length, 2);
-  for (const c of sorties) {
-    assert.ok(c.position.y > maj.max.y, `${c.reference} doit être au nord de la borne du tablier`);
-  }
-
-  // Les boîtes, elles, sont dégagées sur un autre axe. La vérification générale
-  // est celle du contrôle de collision : aucune collision établie, et le seul
-  // non-concluant est celui du segment de façade.
   const dedans = (p) =>
     ['x', 'y', 'z'].every((k) => p[k] >= maj.min[k] - 1e-9 && p[k] <= maj.max[k] + 1e-9);
-  for (const c of m.composants.filter((x) => x.circuit === CIRCUIT)) {
+
+  const reglettes = m.composants.filter(
+    (c) => c.circuit === CIRCUIT && c.type === 'reglette-led' && c.paroi === 'plafond',
+  );
+  const sousLePanneau = reglettes.filter((c) => dedans(c.position));
+  assert.deepEqual(
+    sousLePanneau.map((c) => c.reference).sort(),
+    ['EL-01a', 'EL-01b'],
+    'seules les deux réglettes de la porte sont sous le panneau, et ce sont les seules',
+  );
+  for (const c of sousLePanneau) {
+    assert.ok(c.position.y < maj.max.y, `${c.reference} est en deçà de la profondeur relevée du panneau`);
+  }
+  for (const c of reglettes.filter((x) => !sousLePanneau.includes(x))) {
+    assert.ok(c.position.y > maj.max.y, `${c.reference} est au nord de la borne du panneau`);
+  }
+
+  // Les boîtes, elles, restent dégagées : aucune n'entre dans le panneau. La
+  // distribution du plafond a été construite pour cela, et c'est vérifié ici.
+  for (const c of m.composants.filter((x) => x.circuit === CIRCUIT && x.type === 'boite-derivation')) {
     assert.equal(dedans(c.position), false, `${c.reference} est dans le majorant du tablier`);
   }
 });
@@ -205,13 +247,17 @@ test('la chute de tension cumulée reste sous la limite de 3 % de l’éclairage
   const circuit = m.circuits.find((c) => c.id === CIRCUIT);
   const RHO = 0.0225;
   const U = 230;
-  // Hypothèse majorante : quatre sorties LED de 60 W allumées ensemble.
-  const I = circuit.courantEmploi ?? (4 * 60) / U;
+  // 6 × 36 W = 216 W à 230 V.
+  const I = circuit.courantEmploi ?? (6 * 36) / U;
 
   // Le point dimensionnant se cherche sur la somme des deux longueurs, et non
   // plus sur la seule longueur de conduit : changer de forme peut changer de
-  // point, et le supposer serait supposer la conclusion.
-  const points = m.composants.filter((c) => c.circuit === CIRCUIT && c.type === 'luminaire');
+  // point, et le supposer serait supposer la conclusion. On inclut les deux
+  // réglettes (le nouveau plafond) ET les deux luminaires étanches historiques
+  // (EL-02, EL-03) qui partagent le même circuit.
+  const points = m.composants.filter(
+    (c) => c.circuit === CIRCUIT && ['reglette-led', 'luminaire'].includes(c.type),
+  );
   assert.ok(points.length > 0);
   const chutes = points.map((c) => {
     const phase = cheminDePhase(graphe, m, CIRCUIT, c.id);
@@ -225,15 +271,22 @@ test('la chute de tension cumulée reste sous la limite de 3 % de l’éclairage
   assert.ok(pire.chute < 3, `chute terminale de ${pire.chute.toFixed(3)} % sur ${pire.reference}`);
 
   // La forme exacte n'est jamais moins sévère que `2ρLI/S` sur la seule longueur
-  // de conduit. Elle l'est STRICTEMENT tant que la phase fait un détour par la
-  // commande ; depuis que CM-01 adresse un ordre à MC-01, posé dans la goulotte
-  // sur le chemin du plafonnier, il n'y a plus de détour et les deux formes se
-  // rejoignent. Si l'exacte passait dessous, c'est qu'un bout de phase aurait été
+  // de conduit, pour AUCUN point alimenté — pas seulement le pire. La comparaison
+  // se fait donc sur le conduit le plus long atteint par un point (le chemin de
+  // phase le plus long), pas sur le conduit le plus long du réseau : celui-ci
+  // peut ne desservir aucun point dimensionnant. Si la forme exacte passait
+  // dessous pour le chemin le plus long, c'est qu'un bout de phase aurait été
   // perdu en chemin.
-  const parConduit = longueursDepuisTableau(graphe, m, CIRCUIT).plusLong;
-  assert.ok(parConduit);
-  const ancienne = (100 * 2 * RHO * parConduit.longueur * I) / (circuit.section * U);
-  assert.ok(pire.chute >= ancienne - 1e-9, 'la phase ne peut pas être plus courte que le conduit');
+  const cheminMax = points.reduce((a, c) => {
+    const ph = cheminDePhase(graphe, m, CIRCUIT, c.id);
+    return ph.longueur + ph.neutre > a.longueur + a.neutre ? ph : a;
+  }, { longueur: 0, neutre: 0 });
+  const ancienne = (100 * 2 * RHO * Math.max(cheminMax.longueur, cheminMax.neutre) * I) / (circuit.section * U);
+  assert.ok(
+    pire.chute >= (100 * RHO * I * (cheminMax.longueur + cheminMax.neutre)) / (circuit.section * U) - 1e-9,
+    'la forme exacte doit au moins égaler la forme 2ρLI/S au point le plus long',
+  );
+  assert.ok(longueursDepuisTableau(graphe, m, CIRCUIT).plusLong, 'un conduit alimente le réseau');
 
   // Comparaison à la VALEUR, non à un encadrement : voir le commentaire du test
   // homologue de `apport-002.test.js`. Une valeur périmée de 1,76 %, d'avant le
@@ -291,7 +344,10 @@ test('les conduits partagés portent les deux circuits, et eux seuls', () => {
   //      joue, et nulle part ailleurs.
   // La comparaison de calibres n'a de sens qu'entre CONDUITS : un profilé n'a pas
   // de diamètre, et sa condition de remplissage se lit sur la fiche produit.
-  const conduit = (c) => c.raccordement !== 'lateral' && c.section.forme === 'circulaire';
+  // Un CORDAGE n'a pas de section de conduit : il n'a ni diamètre, ni forme, ni
+  // taux de remplissage. Comparer des calibres n'a de sens qu'entre tubes — et
+  // le dire ici évite surtout de lire une `section` qui n'existe pas.
+  const conduit = (c) => c.raccordement !== 'lateral' && !estCordage(c) && c.section.forme === 'circulaire';
   const dedies = m.cheminements.filter((c) => conduit(c) && c.circuits.length === 1 && c.section.diametre !== null);
   const plusPetitPartage = Math.min(...partages.filter(conduit).map((c) => c.section.diametre));
   const plusGrosDedie = Math.max(...dedies.map((c) => c.section.diametre));
@@ -367,25 +423,67 @@ test('tout contrôle encore sans conclusion porte sur un obstacle sans aucun vol
   // serait-ce que borné. Autrement dit, tout ce que le relevé permet de conclure
   // est conclu.
   //
-  // Une exception, et une seule, depuis le relevé du 2026-09-23 : la saillie du
-  // tablier FERMÉ est relevée, pas son haut, borné par la sous-face du tablier
-  // remonté à 2,31 m. Le segment de CH-L1 qui longe la paroi sud à 2,22 m, 12 cm
-  // au-dessus de la baie, recoupe ce majorant. Si le tablier fermé déborde le
-  // linteau, il touche le conduit : le doute est réel, et une seule cote le lève.
+  // Deux exceptions, et deux seulement.
+  //
+  // La première, depuis le relevé du 2026-09-23 : la saillie du tablier FERMÉ est
+  // relevée, pas son haut, borné par la sous-face du tablier remonté à 2,31 m. Le
+  // segment de CH-L1 qui longe la paroi sud à 2,22 m, 12 cm au-dessus de la baie,
+  // recoupe ce majorant. Si le tablier fermé déborde le linteau, il touche le
+  // conduit : le doute est réel, et une seule cote le lève.
+  //
+  // La seconde, décidée par le maître d'ouvrage le 2026-09-26 : les deux réglettes
+  // de la porte, EL-01a et EL-01b, restent à y = 1,55 m, sous le tablier REMONTÉ.
+  // Ce majorant est solidement relevé — largeur 5,00 m, profondeur 2,15 m, sous-face
+  // à 2,31 m — mais son ÉPAISSEUR ne l'est pas : bornée au plafond, elle laisse un
+  // volume de 44 cm d'épaisseur possible, dans lequel les réglettes de plafond et
+  // leurs conduits ne peuvent être ni prouvés dégagés ni prouvés en collision.
+  // Physiquement, un panneau de 44 cm n'existe pas, et les six réglettes sont au
+  // plafond, 40 cm au-dessus de la sous-face relevée ; mais « n'existe pas » n'est
+  // pas une mesure, et le Principe I interdit d'en faire une. La décision prise est
+  // donc de DÉCLARER le doute : l'épaisseur du panneau rejoint les cotes à relever,
+  // et le non concluant est assumé, consigné, et non dissimulé par une valeur
+  // inventée. Une fois l'épaisseur relevée, l'exception se referme d'elle-même.
+  //
+  // Réécrit le 2026-10-01 : le doute ne porte plus sur des SEGMENTS DE CONDUIT, il
+  // n'y en a plus sous le panneau — les colonnes passent au nord, à 4,75 m, et la
+  // descente s'arrête à la réglette du deuxième rang. Il porte désormais sur les
+  // DEUX CORDAGES qui atteignent le rang sud, CP-2 et CP-4 : ceux qui amènent le
+  // courant jusqu'à EL-01a et EL-01b sous le tablier. C'est la MÊME question qu'avant
+  // — le raccordement de ces deux réglettes n'est pas dégagé — posée sur ce qui la
+  // pose désormais.
   const m = modeleDe();
   const r = controlerCollisions(m);
   const parId = new Map(m.local.obstacles.map((o) => [o.id, o]));
   const reperes = new Map(m.cheminements.map((c) => [c.id, c.reference]));
   const siens = r.resultats.filter((x) => x.cheminement.startsWith('ec-'));
   assert.ok(siens.length > 0);
-  const exception = (x) =>
+
+  const exceptionFermee = (x) =>
     x.obstacle === 'tablier-sectionnelle-ferme' && reperes.get(x.cheminement) === 'CH-L1' && x.segment === 4;
-  assert.equal(siens.filter(exception).length, 1, 'le segment de façade de CH-L1 est contrôlé');
+  // Sous le panneau remonté, le doute ne porte QUE sur les deux cordages qui
+  // entrent réellement dans sa zone — ce sont eux, et eux seuls, quintdes des
+  // conducteurs dessous. Tout le reste du pontage, CP-1 et CP-3 compris, en sort et
+  // redevient CONFORME : l'exception ne s'étend pas au cordage ni au circuit,
+  // seulement aux deux segments qu'elle désigne.
+  const exceptionRemontee = (x) =>
+    x.obstacle === 'tablier-sectionnelle-ouvert' &&
+    (reperes.get(x.cheminement) === 'CP-2' || reperes.get(x.cheminement) === 'CP-4');
+  const exception = (x) => exceptionFermee(x) || exceptionRemontee(x);
+  assert.equal(siens.filter(exceptionFermee).length, 1, 'le segment de façade de CH-L1 est contrôlé');
+  assert.equal(
+    siens.filter(exceptionRemontee).length,
+    2,
+    'les deux cordages qui rejoignent le rang sud sont contrôlés',
+  );
 
   for (const x of siens) {
     const o = parId.get(x.obstacle);
     if (exception(x)) {
-      assert.equal(x.verdict, VERDICTS.NON_CONCLUANT, 'le haut du tablier fermé n’est pas relevé');
+      assert.equal(
+        x.verdict,
+        VERDICTS.NON_CONCLUANT,
+        `${o.id} : ni l’épaisseur du panneau, ni son haut ne sont relevés`,
+      );
       continue;
     }
     // Un obstacle borné ne peut jamais affirmer de collision.
@@ -405,8 +503,8 @@ test('tout contrôle encore sans conclusion porte sur un obstacle sans aucun vol
   const sansVolume = m.local.obstacles.filter((o) => !o.volume && !o.volumeMajorant).map((o) => o.id);
   assert.deepEqual(
     [...sansConclusion].sort(),
-    [...sansVolume, 'tablier-sectionnelle-ferme'].sort(),
-    'les obstacles sans aucun volume, et le haut du tablier fermé',
+    [...sansVolume, 'tablier-sectionnelle-ferme', 'tablier-sectionnelle-ouvert'].sort(),
+    'les obstacles sans aucun volume, et les deux tabliers dont une face n’est pas relevée',
   );
 });
 

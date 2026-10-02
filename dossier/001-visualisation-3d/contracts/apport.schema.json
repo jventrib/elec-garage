@@ -216,6 +216,13 @@
             "exterieur"
           ]
         },
+        "orientation": {
+          "enum": [
+            "x",
+            "y"
+          ],
+          "description": "Axe le long duquel l'appareil s'étend. Facultatif, et sans effet sur l'encombrement : le type dit déjà, par « repartitionAuPlafond », quelle cote tombe sur quel axe. Utile à une réglette dont on veut lire la chaîne d'un coup d'œil, et à un appareil que l'on peut poser dans les deux sens."
+        },
         "position": {
           "type": "object",
           "required": [
@@ -287,6 +294,13 @@
             "minLength": 1
           }
         },
+        "zoneTablier": {
+          "enum": [
+            "degage-prouve",
+            "non-concluant"
+          ],
+          "description": "État du dégagement de la zone de travail de l'appareil. Ce champ se RELEVE, il ne se calcule pas : aucune géométrie ne peut le déduire, et il n'est donc lu par aucun calcul. Il est ici parce que la donnée le porte, et parce qu'un champ porté sans être décrit serait refusé par ce schéma ; la fiche le montre à l'installateur. « non-concluant » n'est pas une absence de valeur : c'est un point à lever sur place avant de commencer."
+        },
         "indiceProtection": {
           "type": [
             "string",
@@ -332,6 +346,12 @@
           "description": "Nombre d'entrées de conduit d'une boîte de dérivation. Contrepartie obligatoire de « dimensions » : un conduit qui se termine dans la boîte en occupe une, un conduit qui la traverse en occupe deux. Une traversée de paroi n'en occupe aucune, elle sort par le fond. Contrôlé par V21.",
           "type": "integer",
           "minimum": 1
+        },
+        "raccords": {
+          "description": "Points par où les conducteurs entrent et sortent de l'appareil — deux au moins, trois coordonnées chacun, et V24 vérifie que chacun tombe dans l'enveloppe déclarée. Un appareil qui n'en déclare qu'un reste un point : il n'aurait qu'un connecteur, et le graphe ne pourrait le relier à rien. C'est ce qui autorise une réglette à être alimentée par sa voisine : son raccord d'arrivée devient un nœud du graphe, relié à son raccord de départ par le câblage interne du fabricant — une arête de 1,20 m, réelle pour le courant, absente du métré.",
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/point" }
         }
       }
     },
@@ -483,8 +503,7 @@
         "id",
         "reference",
         "circuits",
-        "segments",
-        "diametre"
+        "segments"
       ],
       "additionalProperties": false,
       "properties": {
@@ -496,6 +515,13 @@
           "type": "string",
           "minLength": 1,
           "description": "Repère du dossier, par exemple CH-01."
+        },
+        "nature": {
+          "enum": [
+            "conduit",
+            "cordage"
+          ],
+          "description": "Ce que le cheminement EST, et non ce qu'il contient. Facultatif : l'absence vaut « conduit », qui est le cas ordinaire. « cordage » désigne un câble qui relie deux appareils bout à bout, et cela change quatre choses, chacune règle à part : il n'a pas de section, parce que le diamètre d'un câble multiconducteur n'est pas un diamètre intérieur ; il part en diagonale, que V13 interdit à un conduit ; il pend entre ses deux aboutisseurs, au lieu de se poser en saillie du nu ; et il s'achète au câble, sur une ligne de fournitures qui lui est propre. Retirer la nature d'un cordage ne le rend pas neutre : il redevient un conduit, et un conduit sans section est un défaut."
         },
         "circuits": {
           "type": "array",
@@ -513,13 +539,27 @@
             "$ref": "#/$defs/segment"
           }
         },
-        "diametre": {
-          "type": [
-            "number",
-            "null"
+        "section": {
+          "description": "Section du conduit. EXIGÉE pour un conduit, qui est une gaine et n'a pas de sens sans elle ; REFUSÉE pour un cordage, qui n'a pas de diamètre intérieur. Une section à zéro ne se distingue pas d'une section absente : les deux sont un défaut, et non un « à déterminer ».",
+          "type": "object",
+          "required": [
+            "forme",
+            "diametre"
           ],
-          "exclusiveMinimum": 0,
-          "description": "Diamètre extérieur du conduit en mètres, ou null tant que la note de calcul ne l'a pas arrêté — il dépend du taux de remplissage, donc du nombre de conducteurs. null s'affiche comme inconnu."
+          "additionalProperties": false,
+          "properties": {
+            "forme": {
+              "enum": [
+                "circulaire",
+                "rectangulaire"
+              ]
+            },
+            "diametre": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Diamètre extérieur du conduit, ou largeur pour une section rectangulaire, en mètres."
+            }
+          }
         }
       }
     },

@@ -83,6 +83,7 @@ export function caracteristiques(composant, circuits = [], vocabulaire = {}, con
   const circuit = circuits.find((c) => c.id === composant.circuit);
   const libellesParois = vocabulaire.parois ?? {};
   const libellesFaces = vocabulaire.faces ?? {};
+  const libellesZonesTablier = vocabulaire.zonesTablier ?? {};
   const types = vocabulaire.types ?? [];
   const typeLisible = types.find((t) => t.id === composant.type)?.libelle ?? composant.type;
   const role = types.find((t) => t.id === composant.type)?.role;
@@ -93,6 +94,13 @@ export function caracteristiques(composant, circuits = [], vocabulaire = {}, con
     { libelle: 'Face', ...valeur(libellesFaces[composant.face] ?? composant.face) },
     { libelle: "Hauteur d'axe", ...valeur(composant.hauteurAxe, ' m') },
     { libelle: 'Indice de protection', ...valeur(composant.indiceProtection) },
+    // Le dégagement d'une zone de travail se RELÈVE, il ne se calcule pas : rien
+    // dans la géométrie ne peut le dire à la place d'un relevé. Il n'a donc rien à
+    // faire dans le contrat de géométrie — mais il doit se voir ici, sinon il est
+    // une information que personne ne lit et que personne ne maintient.
+    ...(composant.zoneTablier
+      ? [{ libelle: 'Zone de travail', ...valeur(libellesZonesTablier[composant.zoneTablier] ?? composant.zoneTablier) }]
+      : []),
     { libelle: 'Circuit', ...valeur(circuit ? circuit.libelle : composant.circuit) },
     // Une enceinte qui déclare un volume le montre : c'est ce qui distingue une
     // goulotte d'une boîte, et le seul endroit où la maquette peut le dire.

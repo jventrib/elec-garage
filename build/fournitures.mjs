@@ -81,6 +81,23 @@ export function rendre(f, modele) {
     f.coudes.detail.map((d) => `${d.nombre} sur ${d.reference}`).join(', ') + '.');
   l.push('');
 
+  // Les CORDAGES ont leur propre ligne, et pour une raison qui tient à l'achat :
+  // on ne commande pas du conduit au mètre pour un bridage. La ligne n'apparaît
+  // que s'il y en a — sinon le relevé silence un poste qui n'existe pas.
+  if (f.cordages.nombre > 0) {
+    l.push('## Cordages');
+    l.push('');
+    l.push('| Nombre | Longueur | Références |');
+    l.push('|--------|----------|------------|');
+    l.push(`| ${f.cordages.nombre} | ${nb(f.cordages.longueur, ' m')} | ${f.cordages.references.join(', ')} |`);
+    l.push('');
+    l.push('Liaisons souples entre connecteurs, posées à la main. Le **câblage interne** des');
+    l.push('appareils n\'y figure pas : il est monté d\'usine, et le diamètre du câble n\'est pas');
+    l.push('un diamètre intérieur — c\'est pourquoi ces mètres ne rejoignent pas le tableau des');
+    l.push('conduits.');
+    l.push('');
+  }
+
   l.push('## Conducteurs');
   l.push('');
   l.push('| Section | Longueur à acheter | Circuit | État |');
@@ -97,7 +114,13 @@ export function rendre(f, modele) {
   l.push('**Ces longueurs suivent le tracé, et il faut les majorer de deux façons :**');
   l.push('');
   l.push(`- la **réserve en boîte**, 10 à 15 cm par conducteur et par boîte traversée — l'ordre de`);
-  l.push(`  montage l'exige, et il y a ${f.boites.length} boîtes de dérivation ;`);
+  // `boites` compte les JONCTIONS, pas les seules boîtes de dérivation : un organe
+  // de connexion se traverse comme une boîte et se pose avant les conducteurs. Les
+  // nommer toutes « boîtes de dérivation » serait compter juste et nommer faux.
+  const derivees = f.boites.filter((b) => !b.reference.startsWith('OC-'));
+  const organes = f.boites.length - derivees.length;
+  l.push(`  montage l'exige, et il y a ${nb(derivees.length)} boîtes de dérivation`);
+  l.push(`  ${organes > 0 ? `et ${nb(organes)} ${organes > 1 ? 'organes de connexion' : 'organe de connexion'}` : ''} qui se traversent comme elles ;`);
   l.push(`- l'**épaisseur de paroi** à chaque traversée, ${nb(f.traversees.epaisseur, ' m')}, sur ${f.traversees.nombre} traversées.`);
   l.push('');
   l.push('Elles partent en outre du **dessus du tableau** et s\'arrêtent à l\'**entrée des appareils** :');

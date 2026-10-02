@@ -13,7 +13,7 @@
  * pour qu'un chiffre plausible se déguise en chiffre vérifié.
  */
 
-import { longueurCheminement } from '../geometrie/cheminement.js';
+import { estCordage, longueurCheminement } from '../geometrie/cheminement.js';
 import { construireGraphe } from '../geometrie/graphe.js';
 import { longueurParConducteur } from '../geometrie/conducteurs.js';
 
@@ -56,7 +56,7 @@ function estJonction(modele, composant) {
  */
 export function conduitsParCalibre(modele) {
   const lignes = [];
-  for (const [cle, groupe] of grouper(modele.cheminements ?? [], (ch) => {
+  for (const [cle, groupe] of grouper((modele.cheminements ?? []).filter((ch) => !estCordage(ch)), (ch) => {
     const f = ch.section?.forme ?? 'circulaire';
     if (sectionArretee(ch.section)) return `arrete:${f}:${calibreDe(ch.section)}`;
     return `majorant:${f}:${calibreDe(ch.section) ?? 'inconnu'}`;
@@ -199,10 +199,33 @@ export function coudes(modele) {
   return { total: n, detail };
 }
 
+/**
+ * Les CORDAGES, à part des conduits.
+ *
+ * Un bridage n'est pas du tube : il ne se commande pas au mètre de conduit, il ne
+ * se pose pas à la colle, et sa « section » est celle d'un câble — rien à voir
+ * avec un diamètre intérieur. Le mélanger aux conduits produirait une ligne
+ * d'achat qui n'existe pas au catalogue. D'où une ligne dédiée, au même titre
+ * que les conducteurs : ce qui se pose à la main se compte à part.
+ *
+ * La longueur du câblage interne des appareils reste hors de ce total : elle
+ * est montée d'usine, et personne n'a de câble à acheter pour la faire.
+ */
+export function cordages(modele) {
+  const groupe = (modele.cheminements ?? []).filter(estCordage);
+  if (groupe.length === 0) return { nombre: 0, longueur: 0, references: [] };
+  return {
+    nombre: groupe.length,
+    longueur: arrondi(groupe.reduce((t, ch) => t + longueurCheminement(ch), 0)),
+    references: groupe.map((ch) => ch.reference).sort(),
+  };
+}
+
 /** Le relevé complet, prêt à être rendu. */
 export function fournitures(modele) {
   return {
     conduits: conduitsParCalibre(modele),
+    cordages: cordages(modele),
     conducteurs: conducteursParSection(modele),
     boites: boites(modele),
     appareillage: appareillage(modele),

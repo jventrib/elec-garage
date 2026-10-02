@@ -18,10 +18,21 @@
 | goulotte 120 × 60 | **1,12** m | GL-01 | **tronc partagé** entre 3 circuits — remplissage à justifier sur la fiche produit |
 | goulotte 90 × 40 | **6** m | GL-02 | **tronc partagé** entre 3 circuits — remplissage à justifier sur la fiche produit |
 | IRL 25 | **4,92** m | CH-05, CH-B3 | **mixte** — 1,56 m de **tronc partagé** entre deux circuits et 3,36 m de ligne **dédiée** : même article à l'achat, deux natures. Le partage ne change pas le calibre, il change le **remplissage** — c'est là qu'il se paie |
-| IRL 20 | **15,02** m | CH-03, CH-06, CH-07, CH-08, CH-A1, CH-L1, CH-L2, CH-L3, CH-L4, CH-L6 | **mixte** — 7,96 m de **tronc partagé** entre deux circuits et 7,06 m de ligne **dédiée** : même article à l'achat, deux natures. Le partage ne change pas le calibre, il change le **remplissage** — c'est là qu'il se paie |
-| **Total** | **27,06 m** | | **tous les calibres sont arrêtés** |
+| IRL 20 | **20,52** m | CH-03, CH-06, CH-07, CH-08, CH-A1, CH-L1, CH-L2, CH-L3, CH-L4, CH-L6 | **mixte** — 7,96 m de **tronc partagé** entre deux circuits et 12,56 m de ligne **dédiée** : même article à l'achat, deux natures. Le partage ne change pas le calibre, il change le **remplissage** — c'est là qu'il se paie |
+| **Total** | **32,56 m** | | **tous les calibres sont arrêtés** |
 
-**5 changements de direction** se traitent par accessoire, jamais par pincement du tube : 1 sur GL-02, 2 sur CH-L1, 2 sur CH-B3.
+**13 changements de direction** se traitent par accessoire, jamais par pincement du tube : 1 sur GL-02, 2 sur CH-L1, 4 sur CH-L3, 4 sur CH-L4, 2 sur CH-B3.
+
+## Cordages
+
+| Nombre | Longueur | Références |
+|--------|----------|------------|
+| 4 | **7,69** m | CP-1, CP-2, CP-3, CP-4 |
+
+Liaisons souples entre connecteurs, posées à la main. Le **câblage interne** des
+appareils n'y figure pas : il est monté d'usine, et le diamètre du câble n'est pas
+un diamètre intérieur — c'est pourquoi ces mètres ne rejoignent pas le tableau des
+conduits.
 
 ## Conducteurs
 
@@ -29,12 +40,13 @@
 |---------|------------------------|---------|------|
 | **câble 3G10**, 10 mm² | **10,48** m de câble 3G10 | Borne de recharge | dérivée du trajet de chaque conducteur |
 | 2,5 mm² | **62,39** m de conducteur | Prises garage | dérivée du trajet de chaque conducteur |
-| 1,5 mm² | **69,34** m de conducteur | Éclairage garage | dérivée du trajet de chaque conducteur |
+| 1,5 mm² | **108,92** m de conducteur | Éclairage garage | dérivée du trajet de chaque conducteur |
 
 **Ces longueurs suivent le tracé, et il faut les majorer de deux façons :**
 
 - la **réserve en boîte**, 10 à 15 cm par conducteur et par boîte traversée — l'ordre de
-  montage l'exige, et il y a 6 boîtes de dérivation ;
+  montage l'exige, et il y a **4** boîtes de dérivation
+  et **2** organes de connexion qui se traversent comme elles ;
 - l'**épaisseur de paroi** à chaque traversée, **0,2** m, sur 5 traversées.
 
 Elles partent en outre du **dessus du tableau** et s'arrêtent à l'**entrée des appareils** :
@@ -77,9 +89,10 @@ tension.
 
 | Article | Nombre | Repères | Indice de protection |
 |---------|--------|---------|----------------------|
+| réglette LED 120 cm | **6** | EL-01a, EL-01b, EL-01c, EL-01d, EL-01e, EL-01f | établi |
 | commande — dont **2 à l'extérieur** | **5** | CM-01, CM-02, CM-03, CM-04, CM-05 | *à arrêter* |
-| luminaire — dont **2 à l'extérieur** | **4** | EL-01a, EL-01b, EL-02, EL-03 | *à arrêter* |
 | socle double — dont **2 à l'extérieur** | **3** | PC-01, PC-02, PC-04 | *à arrêter* |
+| luminaire — dont **2 à l'extérieur** | **2** | EL-02, EL-03 | *à arrêter* |
 | module de commande | **2** | MC-01, MC-02 | *à arrêter* |
 | socle simple | **2** | PC-03, PC-05 | *à arrêter* |
 | accessoire de conduit | **1** | AC-01 | *à arrêter* |

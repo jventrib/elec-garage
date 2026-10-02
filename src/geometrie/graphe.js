@@ -69,10 +69,39 @@ export function construireGraphe(modele) {
   }
 
   // Puis les composants et les traversées, rattachés au nœud qui les porte.
+  //
+  // Un composant peut déclarer ses points de RACCORDEMENT — `raccords` — plutôt
+  // qu'un point unique. C'est le cas d'un appareil dont les conducteurs entrent et
+  // sortent par ses extrémités : un tube de LED passe-montant se raccorde à ses
+  // DEUX bouts, et le rattacher à son centre aurait fait courtoiser la dérivation
+  // par l'intérieur de l'appareil — 1,20 m de câble que personne n'a tirés, et
+  // surtout une continuité qui ne correspond à rien de réel.
+  //
+  // Ces points sont RELIÉS entre eux : l'appareil est un organe de connexion, les
+  // conducteurs le traversent d'un bout à l'autre. L'arête porte leur distance
+  // réelle, qui est la longueur du câblage interne — celle que la chute de tension
+  // doit compter, et qu'aucun conduit ne portera à la place.
+  //
+  // L'ordre de déclaration n'est pas normatif : le graphe ne distingue pas l'entrée
+  // de la sortie. C'est le trajet le plus court depuis le tableau qui résout la
+  // question, et une polarité qu'il faudrait maintenir à la main serait une
+  // donnée de plus à tenir juste.
   for (const c of modele.composants ?? []) {
-    const n = noeudPour(c.position);
-    n.composants.push(c.id);
-    if (c.type === 'boite-derivation') n.boites.push(c.id);
+    const points = Array.isArray(c.raccords) && c.raccords.length > 0 ? c.raccords : [c.position];
+    const siens = points.map((p) => noeudPour(p));
+    for (const n of siens) {
+      n.composants.push(c.id);
+      if (c.type === 'boite-derivation') n.boites.push(c.id);
+    }
+    if (siens.length < 2) continue;
+    for (const a of siens) {
+      for (const b of siens) {
+        if (a === b) continue;
+        if (a.aretes.some((x) => x.vers === b && x.appareil === c.id)) continue;
+        a.aretes.push({ vers: b, appareil: c.id, circuits: c.circuit ? [c.circuit] : null });
+        b.aretes.push({ vers: a, appareil: c.id, circuits: c.circuit ? [c.circuit] : null });
+      }
+    }
   }
   // Une traversée se raccorde par son AXE, là où un boîtier la reçoit : la mèche entre
   // au-dessus et sort au-dessous, dans la même enveloppe. Celle qui part du FOND d'un
@@ -241,6 +270,10 @@ export function construireGraphe(modele) {
       const dedans = noeuds.filter((x) => boiteDe(x.point) === boite);
       return [...new Set([...(n ? [n] : []), ...dedans])];
     },
+    /** Les nœuds où un composant se raccorde : les siens, ou son point unique. */
+    noeudsDeComposant(id) {
+      return noeuds.filter((x) => x.composants.includes(id));
+    },
     noeudsDeDegreAuMoins(n) {
       return noeuds.filter((x) => x.degre >= n);
     },
@@ -357,6 +390,15 @@ function noeudRaccorde(graphe, modele, point) {
   if (n && n.aretes.length > 0) return n;
   const tol = modele.presentation?.toleranceRaccordement ?? 0;
   const ici = (modele.composants ?? []).find((c) => memePoint(c.position, point, tol));
+  // Un appareil raccordé par ses EXTRÉMITÉS n'a pas de nœud à son centre : il se
+  // rejoint par les points qu'il déclare. On rend d'abord ceux qui sont le siège
+  // d'une arête — le parcours le plus court départagera ensuite, et un point
+  // d'arrivée arbitraire ne ferait qu'allonger le trajet sans le changer.
+  const siens = ici && Array.isArray(ici.raccords) && ici.raccords.length > 0 ? graphe.noeudsDeComposant(ici.id) : [];
+  if (siens.length > 0) {
+    const relies = siens.filter((x) => x.aretes.length > 0);
+    return (relies.length > 0 ? relies : siens)[0];
+  }
   if (!ici?.boitier) return n;
   for (const autre of modele.composants ?? []) {
     if (autre.id === ici.id || autre.boitier !== ici.boitier) continue;

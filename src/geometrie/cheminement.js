@@ -15,6 +15,26 @@ export const AXE_NORMAL = { est: 'x', ouest: 'x', nord: 'y', sud: 'y', plafond: 
 
 const EPS = 1e-9;
 
+/**
+ * Ce qu'un cheminement EST, et non seulement ce qu'il court sur.
+ *
+ * Un `conduit` est un tube ou un profilé : rigide, de section connue, il se pose
+ * à la colle ou à la vis et son orthogonalité n'est pas une préférence. Un
+ * `cordage` est un lien SOUPLE entre deux appareils : il relie un connecteur à un
+ * connecteur, il n'a pas de section de conduit — celle d'un câble multiconducteur
+ * ne se compare pas à un diamètre intérieur — et il ne se pose pas en ligne
+ * droite. Lui appliquer les règles du tube reviendrait à déclarer une pose
+ * impossible conforme.
+ *
+ * L'absence de `nature` vaut `conduit` : tous les apports déjà écrits restent
+ * ce qu'ils étaient, sans migration.
+ */
+export const NATURES = ['conduit', 'cordage'];
+
+export function estCordage(cheminement) {
+  return cheminement?.nature === 'cordage';
+}
+
 /** Les deux axes dans le plan de la face, c'est-à-dire ceux qui peuvent varier. */
 export function axesDeFace(face) {
   const normal = AXE_NORMAL[face];

@@ -1,6 +1,55 @@
 # Note de calcul — circuit d'éclairage du garage
 
 **Fonctionnalité**: `003-eclairage` | **Circuit**: `c-eclairage` | **Date**: 2026-09-21
+| Dernière révision | **2026-10-01** — six réglettes **pontées**
+
+> ### Révision du 2026-10-01 — les six réglettes se pontent
+>
+> **Décision** : les six réglettes ne sont plus alimentées chacune par son propre trio remontant
+> du tableau, mais **deux par deux, par cordage**. CH-L3 et CH-L4 n'alimentent plus que
+> l'extrémité nord de leur colonne ; le courant descend ensuite de réglette en réglette par
+> **CP-1 à CP-4**.
+>
+> **Ce qui change dans les chiffres**
+>
+> | Grandeur | Avant (6 réglettes en étoile) | Après (pontage) |
+> |---|---|---|
+> | Chemin le plus long | 11,73 m, EL-01a | **17,17 m**, point d'utilisation d'EL-01b |
+> | Chute terminale | 0,144 % | **0,210 %** |
+> | Chute cumulée | 1,79 % | **1,86 %** |
+> | Métré 1,5 mm² | 104,89 m | **108,92 m** |
+> | Boîtes de l'éclairage | 4 — BL-01, BD-07, BD-08, BD-09 | **1** — BL-01, au degré 3 |
+> | Conduits de l'éclairage | 7 | **4** — CH-L2, CH-L3, CH-L4, CH-L6 |
+> | **Cordages** | aucun | **4** — CP-1 à CP-4, 7,69 m |
+> | **Boîtes portant deux circuits** | 6 | **5** — OC-01, OC-02, BD-04, BD-05, BD-06 |
+>
+> **Le point dimensionnant change de nom, et cette fois pour de bonnes raisons.** Le pontage est
+> un éclairage de **fin de ligne** : il ne touche pas au tracé entre le tableau et le plafond, et
+> ne peut donc pas allonger ce chemin. C'est la géométrie des colonnes qui décide — et la
+> colonne est, légèrement plus longue, devient le pire point : **EL-01b**.
+>
+> **Le pire point, et la convention de lecture.** Pour une réglette pontée, le socle compte la
+> distance jusqu'au **connecteur d'accès** — celui par lequel arrive le cordage de la voisine, ou la
+> colonne pour les deux têtes : **17,17 m** pour EL-01b. C'est le **point d'utilisation** au sens de
+> la norme : la chute se mesure à l'endroit où l'installation se raccorde à l'appareil, non dans
+> l'appareil. Les 1,20 m du câble interne de la réglette ne sont donc pas comptés. *Si on les
+> comptait, EL-01b ferait 18,37 m, 0,225 % et 1,88 % de cumul : c'est le majorant, connu et écarté.*
+>
+> **Le cumul ne bouge presque pas.** Il passe de 1,79 % à **1,86 %**, soit 0,07 point, pour une
+> longueur de phase presque doublée. La raison est que la chute amont, qui domine, dépend du
+> tronc partagé et non des branches : **1,65 % sur 0,210 %**. La marge sur 3 % reste de **1,14
+> point**.
+>
+> **Ce qui s'améliore** : sept cheminements et trois boîtes disparaissent. Les **9,25 m** de
+> conduit propres à l'éclairage remplacent les 18,91 m de la version en étoile, et quatre
+> cordages ajoutent 7,69 m de câble — c'est le prix du pontage, et il est bon.
+>
+> **Ce qui ne change pas** : la charge. 6 × 36 W = 216 W, `IB` = 0,939 A.
+>
+> **Ce qui devient une obligation du modèle** : une réglette alimentée par sa voisine n'a qu'un
+> point d'arrivée, et **V24 en exige deux**. D'où le champ `raccords`, et d'où le câblage
+> interne de 1,20 m que le graphe traite comme une arête — mais que le métré **n'achète pas**,
+> parce qu'il est fourni avec l'appareil.
 
 Ce document porte le **raisonnement**. Les valeurs conclues vivent une seule fois, dans l'entité
 circuit de `data/apports/003-eclairage.json` — voir
@@ -18,9 +67,9 @@ de sécurité (R5).
 |--------|--------|---------|
 | Mode de pose | Apparent, conducteurs isolés en conduit IRL | Donnée figée (constitution) |
 | Section retenue | 1,5 mm² cuivre | Décidée (R2) |
-| Conduit | **IRL 20**, branches propres comme tronc partagé, **sauf CH-02 et CH-05 en IRL 25** | **Décidée le 2026-09-22** par le maître d'ouvrage. Sur le tronc, contre l'avis motivé de la note — voir 3.2. Sur les branches, l'IRL 20 remplace l'IRL 16 et **desserre** la condition de remplissage. **CH-02 et CH-05 repassés en IRL 25 le 2026-09-23**, décision du maître d'ouvrage, à onze et neuf conducteurs — voir 2.4 |
-| Nombre de conducteurs sur le tronc | **6 au plus** dans un conduit, sur CH-02 et CH-05 ; **8** dans la goulotte — voir 3.1 | **Dérivé** du pilotage déclaré |
-| Points lumineux / sorties | 3 points, **4 sorties** | FR-001, FR-002 |
+| Conduit | **IRL 20**, branches propres comme tronc partagé, **sauf CH-05 en IRL 25** | **Décidée le 2026-09-22** par le maître d'ouvrage. Sur le tronc, contre l'avis motivé de la note — voir 3.2. Sur les branches, l'IRL 20 remplace l'IRL 16 et **desserre** la condition de remplissage. **CH-05 en IRL 25 le 2026-09-23**, décision du maître d'ouvrage, à neuf conducteurs — voir 2.4. **CH-02, également en IRL 25, n'est plus emprunté par l'éclairage depuis le 2026-09-26** : la sortie de MC-01 ne passe plus par lui |
+| Nombre de conducteurs sur le tronc | **6 au plus** dans un conduit de l'éclairage, sur CH-05 ; **8** dans la goulotte GL-01 — voir 3.1 | **Dérivé** du pilotage déclaré |
+| Points lumineux / sorties | **6 réglettes, 6 points distincts** — EL-01a à EL-01f | **Décidée le 2026-09-26**, décision du maître d'ouvrage ; voir la révision en tête de note |
 | Commandes | 4 — CM-01, CM-02 (détecteur), CM-03, et CM-04 au boîtier double depuis `005` | FR-029 |
 | Module de commande | MC-01, dans la goulotte : il commute le plafonnier, CM-01 et CM-04 lui adressent un ordre | `005`, 2026-09-23 |
 | Arrivée depuis l'habitation | 3G16, 30 m, protégée à 63 A au départ | Relevée |
@@ -40,43 +89,59 @@ cinq conducteurs de CH-05 ; partout ailleurs le circuit n'en met que trois.
 | Grandeur | Valeur | Origine | Référence | État |
 |----------|--------|---------|-----------|------|
 | Courant d'emploi `IB` | *(à établir)* — dépend de l'hypothèse de simultanéité | Décidée, FR-019 | — | **à statuer** |
-| Mode de pose | Apparent sous conduit IRL **dédié**, conducteurs isolés — **catégorie B1**. **Sauf dans les goulottes** — GL-01 au-dessus du tableau, et depuis le 2026-09-24 GL-02 au plafond de la paroi est, soit 3,04 m des 8,18 m du trajet de EL-01b —, où les conducteurs cheminent sans tube | Donnée figée ; la portion en goulotte relève d'une autre lettre de sélection | *(clause : ..............)* | B1 acquis ; **goulotte à confirmer** — voir 2.4 |
+| Mode de pose | Apparent sous conduit IRL — **partagé sur le tronc, dédié sur les branches éclairage** —, conducteurs isolés — **catégorie B1**. **Sauf dans les goulottes** — GL-01 au-dessus du tableau, et depuis le 2026-09-24 GL-02 au plafond de la paroi est, soit 3,04 m des 8,18 m du trajet de EL-01b —, où les conducteurs cheminent sans tube | Donnée figée ; la portion en goulotte relève d'une autre lettre de sélection | *(clause : ..............)* | B1 acquis ; **goulotte à confirmer** — voir 2.4 |
 | Courant admissible `Iz` de 1,5 mm² | *(à renseigner)* | **Normative** — table, mode de pose et lettre de sélection | *(clause : ..............)* | **à confirmer** |
 | Facteur de correction de température | *(à renseigner)* | **Normative** — température ambiante | *(clause : ..............)* | **à confirmer** |
 | Facteur de correction de **groupement** | *(à renseigner)* | **Normative** — **EXIGIBLE** : le tronc est partagé avec le circuit des prises depuis le 2026-09-21 | *(clause : ..............)* | **à confirmer** |
 | Calibre de protection `In` | *(à renseigner)* | **Normative** — appariement avec la section | *(clause : ..............)* | **à confirmer** |
-| Longueur du chemin le plus long | **8,18 m** jusqu'à EL-01b, que la phase parcourt aussi depuis le 2026-09-23 — 8,20 m avant la goulotte GL-02, **9,00 m** avant le recul de l'axe au sud, **12,00 m** avant MC-01 | **Calculée** par le socle sur le tracé réel | — | acquis |
-| Chute de tension terminale / cumulée | **0,111 % / 1,76 %** au pire cas — 0,112 % avant la goulotte GL-02, 0,122 % / 1,77 % avant le recul de l'axe au sud, **0,142 % / 1,79 %** avant l'automatisation | **Calculée** — ΔU = ρ·I·(L_phase + L_neutre)/S | — | acquis |
+| Longueur du chemin le plus long | **17,17 m** au point d'utilisation d'**EL-01b** ; 11,73 m jusqu'à EL-01a avant le pontage | **Calculée** par le socle sur le tracé réel | — | acquis |
+| Chute de tension terminale / cumulée | **0,210 % / 1,86 %** au point d'utilisation (valeur déclarée par le socle) — 0,144 % / 1,79 % avant le pontage, 0,111 % / 1,76 % avant les six réglettes | **Calculée** — ΔU = ρ·I·(L_phase + L_neutre)/S | — | acquis |
 
 ### 2.1 Longueur du chemin le plus long — calculée sur le tracé réel
 
-Ce n'est pas le métré — 8,13 m en propre, plus 7,95 m de tronc partagé, inchangés l'un et
-l'autre par le déplacement de l'axe — qui décide de la chute
-de tension, mais le **chemin le plus long** depuis le tableau.
+Ce n'est pas le métré — 9,25 m en propre, plus 7,96 m de tronc partagé — qui décide de la chute de
+tension, mais le **chemin le plus long** depuis le tableau.
 
 Deux longueurs, et non plus une seule. La longueur de **conduit** est celle que parcourent le
 neutre et le PE, qui vont tout droit ; celle de **phase** compte le détour par la commande, et
 c'est le socle qui la dérive depuis le 2026-09-22 — voir 2.3.
 
-| Point | Longueur de conduit (neutre, PE) | Longueur de **phase** dérivée |
-|-------|---------------------|-------------------------------|
-| EL-02 | 5,28 m | 5,88 m — commuté **sur place** par le détecteur |
-| EL-03 | 3,33 m | 6,94 m — par CM-03 |
-| EL-01a | 7,98 m | 7,98 m — par MC-01 *(8,00 m avant la goulotte GL-02 ; 8,80 m avant le recul de l'axe au sud ; 11,80 m par CM-01 avant MC-01)* |
-| **EL-01b** | **8,18 m** | **8,18 m** ← dimensionnant *(8,20 m avant la goulotte GL-02 ; 9,00 m avant le recul de l'axe au sud ; 12,00 m avant MC-01)* |
+**Le pontage s'arrête au point d'utilisation ; le câble interne de l'appareil n'y entre pas.** Pour
+une réglette alimentée par sa voisine, le tracé s'arrête au **connecteur d'accès**, celui par lequel
+arrive le cordage (ou la colonne, pour les deux têtes). C'est là que l'installation se raccorde à
+l'appareil, et donc là que se lit la chute. Le **lien interne** de 1,20 m — que le métré n'achète pas
+et qui est dans l'appareil — n'est pas compté.
+
+| Point | Longueur au point d'utilisation | ΔU à 0,939 A |
+|-------|---------------------------------|--------------|
+| **EL-01b** | **17,17 m** ← pire point | **0,210 %** |
+| EL-01a | 16,97 m | 0,208 % |
+| EL-01d | 14,17 m | 0,174 % |
+| EL-01c | 13,97 m | 0,171 % |
+| EL-01f | 10,93 m | 0,134 % |
+| EL-01e | 10,73 m | 0,131 % |
+| EL-02 | 5,88 m — commuté **sur place** par le détecteur | 0,068 % |
+| EL-03 | 6,94 m — par CM-03 | 0,063 % |
+
+*Si l'on ajoutait le lien interne de la cible, EL-01b ferait 18,37 m et 0,225 % : c'est le majorant,
+écarté au nom du point d'utilisation.*
+
+**EL-01b est le point dimensionnant, et il ne l'est pas pour la raison que l'on attendait.** Le
+pontage est un éclairage de fin de ligne : il ne touche pas au tracé entre le tableau et le
+plafond, et ne peut donc pas allonger ce chemin. C'est la colonne est, légèrement plus longue que
+la colonne ouest, qui décide — quand la version en étoile, elle, plaçait EL-01a devant.
 
 CM-01 est à **4,71 m** de conduit du tableau, CM-03 à **4,91 m** — elle est dehors, au dos de
 BD-04 depuis le 2026-09-21, d'où les 0,20 m de paroi en plus. Ces deux valeurs sont dérivées, non
 relevées : le socle sait désormais calculer une distance depuis un nœud quelconque, et non plus
 seulement depuis le tableau.
 
-*Révisé quatre fois le 2026-09-21. La mutualisation du tronc avait raccourci le chemin le plus
-long de 0,20 m ; le décalage de l'axe vers le nord l'a ensuite allongé de 1,05 m, le conduit
-allant chercher le droit du socle du moteur avant de remonter ; la réutilisation du tube vertical
-par EL-03 a raccourci **ce point-là** de 2,90 m sans toucher au point dimensionnant ; le
-rapprochement de l'axe à 0,20 m de la porte n'a enfin **rien changé du tout** — CH-02 perd 0,40 m
-et CH-07 les reprend, et les deux sont sur le tronc. Sans conséquence sur la conclusion : 1,21
-point de marge.*
+*Révisé cinq fois le 2026-09-21, puis le 2026-10-01. La mutualisation du tronc avait raccourci le
+chemin le plus long de 0,20 m ; le décalage de l'axe vers le nord l'a ensuite allongé de 1,05 m ; la
+réutilisation du tube vertical par EL-03 a raccourci **ce point-là** de 2,90 m ; le rapprochement
+de l'axe à 0,20 m de la porte n'a **rien changé du tout**. Le pontage, enfin, a laissé le chemin
+du tableau au plafond intact et déplacé le point dimensionnant de a à b. Sans conséquence de
+conclusion : 1,14 point de marge.*
 
 ### 2.2 Chute de tension — calculée sur la forme exacte
 
@@ -93,27 +158,41 @@ c'est le retour commandé qui remonte. L'écart était relevé et chiffré au 2.
 2026-09-21, sans pouvoir être rebasé faute de savoir quelle commande pilotait quel point. Cette
 donnée est déclarée depuis le 2026-09-22, et c'est elle qui alimente ce tableau.
 
-Sur EL-01b, dimensionnant, `L_phase + L_neutre` = 9,00 + 9,00 = **18,00 m** depuis que le
-plafonnier est commuté par MC-01 — 21,00 m auparavant, voir 2.4. Trois hypothèses de charge, les
-quatre sorties allumées ensemble :
+Sur **EL-01b**, dimensionnant depuis le 2026-10-01, `L_phase + L_neutre` = 17,17 + 17,17 =
+**34,34 m** au point d'utilisation, contre 23,45 m pour EL-01a avant cette révision, et 16,35 m
+depuis la goulotte GL-02. Le 2026-09-26, l'hypothèse de charge **cesse d'être une hypothèse** : la puissance
+unitaire n'est plus 20, 40 ou 60 W supposés, c'est **36 W déclarés** par le fabricant, et les
+six sont sur le même circuit.
 
-| Hypothèse | Courant | ΔU terminale sur 16,35 m | Cumulée avec l'arrivée (1,65 %) |
-|-----------|---------|------------------------|----------------------------------|
+**On compte la phase, et jusqu'au point d'utilisation.** Le tracé s'arrête au connecteur d'accès, à
+**17,17 m** : la chute se lit là, où l'installation rejoint la réglette. Le câble interne de 1,20 m
+appartient à l'appareil, et le compter porterait à 18,37 m et 0,225 % — un majorant, écarté au nom
+du point d'utilisation et néanmoins chiffré ici pour être opposable.
+
+| Hypothèse | Courant | ΔU terminale | Cumulée avec l'arrivée (1,65 %) |
+|-----------|---------|-------------|----------------------------------|
+| *Avant le 2026-09-26 — deux sorties, trois puissances supposées* | | *sur 16,35 m* | |
 | 4 × 20 W LED | 0,35 A | 0,037 % | 1,69 % |
 | 4 × 40 W LED | 0,70 A | 0,074 % | 1,73 % |
-| **4 × 60 W LED** | **1,04 A** | **0,111 %** | **1,76 %** |
+| 4 × 60 W LED | 1,04 A | 0,111 % | 1,76 % |
+| *2026-09-26 — six réglettes en étoile, sur 23,45 m* | **0,939 A** | **0,144 %** | **1,79 %** |
+| **2026-10-01 — six réglettes pontées, sur 34,34 m** | **0,939 A** | **0,210 %** | **1,86 %** |
 
-**Conclusion** : 1,76 % au pire cas contre une limite de **3 %** applicable à l'éclairage, soit
-une marge de **1,24 point**. *1,79 % et 1,21 point avant l'automatisation ; 1,77 % et 1,23 point avant que l'axe du plafonnier recule de 0,80 m au sud, le 2026-09-23 — la terminale est passée de 18,00 à 16,40 m, phase et neutre. Puis à 16,35 m le 2026-09-24 : la goulotte GL-02 remplace l'antenne CH-02 et la montée CH-04, et les conducteurs sortent par la face avant du profilé au lieu de monter au plafond (changement `goulotte-paroi-est`). La cumulée ne bouge pas au centième.*
+**Conclusion** : 1,86 % au point d'utilisation contre une limite de **3 %**, soit une marge de
+**1,14 point**. La longueur de phase a gagné 47 % pour un courant inchangé — **c'est la longueur, et
+elle seule, qui dimensionne ici**. *L'historique se lit dans la révision en tête de note : 1,76 % et 1,24 point
+avant les six réglettes ; 1,79 % et 1,21 point avant l'automatisation ; 1,77 % et 1,23 point
+avant que l'axe recule de 0,80 m au sud le 2026-09-23 ; puis 1,79 % et 1,21 point après la
+goulotte GL-02 et les six réglettes en étoile ; enfin 1,86 % et 1,14 point avec le pontage.*
 
 **La limite de 3 % paraissait sévère ; elle ne l'est pas.** L'arrivée en consomme 1,65 % à elle
-seule, et il ne semblait rester que 1,35 % pour le circuit terminal. Le calcul montre que celui-ci
-n'en consomme que **0,14 %** — onze fois moins que l'amont. Allonger le circuit d'éclairage de
-moitié ne le mettrait pas en difficulté.
+seule, et il ne reste que 1,35 % pour le circuit terminal. Le calcul montre que celui-ci n'en
+consomme que **0,210 %** — près de huit fois moins que l'amont. Doubler encore le circuit d'éclairage ne
+le mettrait pas en difficulté.
 
 **Ce qui en découle, et qui est le vrai enseignement** : la question n'est pas la section mais
-l'**hypothèse de simultanéité** (FR-019, SC-007). Et elle est ici sans enjeu, puisque les quatre
-sorties allumées en même temps tiennent déjà avec 1,23 point de marge.
+l'**hypothèse de simultanéité** (FR-019, SC-007). Elle est ici sans enjeu, puisque les six
+réglettes allumées en même temps tiennent avec 1,14 point de marge.
 
 ### 2.3 Le détour par la commande — réserve levée le 2026-09-22
 
@@ -124,7 +203,7 @@ commuté ce n'est pas la longueur du conducteur de **phase** — celle-ci descen
 l'interrupteur, puis remonte vers la sortie. Le neutre, lui, va directement. La forme `2ρLI/S`
 suppose les deux de même longueur ; ici elles diffèrent.
 
-L'écart était chiffré à la main, et il aboutissait à 0,142 % / 1,79 %. **Ces deux valeurs ont
+L'écart était chiffré à la main, et il aboutissait à 0,142 % / 1,76 %. **Ces deux valeurs ont
 été celles de 2.2** jusqu'au 2026-09-23, où le plafonnier est passé sous module et le détour a
 disparu — voir 2.4. Elles ne sont plus calculées ici, elles sortent du socle.
 
@@ -161,9 +240,12 @@ l'entrée de la sectionnelle, adresse le même ordre au même module.
 
 **Ce qui en découle pour cette note** :
 
-- **La phase ne fait plus de détour.** MC-01 est sur le chemin du plafonnier : la longueur de
-  phase de EL-01b retombe à celle de son conduit, 9,00 m, et la chute cumulée de 1,79 % à
-  **1,77 %**. Le détour ne subsiste que pour EL-03, par CM-03.
+- **La phase ne fait plus de détour.** MC-01 est sur le chemin des points qu'il commande : leur
+  longueur de phase retombe à celle de leur conduit, et la chute cumulée de 1,79 % à **1,77 %**.
+  Le détour ne subsiste que pour EL-03, par CM-03. *Depuis le pontage, cette égalité joue aussi
+  pour les six réglettes : leur phase comme leur neutre s'arrêtent au connecteur d'accès — le point
+  d'utilisation —, où arrive le cordage. Le câble interne de 1,20 m appartient à l'appareil ; le
+  compter porterait à 1,88 %, un majorant écarté — voir 2.1.*
 - **Le tronc porte davantage.** La sortie de MC-01 monte par CH-02 ; la paire d'ordre de CM-01
   descend par CH-02 et CH-05 ; le fil d'ordre du bouton de porte, du circuit des prises, traverse
   tout le tronc. CH-02 passe à **dix** conducteurs et CH-05 à **neuf**, et le maître d'ouvrage les a
@@ -179,8 +261,9 @@ l'entrée de la sectionnelle, adresse le même ordre au même module.
 
 | Vérification | Valeur | Origine | Référence | État |
 |--------------|--------|---------|-----------|------|
-| Taux de remplissage du **tronc partagé** | Condition exacte `D ≥ d·√(3n)`, avec **n = 11 sur CH-02, 9 sur CH-05** — en IRL 25 — et **8 sur CH-04, CH-07 et CH-L1** en IRL 20 — voir 3.1 | **Calculée** (géométrie) ; la règle du tiers est une **règle de l'art** | règle de l'art, à citer comme telle | acquis, sous réserve des cotes produit |
-| Décompte des points d'éclairage | **3 points, 4 sorties** | **Calculé** | — | acquis |
+| Taux de remplissage du **tronc partagé** | Condition exacte `D ≥ d·√(3n)`, avec **n = 9 sur CH-05** — en IRL 25 — **8 sur CH-L1**, **7 sur CH-07**, et **3 sur chacun des conduits du plafond** — CH-L2, CH-L3, CH-L4, CH-L6 — en IRL 20, et **3 sur
+chacun des quatre cordages**, dont la section n'est pas déclarée — voir 3.1 | **Calculée** (géométrie) ; la règle du tiers est une **règle de l'art** | règle de l'art, à citer comme telle | acquis pour les conduits ; **les cordages ne sont pas calculables** — voir 3.1 |
+| Décompte des points d'éclairage | **6 points, 6 sorties** — EL-01a à EL-01f | **Calculé** | — | acquis |
 | Limite de points par circuit d'éclairage | *(à renseigner)* | **Normative** | *(clause : ..............)* | **à confirmer** |
 | Résistance maximale de la prise de terre | `R ≤ 50/IΔn` — voir 3.3 | **Calculée** ; le seuil de 50 V est normatif | *(clause du seuil : ..............)* | seuil **à confirmer** |
 
@@ -201,8 +284,9 @@ passent, sauf sur un.
 
 | Conduit du tronc | Conducteurs | dont éclairage |
 |------------------|-------------|----------------|
+| *Avant l'automatisation — état du 2026-09-22* | | |
 | CH-01, CH-02 | 6 | phase, neutre, PE |
-| CH-04, CH-07 | 6 | neutre, PE, **retour du plafonnier** |
+| CH-04, CH-07 | 6 | neutre, PE, retour commandé |
 | **CH-05** | **8** | phase, neutre, PE, **deux retours commandés** |
 
 **Révisé le 2026-09-23, par l'automatisation locale** — voir 2.4. CH-01 n'est plus un conduit
@@ -210,12 +294,32 @@ depuis la goulotte ; le décompte dérivé est désormais :
 
 | Cheminement | Calibre | Conducteurs | dont éclairage |
 |-------------|---------|-------------|----------------|
-| GL-01, goulotte | profilé | 14, borne comprise | 8 : phase, neutre, PE, **sortie de MC-01**, paires d'ordre de CM-01 et CM-04 |
-| **CH-02** | **IRL 25** | **10** | 6 : phase, neutre, PE, sortie de MC-01, paire d'ordre de CM-01 |
+| GL-01, goulotte du tableau | profilé | 15, borne comprise | 8 : phase, neutre, PE, **sortie de MC-01**, paires d'ordre de CM-01 et CM-04 |
+| GL-02, goulotte de la paroi est | profilé | 14 | 7 : phase, neutre, PE, **sortie de MC-01**, paire d'ordre de CM-01, retour du point piéton |
 | **CH-05** | **IRL 25** | **9** | 6 : phase, neutre, PE, retour de CM-03, paire d'ordre de CM-01 |
-| CH-04, CH-07 | IRL 20 | 7 | 3 : neutre, PE, sortie de MC-01 |
 | CH-L1 | IRL 20 | 8 | 5 : phase, neutre, PE, paire d'ordre de CM-04 |
+| CH-07 | IRL 20 | 7 | 3 : neutre, PE, sortie de MC-01 |
 | CH-A1 | IRL 20 | 6 | 3 : PE, paire d'ordre de CM-04 |
+| **CH-L2, CH-L3, CH-L4, CH-L6** — colonnes et branche du plafonnier | **IRL 20** | **3 chacun** | **3 chacun : phase, neutre, PE** |
+| **CP-1 à CP-4** — cordages de pontage | **sans section déclarée** | **3 chacun** | **3 chacun : phase, neutre, PE** |
+
+**Révisé le 2026-09-26, par les six réglettes ; révisé le 2026-10-01, par le pontage.** Sept
+cheminements étaient apparus le premier jour — **CH-L9** à **CH-L15** — portant chacun trois
+conducteurs, la signature d'une distribution individuelle. Le pontage les a ramenés à **quatre**
+conduits, et **quatre cordages** leur ont succédé.
+
+**Un cordage n'est pas un câble d'alimentation ordinaire : il porte trois conducteurs.** Chaque
+paire pontée a besoin de sa phase, de son neutre et de son PE entre les deux réglettes — sans le
+PE, le pontage serait un défaut de terre en série. C'est la raison pour laquelle CP-1 à CP-4
+portent chacun trois conducteurs, et non deux.
+
+**Ce qui ne peut pas être calculé, et qui reste ouvert** : un cordage ne déclare **pas de section**
+— c'est même la condition de sa déclaration, puisqu'il n'est pas choisi dans le catalogue des
+conduits. Sa condition de remplissage ne peut donc pas être vérifiée, et le conduit qui le reçoit
+non plus. *Un câblier à trois conducteurs de la section du câble d'éclairage, gainé et gainé
+intérieur, est l'attente ; elle doit être arrêtée à l'achat, pas déduite ici* (R5). **Le maximum
+du tronc ne bouge pas** : il reste à 9 sur CH-05, et les deux goulottes restent les plus chargées
+du réseau à 15 et 14 conducteurs.
 
 Les conducteurs des prises complètent chaque ligne, dont le **fil d'ordre du bouton de porte**,
 en 2,5 mm², sur CH-02, CH-04, CH-07, CH-08, CH-L1 et CH-A1, et la phase qui monte au bouton par
@@ -334,24 +438,25 @@ l'exigence à chaque point d'éclairage, y compris les deux points extérieurs e
 
 ## 4. Bilan de puissance
 
-Sans enjeu pour ce circuit. Quatre sorties LED appellent de 0,35 à 1,04 A, soit au pire **2,7 %**
-de la puissance souscrite de 9 kVA. Le circuit d'éclairage ne participe pas à la contrainte de
+Sans enjeu pour ce circuit. Les six réglettes LED appellent 0,939 A, soit **2,4 %** de la
+puissance souscrite de 9 kVA. Le circuit d'éclairage ne participe pas à la contrainte de
 bilan que la borne de recharge fait peser sur le branchement.
 
 Ce qui compte ici est l'inverse : **FR-016 exige un circuit distinct de celui des prises**, et
 FR-017 en assume la conséquence recherchée — un défaut sur les prises ne plonge pas le garage
-dans le noir. SC-006 en fait un essai : les quatre points coupent à l'essai du différentiel **et
+dans le noir. SC-006 en fait un essai : les six points coupent à l'essai du différentiel **et
 les prises restent alimentées**.
 
 ## 5. Conclusions explicites exigées par le contrat
 
 | Question du contrat | Réponse | État |
 |---------------------|---------|------|
-| Quelle **hypothèse de simultanéité** ? | Les quatre sorties allumées ensemble, cas majorant, et il tient avec 1,23 point de marge. L'hypothèse n'a donc pas besoin d'être discutée pour conclure | **acquis** |
-| Le décompte des points tient-il dans la limite normative ? | 3 points, 4 sorties ; limite **normative à confirmer** | **ouverte** |
+| Quelle **hypothèse de simultanéité** ? | Les six réglettes allumées ensemble, cas majorant, et il tient avec 1,14 point de marge. La puissance unitaire étant DÉCLARÉE et non supposée, l'hypothèse n'a plus à être discutée pour conclure | **acquis** |
+| Le décompte des points tient-il dans la limite normative ? | 6 points, 6 sorties ; limite **normative à confirmer** | **ouverte** |
+| **Le dégagement sous le tablier est-il établi ?** | **Non.** EL-01a et EL-01b, à y = 1,55 m, sont sous le tablier remonté, dont **l'épaisseur n'a jamais été relevée**. **Aucun segment de conduit n'est plus en cause** : les trois qui l'étaient — CH-L10 seg. 3, CH-L13 seg. 2 et 3 — appartenaient aux colonnes supprimées par le pontage. *Elles sont aussi les deux seules réglettes **alimentées par cordage*** — à lever par un relevé avant pose | **ouverte** |
 | `IB ≤ In ≤ Iz` avec l'`Iz` du mode de pose **réel** (B1, en conduit) ? | Structure du contrôle posée ; `Iz` et `In` **normatifs à confirmer** | **ouverte** |
 | Le taux de remplissage du **tronc partagé** est-il respecté ? | **Révisé le 2026-09-23.** CH-02 et CH-05, dix et neuf conducteurs, sont en **IRL 25** : condition à vérifier à ce calibre. En IRL 20, **CH-L1 exige ≥ 14,69 mm** intérieurs, et **CH-04, CH-07** un seuil à calculer. Deux valeurs produit sur quatre échouent déjà à 14,69 mm : c'est une **condition d'achat**, pas une vérification de forme (2.4, 3.1, 3.2) | **ouverte — conditionne l'achat du conduit** |
-| La chute de tension cumulée reste-t-elle sous 3 % ? | **Oui — 1,76 %** sur la forme exacte, marge de 1,24 point — 1,77 % avant le recul de l'axe au sud, 1,79 % avant l'automatisation | **acquis** |
+| La chute de tension cumulée reste-t-elle sous 3 % ? | **Oui — 1,86 %** au point d'utilisation sur la forme exacte, marge de 1,14 point — 1,79 % avant le pontage, 1,77 % avant le recul de l'axe au sud, 1,76 % avant l'automatisation | **acquis** |
 | Le type de différentiel satisfait-il le Principe II ? | Dépend de la décision FR-050, section 6. **Plus contraignant ici que pour les prises** | **ouverte** |
 
 ## 6. FR-050 — le type du différentiel, plus contraignant ici

@@ -10,6 +10,8 @@ import {
   Group,
   Mesh,
   BoxGeometry,
+  TubeGeometry,
+  CatmullRomCurve3,
   MeshStandardMaterial,
   EdgesGeometry,
   LineSegments,
@@ -17,7 +19,7 @@ import {
   Vector3,
 } from '../../vendor/three/three.module.js';
 import { nusDeParoi, entreeDeTraversee, sortieDeTraversee } from '../donnees/chargement.js';
-import { AXE_NORMAL, longueurSegment } from '../geometrie/cheminement.js';
+import { AXE_NORMAL, longueurSegment, estCordage } from '../geometrie/cheminement.js';
 import { VERDICTS, controlerCollisions } from '../geometrie/collision.js';
 import { encombrementDe, sectionArretee } from '../geometrie/section.js';
 
@@ -58,6 +60,44 @@ function boiteEnSaillie(local, segment, encombrement) {
   return { taille, centre };
 }
 
+/**
+ * Le tracé d'un cordage, et sa flèche.
+ *
+ * Un cordage n'est pas un conduit plus court : c'est un câble QUI TEND, et sa seule
+ * différence visible est de tomber. Le dessiner droit, à 12 mm comme le tube de
+ * repli, revenait à mentir deux fois — sur un diamètre qui n'est pas arrêté, et sur
+ * une souplesse qui est la seule raison d'avoir choisi un câble.
+ *
+ * La flèche est la parabole `4·f·t·(1−t)` : nulle aux deux aboutisseurs, maximale au
+ * milieu. Elle s'annule donc exactement là où le disent les `raccords` de la
+ * réglette, et le câble reste accroché aux points que la donnée déclare — c'est ce
+ * qui permet de lire la liaison comme une liaison, et pas comme une courbe libre.
+ */
+function courbeDeCordage(segment, fleche, echantillons = 16) {
+  const points = [];
+  for (let i = 0; i <= echantillons; i += 1) {
+    const t = i / echantillons;
+    const chute = 4 * fleche * t * (1 - t);
+    points.push(
+      new Vector3(
+        segment.de.x + (segment.a.x - segment.de.x) * t,
+        segment.de.y + (segment.a.y - segment.de.y) * t,
+        segment.de.z + (segment.a.z - segment.de.z) * t - chute,
+      ),
+    );
+  }
+  return new CatmullRomCurve3(points);
+}
+
+/** Le maillage d'un cordage : un tube rond, suivant la flèche, et non une boîte en saillie. */
+function meshDeCordage(segment, convention, couleur) {
+  const courbe = courbeDeCordage(segment, convention.fleche);
+  const geo = new TubeGeometry(courbe, 24, convention.diametre / 2, 8, false);
+  const materiau = new MeshStandardMaterial({ color: couleur, roughness: 0.6 });
+  const mesh = new Mesh(geo, materiau);
+  return { mesh, materiau };
+}
+
 export function construireCheminements(modele) {
   const groupe = new Group();
   groupe.name = 'cheminements';
@@ -80,10 +120,23 @@ export function construireCheminements(modele) {
     const noeud = new Group();
     noeud.name = ch.id;
     noeud.visible = false;
+    const cordage = estCordage(ch);
+    // Un cordage garde sa couleur dans les trois registres, quand un conduit prend
+    // celle du cheminement dès qu'il est ajouté. Lui rendre la sienne serait un
+    // mensonge : on ne verrait plus qu'il est un câble.
+    const couleurBase = cordage ? couleurs.cordage : couleurs.cheminement;
     const encombrement = encombrementDe(ch.section, sectionParDefaut[ch.section?.forme ?? 'circulaire']);
     const meshes = [];
 
     for (const segment of ch.segments ?? []) {
+      // Le cordage ne se pose pas en saillie du nu : il PEND entre deux connecteurs.
+      if (cordage) {
+        const { mesh, materiau } = meshDeCordage(segment, presentation.cordage, couleurBase);
+        mesh.userData = { cheminement: ch };
+        noeud.add(mesh);
+        meshes.push({ mesh, contour: null, materiau });
+        continue;
+      }
       const b = boiteEnSaillie(modele.local, segment, encombrement);
       if (!b) continue;
       const geo = new BoxGeometry(b.taille.x, b.taille.y, b.taille.z);
@@ -106,6 +159,7 @@ export function construireCheminements(modele) {
       noeud,
       meshes,
       cheminement: ch,
+      couleurBase,
       sectionConnue: sectionArretee(ch.section),
       verdict: verdictParCheminement.get(ch.id) ?? VERDICTS.CONFORME,
     });
@@ -166,7 +220,9 @@ export function construireCheminements(modele) {
       entree.noeud.visible = true;
       for (const m of entree.meshes) {
         m.materiau.color.set(couleur);
-        m.contour.visible = contour;
+        // Un cordage n'a pas de contour : c'est un câble, et un liseré le ferait
+        // ressembler à un tube ajouté. Il se distingue par son diamètre et sa flèche.
+        if (m.contour) m.contour.visible = contour;
       }
     };
 
@@ -177,7 +233,7 @@ export function construireCheminements(modele) {
     for (const ch of partition.cheminements.ajoutes) {
       const e = parId.get(ch.id);
       if (!e) continue;
-      const couleur = e.verdict === VERDICTS.COLLISION ? couleurs.collision : couleurs.cheminement;
+      const couleur = e.verdict === VERDICTS.COLLISION ? couleurs.collision : e.couleurBase;
       peindre(e, couleur, true);
     }
     for (const liste of [partition.traversees.enPlace, partition.traversees.ajoutes]) {
@@ -203,8 +259,8 @@ export function construireCheminements(modele) {
       if (!e.noeud.visible) continue;
       const porte = (e.cheminement.circuits ?? []).some((id) => ids.includes(id));
       for (const m of e.meshes) {
-        m.materiau.color.set(porte ? couleurs.cheminement : couleurs.composantEnPlace);
-        m.contour.visible = porte;
+        m.materiau.color.set(porte ? e.couleurBase : couleurs.composantEnPlace);
+        if (m.contour) m.contour.visible = porte;
       }
     }
   }

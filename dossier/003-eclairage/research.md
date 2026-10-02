@@ -1,16 +1,22 @@
 # Phase 0 — Recherche et décisions
 
 **Fonctionnalité**: `003-eclairage` | **Date**: 2026-09-21
+| Dernière révision | **2026-10-01** — six réglettes pontées, voir **R13**
 
 Chaque décision est vérifiée sur les données : l'implantation candidate a été fusionnée avec le
 tracé réel des prises et soumise aux vingt-deux règles avant d'être écrite ici.
 
 ---
 
-## R1 — L'axe du plafonnier est décalé au nord, au centre du plafond utilisable
+## R1 — L'axe de distribution est décalé au nord, au centre du plafond utilisable
 
 > **Révisé le 2026-09-23 par décision du maître d'ouvrage** : l'axe recule à **y = 3,25 m**, CH-L2
 > étant jugé trop long. Voir `implantation.md`. La décision de 4,05 m ci-dessous est conservée.
+>
+> **R12, 2026-09-26** : l'axe accueille six réglettes au lieu de deux. Les colonnes sont à
+> **1,45 et 4,15 m** — les quarts de la largeur, 1,40 et 4,20, ont été rapprochés de 5 cm de part
+> et d'autre pour que la colonne ouest ne tombe pas sous le bord du tablier. La décision de
+> 4,05 m ci-dessous reste le fondement du décalage vers le nord.
 
 **Decision (révisée le 2026-09-21)**: les deux sorties sont sur un axe est-ouest à
 **y = 4,05 m**, aux abscisses **x = 1,40 m** et **x = 4,20 m**. Le conduit est **commun avec
@@ -202,20 +208,32 @@ elle le redeviendra.
 les valeurs normatives sont marquées **à confirmer** avec leur emplacement de référence de
 clause.
 
-**Chute de tension, calculée sur le tracé réel** — chemin le plus long : **9,00 m** jusqu'à
-EL-01b, après la mutualisation puis le décalage de l'axe vers le nord (R1, R4). Le tableau
-ci-dessous a été recalculé sur cette longueur ; la conclusion qui en est tirée n'a pas bougé.
+**Chute de tension, calculée sur le tracé réel** — chemin le plus long : **17,17 m** au point
+d'utilisation d'**EL-01b**, depuis le pontage du 2026-10-01 (R13). *Avant, c'était 11,73 m jusqu'à
+EL-01a avec les six réglettes en étoile (R6), puis 9,00 m jusqu'à EL-01b, puis 8,18 m après la
+goulotte GL-02.* Le tableau ci-dessous porte l'état actuel ; le raisonnement, lui, est inchangé.
 
 | Hypothèse de charge | Courant | ΔU terminale | Cumulée avec l'arrivée |
 |---------------------|---------|--------------|------------------------|
-| 4 × 20 W LED | 0,35 A | 0,041 % | 1,69 % |
-| 4 × 40 W LED | 0,70 A | 0,082 % | 1,73 % |
-| 4 × 60 W LED | 1,04 A | 0,122 % | **1,77 %** |
+| *Avant le 2026-09-26 — quatre sorties, puissances supposées* | | *sur 16,35 m* | |
+| 4 × 20 W LED | 0,35 A | 0,037 % | 1,69 % |
+| 4 × 40 W LED | 0,70 A | 0,074 % | 1,73 % |
+| 4 × 60 W LED | 1,04 A | 0,111 % | 1,76 % |
+| *2026-09-26 — six réglettes en étoile, sur 23,45 m* | **0,939 A** | **0,144 %** | **1,79 %** |
+| **2026-10-01 — six réglettes pontées, sur 34,34 m** | **0,939 A** | **0,210 %** | **1,86 %** |
 
-La limite de 3 % paraissait sévère ; elle ne l'est pas. Même au pire cas, il reste **1,23 point**
-de marge, et le circuit terminal ne consomme que 0,12 % — l'arrivée en consomme quinze fois
+La limite de 3 % paraissait sévère ; elle ne l'est pas. Même au pire cas, il reste **1,14 point**
+de marge, et le circuit terminal ne consomme que 0,210 % — l'arrivée en consomme près de huit fois
 plus. **La section n'est pas le sujet** ; l'hypothèse de simultanéité l'est (FR-019), et elle
-est ici sans enjeu puisque les quatre points allumés ensemble tiennent déjà.
+est ici **devenue sans enjeu** : elle ne l'est plus du tout, puisque la puissance unitaire
+est **déclarée** par le fabricant et non supposée. Six points allumés ensemble tiennent avec
+1,14 point de marge.
+
+**Ce que les six réglettes ont réellement changé, et qui mérite d'être écrit** : le chemin le
+plus long a gagné **46 %** de longueur de phase et la marge n'a perdu que **0,07 point**. Une
+révision de 2026 avait fait l'inverse — plus de chemin, moins de charge. Cette fois le courant
+était déjà connu et stable : **c'est la longueur seule qui dégrade la marge**, et c'est
+aujourd'hui la seule grandeur à surveiller.
 
 **Restent normatives, à confirmer sur le texte** :
 
@@ -415,6 +433,137 @@ chercher.
   de décrochement. Écarté par R5, ci-dessus.
 - *Axe à 2,70 m* : 0,30 m de la baie, le décrochement de CH-07 tombe à 0,30 m. Ne répond pas à la
   demande, qui dit 0,20 m.
+
+---
+
+## R12 — Six réglettes au plafond, en distribution individuelle
+
+> **Décision du 2026-09-26, partiellement renversée par [R13](#r13--six-réglettes-pontees-par-cordage-le-2026-10-01)**
+> le 2026-10-01. Les six positions, les deux colonnes et les trois rangs restent. Ce qui change :
+> la distribution n'est plus individuelle, elle est **pontée**.
+> Vient après R10, qui est resté le dernier dans le fichier ; la numérotation suit l'ordre
+> d'écriture, pas l'ordre logique.
+
+**État de cette décision, et ce qui reste vrai** : les six réglettes, leurs positions et leur
+cote sous le tablier sont inchangées. La **distribution individuelle qu'elle décrivait est
+abandonnée** : **trois** des quatre boîtes qu'elle imposait ont disparu — BL-01 subsiste, c'est la
+seule des quatre qui survive — et **sept** des sept cheminements. Son refus du **chaînage série reste entier** — voir R13 pour la distinction qui le
+sauve.
+
+**Decision**: le plafond reçoit **six réglettes HOFTRONIC 120 cm** en **deux colonnes de trois** —
+x = 1,45 et 4,15 m, y = 1,55 / 2,90 / 4,55 m — sur **un seul circuit**, commandées ensemble par
+MC-01. La distribution se fait par **quatre boîtes** : BL-01 la fourche, BD-09 à 0,50 m, puis BD-08
+à l'ouest et BD-07 à l'est. Sept cheminements nouveaux, CH-L9 à CH-L15. **BD-09 est un
+branchement et non un simple décrochement** : CH-L4, le conduit de BL-01 vers BD-08, passe en plein
+travers à x = 2,20, ce qui porte son degré à 4. Elle est la raison pour laquelle les trois
+conduits se croisant à cet endroit ont où se raccorder.
+
+**La chaîne série a été examinée et écartée.** Les réglettes sont « connectables entre elles,
+jusqu'à 10 selon la fiche » : le chaînage était donc la solution évidente, avec une seule
+descente et un seul retour. Il est écarté pour une raison vérifiable — **le presse-étoupe PG11 de
+la réglette est intermédiaire, il n'est pas sur le chemin du courant**. Le traverser n'économise
+aucun conduit et ajoute une dérivation et un contact par corps de luminaire. Six points distincts
+valent mieux qu'un point unique à six dénominations, et le prix est assumé : le métré passe de
+69,34 à **104,89 m**.
+
+**Rationale**: quatre raisons — un calcul, deux décisions de conception, et un arbitrage assumé.
+
+- **Le point dimensionnant change de nom, et ce n'est pas un ajustement.** EL-01a remplace EL-01b
+  à 11,73 m contre 11,53 m. La colonne ouest est à 1,45 m de l'axe médian quand la colonne est
+  est à 4,15 m, et la goulotte descend au sud : l'itinéraire par l'ouest est **20 cm plus long**.
+  C'est la même raison que l'ancien test opposait à l'hypothèse d'une symétrie de parcours — elle
+  porte ici sur le tracé, non sur la géométrie. L'implantation est **symétrique en position et
+  asymétrique en longueur**, et il fallait le dire plutôt que de lisser.
+- **La charge baisse pendant que la longueur monte.** 6 × 36 W déclarés = 0,939 A, contre
+  1,04 A supposés pour 4 × 60 W. La terminale passe de 0,111 % à 0,144 %, la cumulée de 1,76 % à
+  1,79 %. La marge sur 3 % se resserre de 1,24 à 1,21 point — **c'est la seule grandeur qui se
+  dégrade, et elle se surveille**.
+- **Le décompte des conducteurs ne bouge pas : dix.** La longueur a doublé, pas la quantité de
+  cuivre par point. C'est la signature d'une distribution individuelle : les colonnes portent
+  chacune leur trio phase/neutre/PE, parce que la commande est centralisée en amont sur MC-01.
+- **Le tablier devient un dossier ouvert, et c'est le prix de cette implantation.** Les deux
+  réglettes du rang sud sont à y = 1,55 m, dans le majorant du tablier remonté, qui va jusqu'à
+  2,15 m de profondeur. **Seule l'épaisseur du panneau manque** — le dessus du volume est pris au
+  plafond — donc leur dégagement n'est pas établi, et trois segments restent `non-concluant` :
+  CH-L10 seg. 3, CH-L13 seg. 2 et 3. Le maître d'ouvrage a décidé de **poser quand même** et de
+  **déclarer l'épaisseur comme cote à relever** : arbitrage explicite, à mesurer en place avant
+  fixation.
+
+**Alternatives considered**:
+- *Chaîne série des six réglettes* : écartée, le presse-étoupe n'économise aucun conduit (ci-dessus).
+- *Décaler le rang sud à y = 2,15 m pour dégager le tablier* : la contrainte disparaît, mais les
+  deux réglettes se superposent au rang médian, et l'implantation perd sa lecture en trois rangs.
+  **À reconsidérer au relevé de l'épaisseur**, si les deux réglettes frottent.
+- *Plafond à cinq réglettes, une colonne de moins* : refusé, la symétrie deux colonnes de trois
+  est demandée et l'équilibre de l'éclairement s'en trouve meilleur.
+
+**Ce que cette décision rouvre** : le nombre maximal de points lumineux par circuit
+d'éclairage reste **une exigence normative non confirmée** (FR-018, R5). Six points sur un
+circuit, c'est précisément le cas qu'elle doit couvrir, et elle n'a pas encore été vérifiée sur
+le texte. C'est la réserve ouverte la plus sérieuse que cette implantation crée.
+
+---
+
+## R13 — Six réglettes pontées par cordage, le 2026-10-01
+
+> **Décision du 2026-10-01.** Dernière du fichier. Numérotation par ordre d'écriture, comme
+> ci-dessus.
+
+**Decision**: les six réglettes sont **pontées deux à deux** par quatre **cordages**, CP-1 à CP-4.
+CH-L3 et CH-L4 n'alimentent plus que l'extrémité nord de leur colonne — **EL-01f** à l'est,
+**EL-01e** à l'ouest — et le courant descend ensuite de réglette en réglette :
+**EL-01f →CP-4→ EL-01d →CP-2→ EL-01b**, **EL-01e →CP-3→ EL-01c →CP-1→ EL-01a**. Une seule boîte
+au plafond, **BL-01**, au degré 3.
+
+**Rationale**: ce que R12 avait payé en cuivre et en volume de plafond, sans le vouloir.
+
+- **Sept cheminements et trois boîtes disparaissent.** Le conduit propre à l'éclairage tombe de
+  18,91 m à **9,25 m**, et les boîtes de l'éclairage de quatre à **une**. Le métré total, lui, ne
+  descend que de 104,89 m à **108,92 m** : le pontage n'est pas une économie, c'est un
+  **déplacement** — moins de tube posé au plafond, plus de câble à l'intérieur.
+- **Trois conducteurs par cordage, et non deux.** Chaque paire a besoin de sa phase, de son
+  neutre et de son **PE**. C'est ce qui distingue un cordage de pontage d'un câble d'alimentation
+  ordinaire, et ce qui rend le pontage acceptable : sans le PE, ce serait un défaut de terre en
+  série dans l'éclairage.
+- **Un cordage n'a pas de section, et c'est voulu.** Il n'est pas choisi dans un catalogue de
+  conduits ; il se déclare `nature: "cordage"`, sans `section`. La conséquence est assumée et
+  écrite : sa condition de remplissage **n'est pas vérifiable**. *C'est la seule grandeur de ce
+  dossier qui ne peut pas être calculée, et elle doit rester un point d'achat, pas une déduction.*
+- **V24 rend `raccords` obligatoire.** Une réglette alimentée par sa voisine n'a qu'un point
+  d'arrivée, et le socle refuse un appareil qui en a moins de deux. D'où le champ `raccords`, et
+  d'où l'arête interne de **1,20 m** — le câble fourni dans le corps — que le graphe traite
+  comme une liaison réelle et que le métré **n'achète pas**.
+- **Le point dimensionnant change de lettre, sans que ce soit la faute du pontage.** EL-01b
+  passe devant, à 17,17 m au point d'utilisation. Mais le pontage
+  est un éclairage de **fin de ligne** : il ne touche pas au trajet du tableau au plafond. C'est
+  la colonne est, plus longue de 20 cm, qui décide. *La distinction importe pour la suite : on
+  n'attribue pas au pontage une longueur qu'il n'a pas créée.*
+- **La chute suit la phase, et s'arrête au point d'utilisation.** Pour une réglette pontée, le
+  socle compte jusqu'au connecteur d'accès : c'est là que l'installation se raccorde à l'appareil,
+  et le câble interne de 1,20 m n'y est pas compté. La terminale passe de 0,144 % à **0,210 %**,
+  la cumulée de 1,79 % à **1,86 %**, et la marge de 1,21 à **1,14 point**. *Un majorant existe si
+  l'on ajoutait le lien interne de la cible (0,225 % et 1,88 %) : il est chiffré et écarté, la
+  convention retenue étant le point d'utilisation.* C'est la seule grandeur qui se dégrade, et
+  elle se surveille — comme en R12.
+
+**Alternatives considered**:
+- *Chaîne série dans le corps des réglettes* : **toujours écartée**, et R12 avait raison. Le
+  presse-étoupe PG11 est intermédiaire, il n'est pas sur le chemin du courant ; le traverser
+  n'économise aucun conduit. Le pontage ne la ressuscite pas : il la **contourne** par un câble
+  qui va d'un point à l'autre, pas à travers un appareil. *C'est la distinction à ne pas perdre :
+  « les réglettes sont connectables entre elles » ne dit pas « elles se passent le courant ».*
+- *Six conduits indépendants, la version R12* : abandonnée, elle payait 9,66 m de tube et trois
+  boîtes de plus pour le même éclairage.
+- *Pontage par un seul câble de colonne en colonne, six au lieu de quatre* : refusé, un câble
+  traversant trois corps successifs retombe dans la chaîne série, et le modelage en perd la
+  lisibilité.
+- *Déplacer EL-01a et EL-01b pour dégager le tablier* : toujours écarté — voir R12, la contrainte
+  n'a pas bougé, elle a changé de forme.
+
+**Ce que cette décision rouvre** : la même réserve que R12 sur le **nombre maximal de points
+lumineux par circuit** (FR-018), et une nouvelle, plus petite — **la section et le type du
+câblier des cordages** sont à arrêter à l'achat. Aucune des deux ne se déduit des données.
+
 
 ---
 

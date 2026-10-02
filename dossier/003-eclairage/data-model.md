@@ -1,6 +1,18 @@
 # Phase 1 — Implantation cotée et modèle de données
 
 **Fonctionnalité**: `003-eclairage` | **Date**: 2026-09-21
+| Dernière révision | **2026-10-01** — six réglettes **pontées**
+
+> **Ce qui change dans le modèle** : les six réglettes sont désormais **pontées deux à deux** par
+> quatre **cordages**, au lieu d'être alimentées chacune par son propre trio remontant du tableau.
+> Une réglette alimentée par sa voisine n'a plus qu'**un seul point d'arrivée** au lieu de deux ;
+> V24 exige alors qu'elle déclare ses `raccords`, faute de quoi elle serait un cul-de-sac. C'est le
+> pontage qui rend ce champ obligatoire. Conséquence immédiate : **trois
+> boîtes disparaissent** (BD-07, BD-08, BD-09), **sept cheminements disparaissent** (CH-L9 à
+> CH-L15), quatre **cordages** apparaissent (CP-1 à CP-4), et l'agencement des colonnes s'allonge :
+> **CH-L3** passe à 4,25 m et **CH-L4** à 4,05 m. Le point dimensionnant **change de côté** : ce
+> n'est plus **EL-01a** mais **EL-01b**, et la longueur croît de près de moitié — les 11,73 m de
+> l'ancien tracé deviennent 17,17 m au point d'utilisation d'EL-01b.
 
 Toutes les cotes sont dans le repère de la constitution : origine à l'angle sud-ouest de l'œuvre
 intérieure au sol fini, x vers l'est, y vers le nord, z vers le haut, unité le mètre.
@@ -27,20 +39,34 @@ non du tracé** — voir « Le défaut subsistant » en fin de document. Zéro c
 
 ## Sorties, commandes et boîtes
 
-| Repère | Type | Paroi | Face | x | y | z | Hauteur d'axe |
-|--------|------|-------|------|---|---|---|---------------|
-| EL-01a | sortie d'éclairage | plafond | intérieur | **1,40** | **4,05** | 2,75 | *(plafond)* |
-| EL-01b | sortie d'éclairage | plafond | intérieur | **4,20** | **4,05** | 2,75 | *(plafond)* |
-| BL-01 | boîte de dérivation | plafond | intérieur | 2,70 | **4,05** | 2,75 | *(plafond)* |
-| EL-02 | sortie d'éclairage | sud | **extérieur** | 2,70 | −0,20 | **2,22** | 2,22 |
+| Repère | Type | Paroi | Face | x | y | z | Hauteur d'axe | `zoneTablier` |
+|--------|------|-------|------|---|---|---|---------------|----------------|
+| EL-01a | **réglette LED 120 cm** | plafond | intérieur | **1,45** | **1,55** | 2,75 | *(plafond)* | `non-concluant` |
+| EL-01b | **réglette LED 120 cm** | plafond | intérieur | **4,15** | **1,55** | 2,75 | *(plafond)* | `non-concluant` |
+| EL-01c | **réglette LED 120 cm** | plafond | intérieur | **1,45** | **2,90** | 2,75 | *(plafond)* | `degage-prouve` |
+| EL-01d | **réglette LED 120 cm** | plafond | intérieur | **4,15** | **2,90** | 2,75 | *(plafond)* | `degage-prouve` |
+| EL-01e | **réglette LED 120 cm** | plafond | intérieur | **1,45** | **4,55** | 2,75 | *(plafond)* | `degage-prouve` |
+| EL-01f | **réglette LED 120 cm** | plafond | intérieur | **4,15** | **4,55** | 2,75 | *(plafond)* | `degage-prouve` |
+| BL-01 | boîte de dérivation, **fourche** | plafond | intérieur | 2,70 | **3,25** | 2,75 | *(plafond)* | `degage-prouve` |
+| EL-02 | sortie d'éclairage | sud | **extérieur** | 2,70 | −0,20 | **2,22** | 2,22 | — |
 | EL-03 | sortie d'éclairage | est | **extérieur** | 5,80 | **2,60** | **2,60** | 2,60 |
-| CM-01 | commande | est | intérieur | 5,60 | **2,68** | **1,10** | 1,10 |
-| CM-03 | commande | est | **extérieur** | **5,80** | **2,60** | **1,10** | 1,10 |
-| CM-02 | commande *(détecteur)* | sud | **extérieur** | 2,40 | −0,20 | 2,22 | 2,22 |
+| CM-01 | commande | est | intérieur | 5,60 | **2,68** | **1,10** | 1,10 | — |
+| CM-03 | commande | est | **extérieur** | **5,80** | **2,60** | **1,10** | 1,10 | — |
+| CM-02 | commande *(détecteur)* | sud | **extérieur** | 2,40 | −0,20 | 2,22 | 2,22 | — |
 
-**Cet apport ne déclare qu'une boîte : BL-01, la fourche du plafonnier.** Depuis la
-mutualisation maximale du 2026-09-21, les cinq autres boîtes du circuit sont **partagées** avec celui des prises et déclarées
-par `002-prises-de-courant` :
+**Les six réglettes sont pontées par paires, et deux d'entre elles seulement reçoivent un
+conduit.** CH-L3 et CH-L4 alimentent chacune l'extrémité nord de leur colonne — **EL-01f** à
+l'est, **EL-01e** à l'ouest. Le courant descend ensuite de réglette en réglette par les quatre
+cordages : **EL-01f →CP-3→ EL-01d →CP-4→ EL-01b** à l'est, **EL-01e →CP-1→ EL-01c →CP-2→ EL-01a**
+à l'ouest. Les deux réglettes les plus au sud, **EL-01a** et **EL-01b**, ne sont donc pas
+alimentées par un tube mais **par leur voisine** — et ce sont elles qui portent
+`zoneTablier: "non-concluant"`, sous le tablier. *Elles n'ont qu'un point d'arrivée, où la
+réglette voisine vient les alimenter : V24 exige alors deux points ou plus, d'où `raccords`.*
+
+**Cet apport ne déclare plus qu'une boîte propre : BL-01, la fourche des deux colonnes.**
+*Il en déclarait quatre depuis le 2026-09-26 ; le pontage du 2026-10-01 a supprimé les trois
+autres, et avec elles le besoin même qui les faisait naître.* Les cinq autres boîtes du circuit
+sont **partagées** avec celui des prises et déclarées par `002-prises-de-courant` :
 
 | Boîte partagée | Position | Ce qu'elle sert à l'éclairage |
 |----------------|----------|-------------------------------|
@@ -63,12 +89,23 @@ TD-01 n'est pas redéclaré non plus : il appartient à `002` (R10).
 
 Vérifications d'implantation :
 
-- **L'axe du plafonnier est à y = 3,25 m** depuis le 2026-09-23 — décision du maître d'ouvrage, CH-L2 étant trop long ; il était à y = 4,05 m, décalé vers le nord le 2026-09-21. Ses deux sorties
-  restent aux quarts de la largeur, x = 1,40 et 4,20, donc symétriques par rapport à l'axe médian
-  nord-sud à x = 2,80 (FR-035, SC-016). Il est à **1,55 m au nord** du majorant du tablier
-  ouvert, qui s'arrête à y = 2,50 (FR-003, SC-002) — la contrainte du tablier est largement
-  dégagée.
-- **Aucune sortie de plafond n'est dans l'emprise du rail**, qui occupe x 2,66–2,74.
+- **Les six réglettes sont en deux colonnes, x = 1,45 et 4,15**, symétriques par rapport à l'axe
+  médian nord-sud à x = 2,80 (FR-035, SC-016), sur trois rangs en profondeur, y = 1,55 / 2,90 /
+  4,55. *La colonne ouest était à x = 1,40 avant le 2026-09-26 ; elle est à 1,45 m depuis.*
+- ⚠️ **EL-01a et EL-01b ne sont PAS dégagées du tablier.** Elles sont à y = 1,55 m, dans le
+  majorant du tablier remonté qui occupe y de 0 à **2,15 m** — et non 2,50 m, cote qui valait
+  avant que la profondeur relevée le 2026-09-23 ne resserre le majorant de 0,35 m. Leur
+  dégagement n'est pas établi : **seule l'épaisseur du panneau manque**, le dessus du volume étant
+  pris au plafond. Elles portent `zoneTablier: "non-concluant"`.
+- **Les quatre autres réglettes sont `degage-prouve`.** C'est un statut **prouvé**, pas supposé :
+  elles sont au nord de y = 2,15 m, donc hors de tout volume du tablier.
+- **Aucun segment de cet apport n'est `non-concluant`** contre le tablier. Les trois qui l'étaient
+  — CH-L10 segment 3, CH-L13 segments 2 et 3, ce dernier longeant le bord ouest à x = 0,40 m —
+  appartenaient aux colonnes du plafond, que le pontage a supprimées.
+- **Aucun point de la distribution n'est dans l'emprise du rail**, qui occupe x 2,66–2,74 : les
+  colonnes sont à 1,45 et 4,15, et BL-01 à 2,70.
+- **Les quatre cordages ne touchent aucun obstacle** : ils courent au plafond, en diagonale entre
+  deux connecteurs, et leur enveloppe n'a pas d'épaisseur de gaine à éviter.
 - **L'axe est à 1,05 m du parcours de plafond des prises**, qui court à y = 3,00 m. Cet écart est
   franc : c'est le décalage vers le nord qui a supprimé le dernier croisement de conduits.
 - **EL-02 est centré sur la porte sectionnelle** et sa traversée passe dans la seule bande libre
@@ -114,18 +151,27 @@ boîtier, percement **en biais vers le bas**, et percement **avant** la pose du 
 | *(CH-05)* | BD-01 | BD-04 | descente aux commandes | 1,50 | **partagé** |
 | *(CH-07)* | BD-03 | BD-05 | plafond vers l'ouest, **commun avec le socle du moteur** | 2,90 | **partagé** |
 | CH-L1 | BD-02 | TV-L1 *(EL-02)* | 0,70 sur la paroi est, 0,38 de descente sud, puis 2,90 | 3,98 | éclairage |
-| CH-L2 | BD-05 | BL-01 | **virage vers le nord** | 1,05 | éclairage |
-| CH-L3 | BL-01 | EL-01b | **fourche**, branche est | 1,50 | éclairage |
-| CH-L4 | BL-01 | EL-01a | **fourche**, branche ouest | 1,30 | éclairage |
+| CH-L2 | BD-05 | BL-01 | **virage vers le nord** | 0,65 | éclairage |
+| CH-L3 | BL-01 | **EL-01f** | **colonne est** — nord à y = 4,75, puis traverse à x = 5,00 et redescend sur le flanc est de EL-01f | 4,25 | éclairage |
+| CH-L4 | BL-01 | **EL-01e** | **colonne ouest** — nord à y = 4,75, puis traverse à x = 0,60 et redescend sur le flanc ouest de EL-01e | 4,05 | éclairage |
 | CH-L6 | EL-02 | CM-02 | **extérieur**, nu sud | 0,30 | éclairage |
+| **CP-1** | **EL-01e** | **EL-01c** | **cordage**, diagonale ouest | **2,04** | éclairage |
+| **CP-2** | **EL-01c** | **EL-01a** | **cordage**, diagonale ouest | **1,81** | éclairage |
+| **CP-3** | **EL-01f** | **EL-01d** | **cordage**, diagonale est | **2,04** | éclairage |
+| **CP-4** | **EL-01d** | **EL-01b** | **cordage**, diagonale est | **1,81** | éclairage |
 
 Les cinq premiers, entre parenthèses, sont déclarés par `002` et **portent les deux circuits**.
 Ils sont en **IRL 20** depuis la décision du 2026-09-22, et les conduits propres à l'éclairage aussi : le projet ne compte plus qu'**un seul calibre** hors ligne de la borne.
 
-**Métré propre à l'éclairage : 8,13 m**, en **sept** segments.
-**Tronc partagé : 7,95 m.**
-**Total posé pour les deux circuits : 21,93 m**, contre 28,93 m avant la mutualisation — soit
-**7,00 m de tube en moins**, et autant de colliers, de chevilles et de trous dans le béton.
+**Métré de conduit propre à l'éclairage : 9,25 m**, en **quatre** cheminements — CH-L2 (0,65),
+CH-L3 (4,25), CH-L4 (4,05) et CH-L6 (0,30).
+**Métré de cordage : 7,69 m**, en quatre liaisons souples qui ne sont pas du tube.
+**Part du tronc partagé : 7,96 m**, portée par CH-L1 et par les cheminements de `002`.
+
+*Les 8,13 m de la révision précédente dataient d'avant les six réglettes ; les 18,91 m du
+2026-09-26 portaient sur une distribution individuelle à sept cheminements. Les 9,25 m
+d'aujourd'hui sont le prix du **pontage**, et non d'un besoin moindre : six réglettes restent
+six réglettes, et le câble des cordages en achète 7,69 m à la place — c'est le deal.*
 
 CH-L5 a disparu le 2026-09-21 : EL-03 emprunte le tube vertical déjà posé sur l'aplomb de PC-01
 au lieu d'en poser un second à 0,30 m de celui-là (R9, FR-046).
@@ -144,7 +190,8 @@ d'achat** sur CH-05, seul conduit à porter huit conducteurs. Voir § 3.2 de la 
 
 **Ce que le partage apporte** :
 
-- 5,05 m de tube en moins, et l'éclairage ne pose plus **aucune** boîte ;
+- 5,05 m de tube en moins, et l'éclairage ne pose plus **aucune boîte sur les parois** — la
+  sienne est au plafond, BL-01, et elle tient au partage ;
 - la bande contrainte de 0,25 m au-dessus du linteau de la porte de service ne porte plus qu'un
   conduit au lieu de deux, ce qui laisse sa place à la ligne de la borne (R3) ;
 - le croisement de conduits qui était inévitable **sur la paroi est** disparaît : l'éclairage
@@ -156,7 +203,9 @@ d'achat** sur CH-05, seul conduit à porter huit conducteurs. Voir § 3.2 de la 
   le Principe III impose dès qu'un conduit en porte plusieurs. La note de calcul de `002`
   portait « Groupement sans objet : conduit dédié » — cette ligne est devenue fausse et a été
   remplacée par une case à confirmer. **T006 devient bloquante pour les deux circuits** ;
-- quatre boîtes portent deux circuits, avec la conséquence de consignation ci-dessus ;
+- **cinq boîtes portent plus d'un circuit** — OC-01 et OC-02, BD-04, BD-05, BD-06 — avec la
+  conséquence de consignation ci-dessus ; *elles étaient six le 2026-09-26, BD-07 en faisant la
+  sixième à elle seule* ;
 - ~~les commandes remontent à 0,68 et 0,76 m de l'encadrement de la porte au lieu de 0,20 m~~ —
   **coût annulé le même jour** par R11, qui déplace l'axe entier à 0,20 m de la baie plutôt que
   les seules commandes. FR-030 est rendu à sa lettre ;
@@ -168,30 +217,38 @@ plafonnier à y = 3,00 pour suivre celui des prises, et ses sorties tomberaient 
 boîtier d'un luminaire. L'axe est donc resté distinct, puis a été porté à y = 4,05 le même jour,
 ce qui a franchement écarté la question.
 
-### Les quatre boîtes sont partagées, et aucune n'appartient à l'éclairage
+### Les jonctions, après le pontage
 
-| Boîte | Conduits qui s'y rejoignent | Degré | Circuits |
-|-------|---------------------------|-------|----------|
-| BD-02 | CH-01, CH-02, CH-L1 | 3 | **deux** |
-| BD-01 | CH-02, CH-03, CH-04, CH-05, **+ TV-L2 en fond** | 4 | **deux** |
-| BD-04 | CH-05, CH-06 | 2 | **deux** |
-| BD-05 | CH-07, CH-08, CH-L2 | 3 | **deux** |
-| BL-01 | CH-L2, CH-L3, CH-L4 | 3 | éclairage seul — **la fourche** |
+| Nœud | Conduits qui s'y rejoignent | Degré | Boîte |
+|------|---------------------------|-------|-------|
+| 5,60 ; 0,70 ; 2,60 | CH-01, GL-01 | 3 | **OC-01** |
+| 5,60 ; 2,60 ; 1,10 | CH-05, CH-06, TV-L3 | 3 | **BD-04** |
+| 2,70 ; 2,60 ; 2,75 | CH-07, CH-08, **CH-L2** | 3 | **BD-05** |
+| 5,40 ; 0 ; 2,22 | **CH-L1**, CH-A1 | 3 | **BD-06** |
+| **2,70 ; 3,25 ; 2,75** | **CH-L2, CH-L3, CH-L4** | **3** | **BL-01** — *éclairage seul* |
 
-Quatre sont imposées par V17. **BD-04 ne l'est plus** depuis que CH-L5 a disparu : son degré est
-retombé à 2, et elle subsiste parce qu'elle est l'enveloppe du boîtier des commandes, non parce
-qu'une règle l'exige. **BD-01 porte en plus le départ de TV-L2 dans son fond** — une traversée ne
-compte pas dans le degré, mais elle occupe du volume : c'est l'objet de FR-046. Chacune sépare
-deux départs de circuits différents — c'est
-précisément ce que la mutualisation produit : les boîtes deviennent les points où les deux
-circuits se séparent.
+Cinq nœuds de degré 3 ou plus portent une boîte, et **un seul relève de l'éclairage** : BL-01.
+Trois autres nœuds de degré 3 ou plus sont **nus** — (5,60 ; 0,70 ; 2,705) au degré 4, (5,60 ;
+2,60 ; 2,705) au degré 5, (5,45 ; 5,60 ; 2,705) au degré 3 — et V17 les épargne parce qu'ils sont
+couverts par un profilé démontable. Ce sont des angles de goulotte, pas des jonctions.
 
-Aucune autre jonction n'atteint le degré 3. Les deux sorties du plafonnier **ne se chaînent
-pas** : CH-L3 et CH-L4 partent l'un et l'autre de **BL-01**, qui est une fourche, et chacun
-dessert sa sortie. *Cette phrase a décrit un **repiquage** dans le boîtier de EL-01b jusqu'au
-2026-09-22 ; c'était périmé depuis l'introduction de BL-01, et seule la prose le disait encore —
-le tracé, lui, était juste. Relevé en dérivant le trajet des conducteurs, qui suit le graphe et
-non le texte.* EL-03 ne se nourrit plus des bornes de CM-03 mais du **fond de BD-01** ; son
+*Le 2026-09-26, avec les six réglettes distribuées individuellement, il y en avait **sept** :
+BL-01 au degré 4, plus BD-07, BD-08 et BD-09 au plafond. Le pontage les a supprimées.*
+
+**BL-01 est la seule boîte que le plafond réclame, et elle tient à trois conduits.** CH-L2 y
+arrive du sud, CH-L3 repart vers l'est, CH-L4 vers l'ouest. Au degré 3, V17 l'exige — et c'est
+tout ce qu'elle exige. Elle n'a plus de travail de redistribution à faire : chacune des deux
+colonnes reçoit son trio unique, et les six réglettes se répartissent ensuite par cordage, sans
+quatre boîtes de plus.
+
+**BD-04 est dans le décompte** : son degré est de 3, non de 2. Une traversée ne compte pas dans
+le degré — elle occupe du volume, c'est l'objet de FR-046 — et CH-06 y arrive du plafond.
+
+**Le câblage interne ne crée aucune jonction et ne réclame aucune boîte.** Il relie deux nœuds
+d'un même appareil, à l'intérieur de son gabarit : V17 ne le voit pas, et il ne le doit pas. Un
+câble de 1,20 m n'a rien à voir avec un piquage de conduit.
+
+EL-03 ne se nourrit plus des bornes de CM-03 mais du **fond de BD-01** ; son
 retour commandé, lui, vient toujours de CM-03, en remontant CH-05.
 
 ## Longueurs depuis le tableau, et chute de tension
@@ -199,33 +256,69 @@ retour commandé, lui, vient toujours de CM-03, en remontant CH-05.
 Deux longueurs par point depuis le 2026-09-22 : celle du **conduit**, que suivent le neutre et le
 PE, et celle de la **phase**, qui passe par la commande. La chute se calcule sur leur somme.
 
-| Point | Longueur de conduit | Longueur de phase | ΔU à 1,04 A |
-|-------|---------------------|-------------------|-------------|
-| EL-02 | 5,28 m | 5,88 m — commuté sur place | 0,076 % |
-| CM-02 | 5,58 m | — | — |
-| EL-03 | **3,20 m** | 6,60 m | 0,066 % |
-| EL-01a | 8,80 m | 11,80 m | 0,140 % |
-| **EL-01b** | **9,00 m** ← point le plus éloigné | **12,00 m** | **0,142 %** |
+Pour une réglette **pontée**, ces deux longueurs cessent d'être égales pour certains points —
+mais **pas pour les six réglettes** : MC-01 commande les six, il est sur le chemin de chacune, et
+leur phase comme leur neutre s'arrêtent au **point de raccordement** de la réglette, là où le
+cordage de la voisine — ou la colonne, pour les deux têtes — rejoint l'appareil. C'est la valeur
+que rend `cheminDePhase` : **17,17 m** pour EL-01b.
 
-*Le décalage de l'axe vers le nord allonge le chemin du plafonnier : le conduit va chercher le
-droit du socle du moteur avant de remonter, ce qui met les deux sorties à près de 9 m. La chute
-terminale passe de 0,108 % à 0,122 % sur la seule longueur de conduit, et à 0,142 % sur la forme
-exacte — sans conséquence, la marge restant de 1,21 point.*
+*C'est le **point d'utilisation** au sens de la norme : la chute de tension se mesure entre
+l'origine et le point où l'installation se raccorde à l'appareil, non à l'intérieur de celui-ci.
+Les 1,20 m du câble interne de la réglette sont dans l'appareil et ne sont donc pas comptés pour
+la cible.*
+
+| Point | Longueur phase = neutre (point d'utilisation) | ΔU à 0,939 A |
+|-------|-----------------------------------------------|--------------|
+| **EL-01b** | **17,17 m** ← point le plus défavorisé | **0,210 %** |
+| EL-01a | 16,97 m | 0,208 % |
+| EL-01d | 14,17 m | 0,174 % |
+| EL-01c | 13,97 m | 0,171 % |
+| EL-01f | 10,93 m | 0,134 % |
+| EL-01e | 10,73 m | 0,131 % |
+| EL-02 | 5,88 m — commuté **sur place** par le détecteur | 0,068 % |
+| EL-03 | 6,94 m — par CM-03 | 0,063 % |
+
+**Un majorant connu, et écarté volontairement.** Si l'on comptait les 1,20 m internes de la
+réglette cible — ce que le socle ne fait pas, et ne doit pas faire au sens du point d'utilisation —,
+EL-01b donnerait 18,37 m et **0,225 %**, soit un cumul de **1,88 %** au lieu de **1,86 %**. C'est
+une borne supérieure, pas la valeur de l'installation.
+
+*Le graphe ne distingue pas l'entrée de la sortie d'un appareil — c'est délibéré, aucun sens de
+câblage n'a à être tenu à la main. Aussi les 1,20 m internes d'une réglette de **transit** sont-ils
+parcourus par `cheminDePhase` quand le trajet la traverse (EL-01e et EL-01c pour EL-01a) : c'est
+le seul écart de traitement interne, il est signalé, et il reste couvert par le majorant ci-dessus.*
+
+*Avant le pontage, phase et neutre avaient **la même longueur** pour les six réglettes : MC-01 était
+sur le chemin de chacune, et la chute suivait donc exactement `2ρLI/S`. Le pontage brise cette
+symétrie pour de bon, et c'est voulu.*
+
+*Le tableau est **révisé le 2026-10-01**. EL-01b, qui n'était que le second point le plus éloigné,
+devient le **premier** : 17,17 m au point d'utilisation, pour une terminale de **0,210 %**. Le point
+dimensionnant a donc changé de lettre, ce qui n'était pas attendu — mais la cause n'est pas le
+pontage, qui est un éclairage de fin de ligne sans effet sur le tracé du tableau, mais la géométrie
+des colonnes elle-même.*
 
 CM-01 ne figure pas comme point : elle n'est l'extrémité d'aucun conduit et se rattache par son
-boîtier — le socle sait néanmoins la joindre, à **4,50 m**. CM-03 est à 4,70 m et CM-02 à 5,58 m,
-mais **une commande n'est pas une charge** : sa longueur ne pèse sur aucun calcul de chute de
-tension *pour elle-même*. Elle pèse en revanche sur celui de la **phase** des points qu'elle
-commute, et c'est ce que porte la colonne ci-dessus — voir § 2.1 de la note de calcul.
+boîtier `bt-commandes` — le socle sait néanmoins la joindre, à **4,71 m**. CM-03 est à **4,91 m**
+et CM-02 à **5,58 m**, mais **une commande n'est pas une charge** : sa longueur ne pèse sur aucun
+calcul de chute de tension *pour elle-même*. Elle pèse en revanche sur celui de la **phase** des
+points qu'elle commute, et c'est ce que porte la colonne ci-dessus — voir § 2.1 de la note de
+calcul.
 
-Chute de tension cumulée avec l'arrivée à pleine charge du disjoncteur d'abonné : **1,79 %**, sur
-une limite de **3 %** applicable à l'éclairage. Marge de **1,21 point**.
+Chute de tension cumulée avec l'arrivée à pleine charge du disjoncteur d'abonné : **1,86 %** au
+point d'utilisation, sur une limite de **3 %** applicable à l'éclairage. Marge de **1,14 point**.
 
 La limite de 3 % paraissait sévère. Le calcul montre qu'elle ne l'est pas : le circuit terminal ne
-consomme que 0,14 % au pire cas, contre 1,65 % pour l'arrivée. **La section n'est pas le sujet**
-(R5) — et ni le partage ni le décalage n'y changent rien : le chemin le plus long est passé de
-8,15 m à 7,95 m par la mutualisation, puis à 9,00 m par le décalage vers le nord, soit 0,85 m de
-plus qu'à l'origine pour 0,014 point de chute supplémentaire.
+consomme que 0,210 %, contre 1,65 % pour l'arrivée. **La section n'est pas le sujet**
+(R5).
+
+**L'histoire du chemin le plus long, en une ligne** : 8,15 m à l'origine, 7,95 m après la
+mutualisation, 9,00 m après le décalage vers le nord, 8,18 m après la goulotte GL-02, 11,73 m le
+2026-09-26 avec les six réglettes, puis **17,17 m le 2026-10-01 avec le pontage**. Le dernier bond
+est le plus brutal de la série : il coûte 5,44 m de conduit, et la marge recule de 1,21 à **1,14
+point**. *Il ne coûte pourtant que 0,07 point de chute, parce que le pontage a supprimé sept
+cheminements et trois boîtes du trajet : la distance parcourue est plus grande, mais elle est
+remplacée, pas allongée.*
 
 ## Séquence de montage
 
@@ -274,9 +367,9 @@ plutôt que dans la mémoire de celui qui a posé.
 | Règle | Ce qu'elle établit sur cette implantation |
 |-------|-------------------------------------------|
 | V16 | Chaque sortie et chaque commande est atteignable depuis TD-01 par le tracé réel — CM-01 par le boîtier qu'elle déclare, CM-03 par la traversée qui la dessert |
-| V17 | Les **quatre** jonctions de trois conduits ou plus portent une boîte — BD-01, BD-02 et BD-05, partagées, plus BL-01 à la fourche. BD-04 est retombée au degré 2 et subsiste comme enveloppe |
+| V17 | Les jonctions de trois conduits ou plus portent une boîte. **Cinq nœuds de degré 3 en dépendent** : (5,60 ; 0,70 ; 2,60), porté par **OC-01** ; (5,60 ; 0,70 ; 2,705), **nu** et couvert par le profilé démontable de la goulotte ; (2,70 ; 2,60 ; 2,75), porté par **BD-05** ; (5,40 ; 0 ; 2,22), porté par **BD-06** ; et (2,70 ; 3,25 ; 2,75), la fourche **BL-01**. *Le pontage du 2026-10-01 a supprimé BD-07, BD-08 et BD-09 : **BL-01 reste la seule boîte propre à cet apport**, et les nœuds de (5,60 ; 2,60 ; 2,705) et (5,45 ; 5,60 ; 2,705) sont retombés au degré 2.* |
 | V19 | Aucun conduit ne franchit la fenêtre nord, la porte de service ni la porte sectionnelle |
-| V13, V14 | Les **sept** segments de cet apport sont orthogonaux et reposent sur un nu déclaré |
+| V13, V14 | Les **seize** segments des cinq conduits de cet apport sont orthogonaux et reposent sur un nu déclaré. Les **quatre** cordages — un segment chacun — sont en diagonale et **V13 les épargne** : un lien souple entre deux connecteurs n'a pas à longer une grille de plafond, mais V14 leur impose de reposer sur leur nu |
 | V18 | Les **trois** traversées déclarent leur pente vers l'extérieur |
 | V3 | Chaque sortie, commande, boîte, conduit et traversée est posé par une étape identifiée |
 | V8 | Aucune étape sous tension ne précède la levée de consignation |
@@ -331,6 +424,23 @@ contrôle serait passé au vert sans rien démontrer.*
 `TODO(TABLIER_OUVERT)` **cesse de gêner `003` en position ouverte**. Il reste ouvert en position
 **fermée**, où rien dans le relevé ne borne la saillie du panneau vers l'intérieur du local — mais
 aucun cheminement de ce dossier n'en dépend.
+
+## Le lien interne, et pourquoi il est hors de la chute de tension
+
+**`cheminDePhase` s'arrête au connecteur d'arrivée, et c'est voulu.** La chute de tension se mesure
+entre l'origine et le **point d'utilisation** — là où l'installation se raccorde à l'appareil —,
+non à l'intérieur de celui-ci. Les 1,20 m du câble interne de la réglette sont dans l'appareil : ils
+ne sont pas comptés pour la cible, et le circuit déclaré accuse donc 0,210 % sur EL-01b, pour un
+cumul de **1,86 %**.
+
+**Le majorant est connu, chiffré, et écarté.** Si on les comptait, EL-01b ferait 18,37 m, 0,225 % et
+**1,88 %** de cumul. C'est une borne supérieure, pas une réserve ouverte : la convention retenue au
+contrat est celle du **point d'utilisation**, et les deux valeurs restent sous la limite de 3 %.
+
+*Une seule asymétrie subsiste, et elle penche du bon côté : les 1,20 m internes d'une réglette de
+**transit** (EL-01e, EL-01c pour EL-01a) sont, eux, parcourus par `cheminDePhase` quand le trajet
+traverse l'appareil — le lien interne est modélisé comme une arête. La valeur déclarée de 1,86 %
+peut donc surestimer le point d'utilisation strict : elle ne le sous-estime jamais.*
 
 ## Ce qui reste `null`, et pourquoi
 

@@ -31,6 +31,7 @@ import {
 } from '../src/geometrie/conducteurs.js';
 import { conducteursDe, caracteristiquesCheminement } from '../src/ui/fiche-composant.js';
 import { conducteursParSection } from '../src/donnees/fournitures.js';
+import { estCordage } from '../src/geometrie/cheminement.js';
 
 const CIRCUIT = 'c-eclairage';
 const modele = fusionner(SOCLE(), [PRISES(), ECLAIRAGE(), BORNE(), AUTOMATISATION()]);
@@ -125,11 +126,29 @@ test('une sortie qui dessert deux sorties reste un seul fil jusqu’à la fourch
   // Ce que l'union évite : compter deux fois le tronc commun. Le chemin de MC-01
   // à chaque sortie passe par CH-07, mais CH-07 n'est facturé qu'une fois. Et il
   // ne passe plus par CH-05 : la sortie part de la goulotte, pas de BD-04.
+  //
+  // RÉVISÉ le 2026-09-26, puis RÉÉCRIT le 2026-10-01 pour le pontage par cordage.
+  // La sortie dessert SIX réglettes, et son itinéraire passait par sept conduits
+  // intermédiaires, CH-L9 à CH-L15, qui n'existaient que pour rejoindre les trois
+  // boîtes neuves du milieu de ligne : supprimées, elles disparaissent avec lui.
+  //
+  // Il reste les DEUX colonnes — CH-L3 à l'est, CH-L4 à l'ouest — et les QUATRE
+  // cordages CP-1 à CP-4, que la sortie emprunte elle aussi, puisqu'ils portent le
+  // courant d'une réglette à la suivante. Un FIL ne passe pas DANS un cordage : il le
+  // SUIT, d'un connecteur à l'autre.
+  //
+  // L'invariant, lui, ne bouge pas — c'est toujours UN fil, facturé une fois, et non
+  // un fil par tube. Une dérivation par somme aurait facturé le tronc dix fois de trop.
   const parRef = new Map(modele.cheminements.map((ch) => [ch.id, ch.reference]));
   assert.deepEqual(
     duPlafonnier.cheminements.map((id) => parRef.get(id)).sort(),
-    ['CH-07', 'CH-L2', 'CH-L3', 'CH-L4', 'GL-01', 'GL-02'],
+    ['CH-07', 'CH-L2', 'CH-L3', 'CH-L4', 'CP-1', 'CP-2', 'CP-3', 'CP-4', 'GL-01', 'GL-02'],
   );
+  // Et les cordages qu'elle emprunte sont bien des CORDAGES : sans section, donc
+  // absents du métré de conduit — ce que le test des fournitures vérifie à part.
+  for (const ch of modele.cheminements) {
+    if (/^CP-/.test(ch.reference)) assert.ok(estCordage(ch), `${ch.reference} doit être un cordage`);
+  }
 });
 
 test('chaque bouton sur module a sa paire d’ordre, sur son propre trajet', () => {
@@ -211,9 +230,38 @@ test('le métré du 1,5 mm² tombe de 80,40 m à sa valeur réelle, les deux aut
   //   10 mm²   31,38 -> 31,44   CH-B2 et 4,08 m de CH-B3 troqués contre 6,00 m de profilé
   // Puis compté en CÂBLE 3G10 (2026-09-24) : 10,48 m de câble, qui s'achète au mètre de câble.
   // Le profilé de GL-02 est un 90 × 40 : les descentes partent de 2,66 m.
+  //
+  // Le plafond à six réglettes les remonte une dernière fois (2026-09-26) :
+  //   1,5 mm²  69,34 -> 104,89
+  // Ce n'est pas une inflation de méthode : le DÉCOMPTE reste à dix conducteurs sur
+  // ce circuit, inchangé, et 2,5 mm² comme 10 mm² ne bougent pas. Ce sont des mètres
+  // réels ajoutés — trois colonnes de distribution, onze lignes, là où il y en avait
+  // deux. Les deux tubes de porte, notamment, coûtent 11,53 m de phase à eux deux
+  // parce qu'ils sont les plus loin du tableau.
+  //
+  // Le pontage par cordage les remonte ENCORE (2026-10-01), et c'est le seul
+  // mouvement de cette liste qui ne soit pas une simple elongation :
+  //   1,5 mm²  104,89 -> 108,92   (+4,03)
+  // Ce n'est pas une dérive, c'est un échange — et il se lit ligne par ligne.
+  //   -35,85 m   les sept conduits intermédiaires supprimés, 11,95 m × 3 conducteurs
+  //   +16,80 m   les deux colonnes sont plus longues que les deux tronçons qu'elles
+  //              remplacent — 8,30 m contre 2,70 m, la colonne décalée devant longer
+  //              jusqu'au nord pour dégager le passage des cordages
+  //   +23,08 m   les quatre cordages, 7,69 m × 3 conducteurs
+  // Ce sont le NEUTRE, la PROTECTION et la SORTIE DE MC-01 qui montent : ce sont les
+  // trois conducteurs qui traversent une réglette pontée de bout en bout. La phase,
+  // elle, ne monte pas — elle s'arrête aux commandes, et c'est la sortie du module qui
+  // porte le courant des six réglettes. Ce que l'on gagne ici — trois boîtes neuves
+  // en moins, sept conduits en moins, et une pose qui se déforme sans se rompre — se
+  // paie en quelques mètres de câble, pas en cyclotron de matière.
   const par = (s) => conducteursParSection(modele).find((c) => c.section === s);
-  assert.equal(par(1.5).longueur, 69.34, 'le trajet réel des conducteurs de l’éclairage, goulottes comprises');
-  assert.ok(par(1.5).longueur < 131.36 * 0.7, 'la dérivation reste loin du produit majorant');
+  assert.equal(par(1.5).longueur, 108.92, 'le trajet réel des conducteurs de l’éclairage, colonnes comprises');
+  // La marge contre le repli majorant se resserre — 108,92 m contre 257,92 m, soit
+  // 58 % de marge, où le plafonnier à deux sorties en laissait 58 % sur un repli
+  // plus court. Les deux chiffres se ressemblent, mais ils ne protègent pas la même
+  // chose : le repli est un garde-fou contre l'invention, pas un métré d'achat, et
+  // il reste large. Ce qui compte ici, c'est que la dérivation reste loin en dessous.
+  assert.ok(par(1.5).longueur < 257.92 * 0.5, 'la dérivation reste à moins de la moitié du repli majorant');
   assert.equal(par(2.5).longueur, 62.39, 'les prises portent désormais le fil d’ordre du bouton de porte');
   assert.equal(par(10).longueur, 10.48, 'la borne, un câble 3G10 : 10,48 m de câble, et non 31,47 m de conducteur');
   assert.equal(par(10).cable, '3G10');
@@ -227,8 +275,11 @@ test('le métré du 1,5 mm² tombe de 80,40 m à sa valeur réelle, les deux aut
     'PE, neutre, phase, sortie de MC-01, deux paires d’ordre, un retour commandé, un retour local',
   );
   // Au centimètre : sous un capot, un conducteur sort par une face, à une demi-largeur
-  // de l'axe, et sa longueur n'est plus une somme de cotes rondes.
-  assert.equal(Math.round(detail.detail.reduce((t, c) => t + c.longueur, 0) * 100) / 100, 69.34);
+  // de l'axe, un cordage court en biais, et sa longueur n'est plus une somme de cotes
+  // rondes. Le CÂBLAGE INTERNE des six réglettes n'y figure pas — 1,20 m chacune,
+  // montés d'usine : on n'achète pas du câble pour refaire ce que le fabricant a
+  // câblé. Il reste dans le calcul de la chute de tension, où il compte.
+  assert.equal(Math.round(detail.detail.reduce((t, c) => t + c.longueur, 0) * 100) / 100, 108.92);
 });
 
 test('la longueur du conducteur de phase n’est pas celle du conduit', () => {
@@ -246,14 +297,54 @@ test('la longueur du conducteur de phase n’est pas celle du conduit', () => {
   // départ, puis en sortent par une face : de l'axe du 90 × 40 au coude AC-01, 0,045 m
   // plus haut et 0,04 m devant, pour 0,15 m de CH-04 et 0,04 m de CH-07 en moins. EL-03 et sa commande prennent la
   // descente CH-05, qui part du dessous du profilé, et la traversée en pente.
+  //
+  // RÉÉCRIT le 2026-09-26 pour les six réglettes. Les colonnes passent par MC-01,
+  // donc phase et neutre y ont la même longueur et la forme 2ρLI/S s'y applique.
+  // Le point dimensionnant avait alors changé : ce n'était plus EL-01b, c'était
+  // EL-01a. Non parce qu'on l'avait choisi, mais parce que EL-01a est à 1,45 m de
+  // l'axe médian alors qu'EL-01b est à 4,15 m : l'arête ouest de l'œuvre est à 0,
+  // la goulotte descend au sud, et l'itinéraire par l'ouest est plus long de 20 cm.
+  //
+  // RÉÉCRIT le 2026-10-01 pour le pontage par cordage, et cette fois le point
+  // dimensionnant REVIENT à l'est, en EL-01b. Les deux colonnes ne sont pas
+  // symétriques — elles le sont par la pièce, pas par le tracé. BL-01 décroche à
+  // x = 2,70 alors que l'axe médian de l'œuvre est à 2,80 : la fourche est 10 cm à
+  // l'ouest du milieu, la colonne est part à 3,10 et court 1,90 m jusqu'à 5,00,
+  // là où l'ouest part à 2,30 et n'en court que 1,70 jusqu'à 0,60. Vingt
+  // centimètres côté est, que le test mesure au lieu de les supposer.
   const proche = (v, attendu, quoi) => assert.ok(Math.abs(v - attendu) < 1e-6, `${quoi} : ${v} au lieu de ${attendu}`);
   const phase = (id) => cheminDePhase(graphe, modele, CIRCUIT, id);
 
-  proche(phase('ec-el-01b').longueur, 8.115 + Math.hypot(0.04, 0.045), 'EL-01b par MC-01');
-  proche(phase('ec-el-01b').neutre, 8.115 + Math.hypot(0.04, 0.045), 'et son neutre, qui va tout droit');
-  assert.equal(phase('ec-el-01b').module, 'MC-01');
-  proche(phase('ec-el-01b').jusquAuModule, 0.8, 'MC-01 est à 0,80 m du tableau, dans la goulotte');
-  proche(phase('ec-el-01a').longueur, 7.915 + Math.hypot(0.04, 0.045), 'EL-01a');
+  const sortie = Math.hypot(0.04, 0.045);
+  // Les six colonnes : la phase retombe sur la longueur du neutre, le module étant
+  // sur le chemin. Et surtout elles ne sont plus INDEPENDANTES — les six réglettes
+  // sont pontées de proche en proche par les cordages, donc chaque colonne se mesure
+  // à partir de la précédente, plus :
+  //   1,20 m   le câblage interne de la réglette qu'on vient de traverser
+  //   + le cordage, 2,04 m au nord et 1,81 m au sud, en diagonale
+  // Ce n'est pas un arrondi : ce sont 1,20 m de fil PAR RÉGLETTE, montés d'usine et
+  // jamais comptés au métré d'achat, mais bien réels pour qui calcule une chute de
+  // tension. La chaîne se lit donc de proche en proche, et l'angle se paie :
+  //   EC-01e  10,7252   la première, direct sur sa colonne
+  //   EC-01f  10,9252   + 0,20   colonne est, 20 cm plus longue
+  //   EC-01d  14,1654   + 3,2402 = 1,20 + CP-3 (2,04)
+  //   EC-01b  17,1717   + 3,0062 = 1,20 + CP-4 (1,81)
+  //   EC-01c  13,9654   et l'ouest, dans le même ordre décroissant
+  //   EC-01a  16,9717
+  const colonnes = {
+    'ec-el-01a': 16.971667736023122,
+    'ec-el-01b': 17.171667736023121,
+    'ec-el-01c': 13.965428549204276,
+    'ec-el-01d': 14.165428549204275,
+    'ec-el-01e': 10.725207972893962,
+    'ec-el-01f': 10.925207972893961,
+  };
+  for (const [id, attendu] of Object.entries(colonnes)) {
+    proche(phase(id).longueur, attendu, `${id} par MC-01`);
+    proche(phase(id).neutre, attendu, `et son neutre, qui va tout droit`);
+    assert.equal(phase(id).module, 'MC-01', `${id} est commuté par le module`);
+  }
+  proche(phase('ec-el-01a').jusquAuModule, 0.8, 'MC-01 est à 0,80 m du tableau, dans la goulotte');
   proche(phase('ec-el-03').longueur, 6.715 + Math.hypot(0.2, 0.105), 'EL-03 par CM-03, dehors au dos de BD-04');
   proche(phase('ec-el-03').jusquALaCommande, 4.91, 'CM-03 à 4,91 m du tableau');
 
@@ -263,9 +354,12 @@ test('la longueur du conducteur de phase n’est pas celle du conduit', () => {
   assert.equal(el02.surPlace, true);
   proche(el02.longueur, el02.neutre + 0.6, 'aller-retour sur la liaison de 0,30 m');
 
-  // Et c'est bien EL-01b qui dimensionne sous la forme exacte, comme sous l'autre.
+  // Et c'est bien EL-01b qui dimensionne, sur les six colonnes comme sur tout le
+  // circuit. Le point le plus lointain n'est ni le plus écarté du tableau ni le plus
+  // haut — c'est celui que la chaîne de pontage laisse le plus loin du départ, et le
+  // test le vérifie plutôt que de le supposer.
   const somme = (id) => phase(id).longueur + phase(id).neutre;
-  const points = ['ec-el-01a', 'ec-el-01b', 'ec-el-02', 'ec-el-03'];
+  const points = [...Object.keys(colonnes), 'ec-el-02', 'ec-el-03'];
   assert.equal(points.reduce((a, b) => (somme(a) >= somme(b) ? a : b)), 'ec-el-01b');
 });
 
@@ -297,11 +391,22 @@ test('un circuit à commandes sans pilote retombe sur le majorant, et la fiche l
   assert.equal(conducteursDe(ch, m.circuits, occ).majore, true);
 
   // Le métré retombe lui aussi sur le produit majorant : huit conducteurs sur tout
-  // le tracé de l'éclairage, 20,39 m, soit 163,12 m. Le majorant compte les
-  // profilés entiers, et c'est ce qu'un majorant doit faire : 16,42 m avant que la
-  // goulotte GL-02 et ses 6,00 m ne remplacent CH-02 et CH-04.
+  // le tracé de l'éclairage, 33,58 m, soit 268,66 m. Le majorant compte les
+  // profilés et les cordages entiers, et c'est ce qu'un majorant doit faire : 16,42 m
+  // avant que la goulotte GL-02 et ses 6,00 m ne remplacent CH-02 et CH-04, 163,12 m
+  // avant que le plafond ne passe à six réglettes le 2026-09-26. C'est le prix d'une
+  // imputation prudente : le repli sert de garde-fou, pas de métré d'achat.
+  //
+  // Le pontage par cordage le pousse de dix mètres encore (2026-10-01), et pour la
+  // même raison qu'au métré exact, amplifiée par huit :
+  //   32,24 m -> 33,58 m de réseau partagé, 257,92 m -> 268,66 m
+  // Ce sont les +1,34 m du réseau — deux colonnes plus longues, sept conduits en
+  // moins, quatre cordages — multipliés par huit conducteurs supposés. Un majorant ne
+  // se rabat pas sur ce qu'il ne sait pas ; il ne fait que payer plus cher quand la
+  // géométrie s'allonge. Rien ici ne signale un défaut de pose : 268,66 m reste un
+  // garde-fou, à 4,5 fois le métré qu'il protège.
   const par = conducteursParSection(m).find((c) => c.section === 1.5);
-  assert.equal(par.longueur, 163.12);
+  assert.equal(par.longueur, 268.66);
   assert.equal(par.majore, true);
 });
 

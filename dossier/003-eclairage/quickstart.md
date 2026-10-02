@@ -1,6 +1,14 @@
 # Phase 1 — Guide de vérification de la conception
 
 **Fonctionnalité**: `003-eclairage` | **Date**: 2026-09-21
+| Dernière révision | **2026-10-01** — six réglettes pontées
+
+> **Depuis le 2026-10-01** : le scénario 5 attend **six réglettes** en deux colonnes de trois,
+> **pontées deux à deux par quatre cordages**, et **une seule boîte** de distribution, BL-01. Le
+> contrôle du **tablier** reste le point d'attention : deux réglettes doivent s'afficher
+> **`non-concluant`**, et c'est le seul résultat non concluant du dossier. *Les trois segments de
+> conduit qui l'étaient ne le sont plus : ils appartenaient aux colonnes supprimées par le
+> pontage.*
 
 Cette fonctionnalité ne se « lance » pas : elle produit une conception. Ce guide dit comment la
 vérifier — d'abord par machine, ce qui est possible pour une bonne part, puis à l'œil, puis au
@@ -29,11 +37,11 @@ prises**. Les règles qui portent le plus ici :
 | Règle | Ce qu'elle établit |
 |-------|--------------------|
 | V16 | Chaque sortie et chaque commande est atteignable depuis TD-01 par le tracé réel |
-| V17 | BD-01, BD-02, BD-04 et BD-05, partagées avec les prises, plus BL-01 à la fourche, couvrent les cinq jonctions de trois conduits ou plus |
+| V17 | **OC-01**, **BD-05** et **BD-06**, enveloppes partagées entre les circuits, plus **BL-01** à la fourche du plafond, couvrent les **cinq** jonctions de trois conduits ou plus |
 | V19 | Aucun conduit ne franchit la fenêtre nord, la porte de service ni la sectionnelle |
 | V20 | Aucun conduit n'en recouvre un autre. **Règle ajoutée le 2026-09-22** : c'est la lacune que R4 avait inscrite au dossier et que le tracé de la borne a fini par faire mordre |
 | V21 | Une boîte à volume déclaré ne reçoit pas plus d'entrées qu'elle n'en déclare. **Ajoutée le 2026-09-22**, en contrepartie de l'enveloppe |
-| V13, V14 | Les **neuf** segments de cet apport sont orthogonaux et reposent sur un nu déclaré |
+| V13, V14 | Les **cinq conduits** de cet apport sont **orthogonaux** et reposent sur un nu déclaré. Les **quatre cordages**, biaisés par nature, sont exemptés d'orthogonalité par V13 mais restent soumis à V14 |
 | V18 | Les **trois** traversées déclarent leur pente vers l'extérieur |
 | V3 | Chaque objet posable est posé par une étape identifiée |
 | V10 | Les six vérifications du Principe V figurent dans la séquence |
@@ -51,13 +59,14 @@ l'extérieur et c'est une traversée qui la dessert.
 npm test
 ```
 
-**Attendu** : le point le plus éloigné est **EL-01b, à 8,20 m** de conduit depuis le tableau,
-dont la **phase parcourt 12,00 m** en passant par CM-01. Chute terminale au pire cas de charge,
-4 × 60 W LED, sur la forme exacte `ρ·I·(L_phase + L_neutre)/S` : **0,142 %**. Cumulée avec
-l'arrivée : **1,79 %**, sur une limite de **3 %**.
+**Attendu** : le point le plus éloigné est **EL-01b, à 17,17 m** au point d'utilisation — le
+connecteur d'accès, où s'arrête le socle. Chute terminale, 6 × 36 W = 216 W, sur la forme exacte
+`ρ·I·(L_phase + L_neutre)/S` : **0,210 %**. Cumulée avec l'arrivée : **1,86 %**, sur une limite de
+**3 %**. *Un majorant de 0,225 % / 1,88 % existe si l'on comptait le lien interne de la cible : il
+est écarté, la chute se lisant au point d'utilisation.*
 
 Ce qui doit se lire dans le résultat, et qui est le vrai enseignement : le circuit terminal ne
-pèse presque rien, l'arrivée pèse onze fois plus. **La section n'est pas le sujet.**
+pèse presque rien, l'arrivée pèse près de huit fois plus. **La section n'est pas le sujet.**
 
 ### 3. Le tracé ne heurte aucun obstacle relevé
 
@@ -113,8 +122,25 @@ npm run serve
 
 Puis <http://localhost:8080>, et parcourir les étapes.
 
-**Attendu** : l'axe du plafonnier apparaît **décalé au nord**, à y = 3,25 m, ses deux sorties
-symétriques par rapport à l'axe médian. Le parcours de plafond des prises court 1,05 m plus au
+**Attendu** : les **six réglettes** apparaissent au plafond en **deux colonnes de trois** —
+x = 1,45 et 4,15 m, y = 1,55 / 2,90 / 4,55 m — et **une seule boîte** de distribution avec elles,
+**BL-01** la fourche, à l'axe décalé au nord, y = 3,25 m. Puis **quatre cordages** en diagonale
+d'une réglette à sa voisine : CP-1 et CP-2 à l'ouest, CP-3 et CP-4 à l'est. *Si vous en voyez
+sept, le pontage n'est pas passé ; si vous n'en voyez aucun, ce sont les colonnes d'avant.*
+
+⚠️ **Le tablier est le contrôle à regarder en premier.** Basculez sur l'état `ouvert` : les deux
+réglettes du rang sud, **EL-01a** et **EL-01b**, doivent apparaître en
+**`non-concluant`** — elles sont sous le panneau, dont l'épaisseur n'a pas été relevée. Les quatre
+autres doivent être **`degage-prouve`**. **Aucun segment de conduit ne doit rester sans
+conclusion** : les trois qui l'étaient — CH-L10 seg. 3, CH-L13 seg. 2 et 3 — ont disparu avec les
+colonnes de la distribution en étoile. **C'est le seul endroit du dossier où un contrôle
+n'aboutit pas**, et c'est voulu.
+
+**Les cordages doivent avoir l'air de cordages** : couleur brique, tube de 6 mm, une flèche de
+20 mm, **sans contour**. Un conduit se reconnaît à son contour ; un cordage n'en a pas. S'ils
+ressemblent à du tube, la donnée `nature` n'est pas passée.
+
+Le parcours de plafond des prises court 1,05 m plus au
 sud, à y = 2,60 m depuis le 2026-09-23 — BD-05 ayant rejoint l'axe ouest de BD-01, le parcours commun file **droit**, sans décrochement. La
 descente vers le boîtier de commande entre **par le dessus**. Les **trois** traversées se lisent
 avec leur sens, et deux d'entre elles sortent du **fond d'une boîte** — celle de EL-03 au dos de
@@ -142,8 +168,9 @@ nouvelle, que la mutualisation du tronc a rendue exigible, et qui vaut identique
 
 ### 8. La concordance des commandes — **de nuit, depuis l'extérieur**
 
-**Attendu** : CM-01 allume et éteint les **deux** sorties du plafonnier d'un seul geste
-(SC-014). CM-03 agit sur EL-03 **seul**, sans effet sur EL-02 ni sur le plafonnier (SC-015).
+**Attendu** : CM-01 allume et éteint les **six** réglettes d'un seul geste
+(SC-014) — un seul point de commande, mais **six points lumineux distincts** : comptez-les. CM-03
+agit sur EL-03 **seul**, sans effet sur EL-02 ni sur le plafond (SC-015).
 
 C'est la vérification la plus importante de cette fonctionnalité, et la seule qu'aucune mesure
 ne peut remplacer : **une inversion de câblage entre deux commandes est invisible au contrôle de
@@ -222,10 +249,19 @@ les conduits qu'aux obstacles, jamais entre eux.
 
 **Il n'y en a plus aucun.** Le croisement était d'abord sur la paroi est, où l'éclairage devait
 franchir l'antenne des prises ; la mutualisation du tronc l'a supprimé. Il s'est alors déplacé au
-plafond, où l'axe du plafonnier franchissait la descente vers le socle du moteur ; le décalage de
+plafond, où l'axe de distribution franchissait la descente vers le socle du moteur ; le décalage de
 l'axe vers le nord l'a supprimé à son tour. Un détecteur écrit pour l'occasion le confirme :
 **deux rencontres entre circuits, toutes deux à une extrémité commune donc dans une boîte, et
 zéro croisement pur.**
+
+**⚠ Ce que le pontage a supprimé, et qu'il faut vérifier avoir disparu** : la distribution en
+étoile créait sept cheminements au plafond, dont **CH-L13 qui longeait le bord ouest à
+x = 0,40 m** — donc à l'intérieur de la largeur du tablier, 0,20 à 5,20 m. Ce n'était pas un
+croisement, c'était une **contrainte de volume**, et c'est de là que venaient les trois segments
+`non-concluant`. *Ponté, les colonnes remontent au nord à y = 4,75 — au nord des 2,15 m de
+profondeur relevée — et les cordages vont d'une réglette à sa voisine.* La contrainte de volume ne
+disparaît pas pour autant : elle se déplace sur **EL-01a et EL-01b**, les deux réglettes sous le
+tablier.
 
 La lacune du socle, elle, demeure. La ligne de la borne viendra sur les mêmes parois et rien ne
 la préviendra.

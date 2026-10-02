@@ -34,7 +34,26 @@ test('les longueurs de conduit par calibre concordent avec les nomenclatures', (
   // couraient sous le plafond : l'IRL 25 perd 7,88 m. L'IRL 20 perd CH-04 et 3,12 m
   // de CH-03, et CH-07 part 0,04 m plus à l'ouest, de la face avant : 3,28 m. GL-02
   // est un 90 × 40, dont le dessous est à 2,66 m.
-  assert.equal(parCalibre(20).longueur, 15.02, 'le parcours de plafond, les branches et la descente du boîtier double');
+  //
+  // RÉVISÉ le 2026-09-26 : le plafonnier à deux sorties cède la place à six réglettes
+  // de 120 cm en deux colonnes de trois, alimentées par trois boîtes de dérivation
+  // neuves (BD-07, BD-08, BD-09). L'IRL 20 passe de 15,02 à 26,87 m : le tronc
+  // partagé ne bouge pas, 7,96 m, mais onze conduits dédiés viennent s'ajouter —
+  // CH-L9 à CH-L15, plus CH-L3 et CH-L4 repurposés comme liaisons de boîtes. Aucune
+  // de ces lignes ne porte un second circuit : ce sont des colonnes de distribution,
+  // pas des troncs.
+  //
+  // RÉÉCRIT le 2026-10-01 pour le pontage par cordage. L'IRL 20 RETOMBE à 20,52 m,
+  // et cette fois le tronc partagé ne bouge toujours pas — 7,96 m, GL-01 et GL-02,
+  // CH-07, CH-L1 et CH-A1. Tout le mouvement est du côté dédié, de 18,91 à 12,56 m :
+  //   -11,95 m   les sept conduits CH-L9 à CH-L15, qui n'existaient que pour les
+  //              trois boîtes neuves du milieu de ligne — supprimées avec eux
+  //   +3,00 m    les deux colonnes s'allongent : CH-L3 1,45 -> 4,25 m et
+  //              CH-L4 1,25 -> 4,05 m, pour courir au nord du passage des cordages
+  // Les 7,69 m de cordage, eux, ne sont pas dans ce chiffre : ils ne sont pas des
+  // conduits. Ils sortent du métré de conduit — 26,87 m -> 20,52 m sur la ligne
+  // d'achat, plus une ligne neuve de 7,69 m à côté. C'est tout l'objet d'un cordage.
+  assert.equal(parCalibre(20).longueur, 20.52, 'le parcours de plafond, les colonnes de distribution, les branches et la descente du boîtier double');
   assert.equal(parCalibre(25).longueur, 4.92, 'la descente de la borne, plus CH-05');
   assert.equal(parCalibre(25).longueurDediee, 3.36, 'la descente de la borne reste dédiée');
   assert.equal(parCalibre(25).longueurPartagee, 1.56, 'et CH-05, 1,56 m depuis le dessous de la goulotte');
@@ -61,8 +80,17 @@ test('un calibre mixte compte à part ce qui est partagé et ce qui est dédié'
   assert.equal(c.dedie, true, 'le même calibre porte aussi des branches dédiées');
   // Le partagé perd CH-02 et CH-05, passés en IRL 25, et gagne CH-L1 et CH-A1, où
   // le bouton de porte rejoint l'éclairage. Puis CH-04, disparu avec la goulotte.
+  // Les colonnes de distribution du plafond s'y ajoutent le 2026-09-26, mais toutes
+  // en ligne DÉDIÉE : BL-01 distribue vers des boîtes qui ne portent que
+  // l'éclairage. Le partagé reste donc à 7,96 m, et c'est bien le trait qui distingue
+  // les deux natures du même article.
+  //
+  // Le pontage par cordage (2026-10-01) ne touche pas à cette partage : le dédié
+  // tombe de 18,91 à 12,56 m — les sept conduits du milieu de ligne s'en vont, les
+  // deux colonnes s'allongent — et le partagé reste à 7,96 m. Un cordage ne change
+  // rien de tout cela : il n'est pas dans le calibre, il est dans son propre poste.
   assert.equal(c.longueurPartagee, 7.96, 'CH-07, CH-L1 et la descente CH-A1');
-  assert.equal(c.longueurDediee, 7.06, 'les branches propres aux prises et à l’éclairage');
+  assert.equal(c.longueurDediee, 12.56, 'les colonnes de distribution, puis les branches propres aux prises et à l’éclairage');
   assert.equal(Math.round((c.longueurPartagee + c.longueurDediee) * 100) / 100, c.longueur);
 
   // L'IRL 25 est devenu mixte à son tour, le 2026-09-23 : la ligne dédiée de la
@@ -99,7 +127,19 @@ test('la longueur de conducteur n’est ni celle du tracé, ni un multiple unifo
   // `conducteurs-trajet.test.js` pour le détail du calcul.
   const par = (s) => conducteursParSection(modele).find((c) => c.section === s);
   assert.equal(par(2.5).longueur, 62.39, '3 conducteurs, plus le fil d’ordre du bouton de porte, sa phase et son PE');
-  assert.equal(par(1.5).longueur, 69.34, 'et non 163,12 m : chaque fil de l’éclairage sur son trajet, goulottes comprises');
+  // RÉVISÉ le 2026-09-26 : de 69,34 à 104,89 m de 1,5 mm². Le plafond à deux sorties
+  // est devenu six réglettes sur deux colonnes de trois, alimentées par trois
+  // boîtes : il y a maintenant onze lignes de distribution au lieu de deux, et
+  // chacune porte phase, neutre et protection sur toute sa longueur. Le nombre de
+  // conducteurs PAR LIGNE n'a pas changé — trois — mais il y a bien plus de mètres.
+  //
+  // RÉÉCRIT le 2026-10-01 pour le pontage par cordage : 104,89 -> 108,92 m, soit
+  // +4,03. Cette fois le métrique de CONDUIT baisse de 6,35 m pendant que celui de
+  // CÂBLE monte : on achète moins de tube et un peu plus de fil. Les cordages
+  // ajoutent 7,69 m × 3 conducteurs, les sept conduits supprimés en rendaient
+  // 11,95 m × 3, et les deux colonnes, plus longues, ajoutent 5,60 m × 3. C'est le
+  // bon échange pour un montage qui se déforme sans se rompre.
+  assert.equal(par(1.5).longueur, 108.92, 'chaque fil de l’éclairage sur son trajet, goulottes, colonnes et cordages compris');
   assert.equal(par(10).longueur, 10.48, 'un câble 3G10 de borne : 3,36 m de conduit et 7,12 m de goulotte');
   assert.equal(par(10).cable, '3G10', 'et il s’achète au mètre de câble');
 });
@@ -151,8 +191,29 @@ test('les changements de direction se comptent sur le tracé', () => {
   // borne ne tournent plus à l'angle : GL-02 le fait pour elles, par un seul angle
   // intérieur, et elles en descendent droit. Le coude du départ de plafond, AC-01,
   // est déclaré en accessoire et ne se compte pas sur un tracé.
-  assert.equal(c.total, 5);
+  //
+  // ONZE depuis le plafond à six réglettes (2026-09-26). Les deux nouveaux virages
+  // viennent de CH-L10, qui descend à 2,55 m pour franchir la fente entre le rail et
+  // la ligne de prises, et de CH-L13, qui fait de même à l'ouest ; les quatre autres
+  // sont les deux angles de chacune des colonnes perpendiculaires. CH-L10 et CH-L13
+  // en portent donc deux chacune, comme CH-L1 avant eux.
+  //
+  // TREIZE depuis le pontage par cordage (2026-10-01), et c'est le seul poste de
+  // fournitures qui AUMENTE. Les descentes CH-L10 et CH-L13 disparaissent avec les
+  // trois boîtes neuves — quatre virages rendus — et les deux colonnes en gagnent
+  // quatre : chacune fait désormais trois changements de direction, là où elle n'en
+  // faisait qu'un. Elles contournent le tablier par le nord, donc elles rampent au
+  // plafond, longent la ligne de prises, redescendent, et repartent. Quatre chacune.
+  //
+  // Et les CORDAGES n'en comptent AUCUN : ce sont des segments obliques, un seul
+  // par câble, sans angle. C'est toute la raison d'être d'un cordage — il porte le
+  // courant sansrupture, là où il aurait fallu assembler un coude, le fixer et
+  // plier le tube. Sur cette ligne, la souplesse se compte en virages évités, pas
+  // en mètres.
+  assert.equal(c.total, 13);
   assert.equal(c.detail.find((d) => d.reference === 'GL-02').nombre, 1, 'l’angle nord-est de la goulotte');
+  assert.equal(c.detail.find((d) => d.reference === 'CH-L3').nombre, 4, 'la colonne est, trois virages');
+  assert.equal(c.detail.find((d) => d.reference === 'CH-L4').nombre, 4, 'la colonne ouest, trois virages');
   assert.ok(!c.detail.some((d) => d.reference === 'CH-03'), 'la descente de PC-03 est droite');
   assert.ok(!c.detail.some((d) => d.reference === 'CH-07'), 'CH-07 file droit : plus de décrochement');
   assert.equal(c.detail.find((d) => d.reference === 'CH-B3').nombre, 2, 'la descente vers la borne, sous l’allège');
@@ -168,7 +229,23 @@ test('rien n’est estimé : ce qui n’est pas établi ressort « à arrêter �
   // qui se déguiserait en calibre confirmé est le risque que le Principe I vise.
   assert.equal(f.circuits.every((c) => c.calibre === null && c.typeDifferentiel === null), true);
   assert.equal(f.circuits.every((c) => c.section !== null), true, 'les trois sections sont décidées');
-  assert.equal(f.appareillage.every((a) => a.indicesInconnus === a.nombre), true, 'aucun indice de protection établi');
+
+  // L'indice de protection, lui, reste à arrêter pour tout ce dont le produit
+  // n'est pas choisi. Les six réglettes font exception depuis le 2026-09-26 : le
+  // produit est arrêté, sa fiche déclare IP65 et IK07, l'indice est donc ÉTABLIE et
+  // non estimé. Les deux luminaires étanches EL-02 et EL-03, eux, restent inconnus,
+  // et c'est ce que ce test vérifie désormais — que l'exception ne déborde pas sur
+  // des articles dont on n'a pas le bon produit.
+  const etablis = f.appareillage.filter((a) => a.indicesInconnus !== a.nombre);
+  assert.equal(etablis.length, 1, 'un seul article porte un indice établi');
+  assert.equal(etablis[0].nombre, 6, 'les six réglettes');
+  assert.equal(
+    f.appareillage
+      .filter((a) => a.references.some((r) => r.startsWith('EL-02') || r.startsWith('EL-03')))
+      .every((a) => a.indicesInconnus === a.nombre),
+    true,
+    'les luminaires dont le produit n’est pas choisi restent à arrêter',
+  );
 
   // Et une section arrêtée n'emporte pas le calibre du conduit : la condition de
   // remplissage reste à vérifier sur les cotes produit.
@@ -192,5 +269,5 @@ test('un circuit sans décompte de conducteurs ne fausse pas le total', () => {
   const m = fusionner(SOCLE(), [sans, ECLAIRAGE(), BORNE(), AUTOMATISATION()]);
   const par = conducteursParSection(m);
   assert.ok(!par.some((c) => c.section === 2.5), 'le circuit non compté disparaît du relevé');
-  assert.equal(par.find((c) => c.section === 1.5).longueur, 69.34, 'les autres sont intacts');
+  assert.equal(par.find((c) => c.section === 1.5).longueur, 108.92, 'les autres sont intacts');
 });

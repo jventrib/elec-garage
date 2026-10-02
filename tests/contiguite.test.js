@@ -167,7 +167,22 @@ test('les apports existants, qui ne déclarent aucune contiguïté, sont intacts
   // l'axe à 2,705 m, et en sort par une face : EL-01b et PC-05 perdent 0,025 m,
   // PC-03 en gagne 0,21 — sa descente part de 2,66 m au lieu de 2,60, et les
   // conducteurs montent d'abord à l'axe du profilé.
-  proche(par('c-eclairage', 'ec-el-01b'), 8.115 + Math.hypot(0.04, 0.045), 'EL-01b, point dimensionnant de l’éclairage');
+  //
+  // Le plafond passe à six réglettes le 2026-09-26, puis se ponte par cordage le
+  // 2026-10-01. EL-01b devient le point dimensionnant, à 18,37 m depuis le tableau,
+  // et EL-01a le suit à 18,17 m.
+  //
+  // Ce n'est plus une somme de tronçons indépendants : les six réglettes sont
+  // pontées de proche en proche, et chacune coûte 1,20 m de câblage interne en plus
+  // de son câble. La chaîne se lit donc de la même façon des deux côtés, et les deux
+  // colonnes ne diffèrent QUE par leur racine — ces 20 cm que la fourche décalée à
+  // x = 2,70 met de travers, l'axe médian de l'œuvre étant à 2,80.
+  const interne = 1.2;
+  const nord = Math.hypot(1.2, 1.65);
+  const sud = Math.hypot(1.2, 1.35);
+  const chaine = 3 * interne + nord + sud;
+  proche(par('c-eclairage', 'ec-el-01a'), 10.725207972893961 + chaine, 'EL-01a, en bout de chaîne ouest');
+  proche(par('c-eclairage', 'ec-el-01b'), 10.925207972893961 + chaine, 'EL-01b, point dimensionnant de l’éclairage');
   proche(par('c-eclairage', 'ec-el-02'), 5.28, 'EL-02');
   proche(par('c-prises', 'pr-pc-03'), 8.66, 'PC-03');
   proche(par('c-prises', 'pr-pc-05'), 6.115 + Math.hypot(0.04, 0.045), 'PC-05');

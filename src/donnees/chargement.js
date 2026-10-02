@@ -181,7 +181,7 @@ export const CLES_ATTENDUES = {
   local: ['oeuvre', 'hauteurSousPlafond', 'epaisseurParois', 'repere', 'baies', 'obstacles', 'provenance'],
   chantier: ['phases', 'naturesEtape', 'verifications'],
   types: ['types', 'gabaritParDefaut'],
-  presentation: ['couleurs', 'paletteCircuits', 'epaisseurDalle', 'toleranceRaccordement', 'sectionConventionnelle', 'deniveleConventionnel', 'vues', 'libelles'],
+  presentation: ['couleurs', 'paletteCircuits', 'epaisseurDalle', 'toleranceRaccordement', 'sectionConventionnelle', 'deniveleConventionnel', 'cordage', 'vues', 'libelles'],
 };
 
 /**

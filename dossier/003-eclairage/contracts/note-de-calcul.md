@@ -9,8 +9,9 @@ norme. Il reprend le contrat de `002-prises-de-courant` et n'en retient que les 
 | Point | Prises | Éclairage |
 |-------|--------|-----------|
 | Limite de chute de tension | 5 % | **3 %** — l'arrivée en consomme déjà 1,65 % |
+| Alimentation des points | un socle, un point d'arrivée | une **réglette pontée** : un point d'arrivée et deux points d'alimentation ; la chute se lit au **point d'utilisation**, au connecteur par lequel l'installation rejoint l'appareil — le lien interne de 1,20 m est dans l'appareil et n'est pas compté |
 | Section | 2,5 mm² | 1,5 mm² |
-| Groupement | **exigible** sur le tronc partagé de 7,95 m | **exigible, au même titre** (R1) — la mutualisation a rendu cette ligne obligatoire des deux côtés ; elle était portée « sans objet » tant que chaque circuit avait son conduit |
+| Groupement | **exigible** sur le tronc partagé de 7,96 m | **exigible, au même titre** (R1) — la mutualisation a rendu cette ligne obligatoire des deux côtés ; elle était portée « sans objet » tant que chaque circuit avait son conduit |
 | Décompte normatif | nombre de **prises** | nombre de **points d'éclairage** (FR-018) |
 | Hauteur d'axe normative | socles | **dispositifs de commande** (FR-031) |
 
@@ -19,12 +20,12 @@ norme. Il reprend le contrat de `002-prises-de-courant` et n'en retient que les 
 | Grandeur | Origine attendue |
 |----------|------------------|
 | Courant d'emploi | Décision d'usage, à partir de l'hypothèse de simultanéité de FR-019 |
-| Mode de pose | Donnée figée : apparent sous conduit IRL, **dédié** |
+| Mode de pose | Donnée figée : apparent sous conduit IRL, **partagé sur tronc commun** — `c-eclairage` partage CH-L1 avec `c-prises`, et CH-L3 / CH-L4 / CH-L6 / CH-L2 sont **dédiés** à l'éclairage |
 | Courant admissible du conducteur | **Norme** — table, pour ce mode de pose et la lettre de sélection |
-| Facteurs de correction appliqués | **Norme** — température ambiante ; groupement **sans objet** |
+| Facteurs de correction appliqués | **Norme** — température ambiante ; **groupement exigible** sur le tronc partagé (R1). Le nombre de circuits à compter est un **donnée du tracé**, pas un choix de la note : il vaut 3 sur CH-L05, 8 sur CH-L1, 7 sur CH-L07, et **3 sur chaque branche du plafond** |
 | Calibre de protection | **Norme** — appariement avec la section |
 | Longueur du chemin le plus long | Calculée par le socle sur le tracé réel |
-| Chute de tension, terminale et cumulée | Calculée : ΔU = 2ρLI/S, cumulée avec l'arrivée |
+| Chute de tension, terminale et cumulée | Calculée sur la **forme exacte** : ΔU = ρ·I·(L_phase + L_neutre)/S, cumulée avec l'arrivée. `2ρLI/S` n'est qu'un majorant, recevable pour un point non commuté — et depuis le pontage des réglettes, plus aucun point du plafond ne l'est |
 
 ## Trois vérifications obligatoires en plus
 
@@ -42,8 +43,10 @@ norme. Il reprend le contrat de `002-prises-de-courant` et n'en retient que les 
 - Le décompte des points **tient-il** dans la limite normative pour un circuit d'éclairage ?
 - La condition `IB ≤ In ≤ Iz` est-elle satisfaite avec l'`Iz` du mode de pose **réel** —
   conducteurs isolés en conduit, catégorie B1 — et non celui d'un câble en saillie ?
-- Le taux de remplissage est-il respecté sur les **deux** portions : le tronc partagé à huit
-  conducteurs, et le calibre retenu sur les branches propres ?
+- Le taux de remplissage est-il respecté sur les **deux** portions : le tronc partagé, jusqu'à
+  **neuf** conducteurs sur CH-05, et le calibre retenu sur les branches propres à trois
+  conducteurs ? *Et que dit-on d'un cordage, qui ne déclare pas de section et ne peut donc pas
+  être vérifié ? La note doit le dire plutôt que de le passer sous silence.*
 - La chute de tension cumulée reste-t-elle sous **3 %** ?
 - Le type de différentiel retenu satisfait-il le Principe II, compte tenu de la décision FR-050
   de `002` et du fait que ce circuit alimente **un détecteur de présence électronique** — donc

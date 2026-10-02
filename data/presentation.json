@@ -12,6 +12,7 @@
     "composantSansCircuit": "#7f8c8d",
     "contourAjout": "#11181d",
     "cheminement": "#2c6e9b",
+    "cordage": "#a8632b",
     "traversee": "#7d5ba6",
     "collision": "#c0392b"
   },
@@ -36,6 +37,11 @@
     }
   },
   "deniveleConventionnel": 0.04,
+  "cordage": {
+    "diametre": 0.006,
+    "fleche": 0.02,
+    "note": "Conventions de dessin d'un cordage : à la différence d'un conduit, il n'a pas de section — on l'achète au câble, pas au tube. Ces deux cotes ne sont donc pas un choix de pose, mais de lisibilité : 6 mm pour qu'il ne se confonde pas avec un IRL, et 2 cm de flèche parce qu'un câble tendu en ligne droite ne ressemble plus à un câble. Rien de tout cela n'est une cote réelle."
+  },
   "trajets": {
     "diametre": 0.01,
     "ecart": 0.016,
@@ -144,6 +150,10 @@
       "baie": "contour de la baie",
       "majorant": "majorant déduit",
       "aucun": "non dessiné"
+    },
+    "zonesTablier": {
+      "degage-prouve": "dégagé et prouvé",
+      "non-concluant": "non concluant — à lever sur place"
     },
     "etatsObstacle": {
       "releve": "relevé",

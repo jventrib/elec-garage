@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DEMO, SOCLE } from './_aides.js';
+import { DEMO, ECLAIRAGE, SOCLE } from './_aides.js';
 import { caracteristiques, provenanceLisible, INCONNU } from '../src/ui/fiche-composant.js';
 import { couleurDeCircuit } from '../src/scene/composants.js';
 
@@ -75,4 +75,29 @@ test('la couleur de circuit déclarée est reprise, et le repli est déterminist
   assert.ok(pres.paletteCircuits.includes(a));
   // Sans circuit, la couleur vient aussi des données.
   assert.equal(couleurDeCircuit([], null, pres), pres.couleurs.composantSansCircuit);
+});
+
+test('le dégagement de la zone de travail se lit, et se nomme', () => {
+  // `zoneTablier` était un champ que personne ne lisait : la donnée le portait, la
+  // fiche l'ignorait, et rien ne pouvait le déduire à sa place — c'est un relevé.
+  // Un relevé invisible est une information que l'installateur ne peut pas utiliser,
+  // et que personne ne maintient. Ces deux assertions le disent dans les deux sens :
+  // la ligne existe quand le relevé existe, et elle n'apparaît pas quand il n'y en a pas.
+  const el = ECLAIRAGE().composants.filter((c) => c.zoneTablier);
+  assert.ok(el.length > 0, 'l’éclairage relève des zones de travail');
+
+  for (const c of el) {
+    const ligne = caracteristiques(c, [], { ...VOCA, zonesTablier: VOCA.zonesTablier }).find(
+      (l) => l.libelle === 'Zone de travail',
+    );
+    assert.ok(ligne, `${c.reference} relève une zone de travail, la fiche doit la montrer`);
+    assert.equal(ligne.texte, VOCA.zonesTablier[c.zoneTablier], 'et le nom vient du vocabulaire, pas du code');
+    assert.equal(ligne.inconnu, false, '« non concluant » est une valeur, pas une absence de valeur');
+  }
+
+  const sans = ECLAIRAGE().composants.find((c) => !c.zoneTablier);
+  if (sans) {
+    const lignes = caracteristiques(sans, [], VOCA);
+    assert.ok(!lignes.some((l) => l.libelle === 'Zone de travail'), 'pas de relevé, pas de ligne');
+  }
 });
