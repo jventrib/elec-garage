@@ -290,14 +290,44 @@
       "circuit": "c-eclairage"
     },
     {
-      "id": "ec-bl-01",
-      "reference": "BL-01",
+      "id": "ec-bd-07",
+      "reference": "BD-07",
       "type": "boite-derivation",
       "paroi": "plafond",
       "face": "interieur",
       "position": {
         "x": 2.7,
-        "y": 3.25,
+        "y": 4.55,
+        "z": 2.75
+      },
+      "hauteurAxe": null,
+      "indiceProtection": null,
+      "circuit": "c-eclairage"
+    },
+    {
+      "id": "ec-bd-08",
+      "reference": "BD-08",
+      "type": "boite-derivation",
+      "paroi": "plafond",
+      "face": "interieur",
+      "position": {
+        "x": 2.7,
+        "y": 2.9,
+        "z": 2.75
+      },
+      "hauteurAxe": null,
+      "indiceProtection": null,
+      "circuit": "c-eclairage"
+    },
+    {
+      "id": "ec-bd-09",
+      "reference": "BD-09",
+      "type": "boite-derivation",
+      "paroi": "plafond",
+      "face": "interieur",
+      "position": {
+        "x": 2.7,
+        "y": 1.55,
         "z": 2.75
       },
       "hauteurAxe": null,
@@ -373,188 +403,6 @@
       ]
     },
     {
-      "id": "ec-ch-02",
-      "reference": "CH-L2",
-      "circuits": [
-        "c-eclairage"
-      ],
-      "section": {
-        "forme": "circulaire",
-        "diametre": 0.02
-      },
-      "segments": [
-        {
-          "face": "plafond",
-          "de": {
-            "x": 2.7,
-            "y": 2.6,
-            "z": 2.75
-          },
-          "a": {
-            "x": 2.7,
-            "y": 3.25,
-            "z": 2.75
-          }
-        }
-      ]
-    },
-    {
-      "id": "ec-ch-03",
-      "reference": "CH-L3",
-      "circuits": [
-        "c-eclairage"
-      ],
-      "section": {
-        "forme": "circulaire",
-        "diametre": 0.02
-      },
-      "segments": [
-        {
-          "face": "plafond",
-          "de": {
-            "x": 2.7,
-            "y": 3.25,
-            "z": 2.75
-          },
-          "a": {
-            "x": 3.1,
-            "y": 3.25,
-            "z": 2.75
-          }
-        },
-        {
-          "face": "plafond",
-          "de": {
-            "x": 3.1,
-            "y": 3.25,
-            "z": 2.75
-          },
-          "a": {
-            "x": 3.1,
-            "y": 4.75,
-            "z": 2.75
-          }
-        },
-        {
-          "face": "plafond",
-          "de": {
-            "x": 3.1,
-            "y": 4.75,
-            "z": 2.75
-          },
-          "a": {
-            "x": 5.0,
-            "y": 4.75,
-            "z": 2.75
-          }
-        },
-        {
-          "face": "plafond",
-          "de": {
-            "x": 5.0,
-            "y": 4.75,
-            "z": 2.75
-          },
-          "a": {
-            "x": 5.0,
-            "y": 4.55,
-            "z": 2.75
-          }
-        },
-        {
-          "face": "plafond",
-          "de": {
-            "x": 5.0,
-            "y": 4.55,
-            "z": 2.75
-          },
-          "a": {
-            "x": 4.75,
-            "y": 4.55,
-            "z": 2.75
-          }
-        }
-      ]
-    },
-    {
-      "id": "ec-ch-04",
-      "reference": "CH-L4",
-      "circuits": [
-        "c-eclairage"
-      ],
-      "section": {
-        "forme": "circulaire",
-        "diametre": 0.02
-      },
-      "segments": [
-        {
-          "face": "plafond",
-          "de": {
-            "x": 2.7,
-            "y": 3.25,
-            "z": 2.75
-          },
-          "a": {
-            "x": 2.3,
-            "y": 3.25,
-            "z": 2.75
-          }
-        },
-        {
-          "face": "plafond",
-          "de": {
-            "x": 2.3,
-            "y": 3.25,
-            "z": 2.75
-          },
-          "a": {
-            "x": 2.3,
-            "y": 4.75,
-            "z": 2.75
-          }
-        },
-        {
-          "face": "plafond",
-          "de": {
-            "x": 2.3,
-            "y": 4.75,
-            "z": 2.75
-          },
-          "a": {
-            "x": 0.6,
-            "y": 4.75,
-            "z": 2.75
-          }
-        },
-        {
-          "face": "plafond",
-          "de": {
-            "x": 0.6,
-            "y": 4.75,
-            "z": 2.75
-          },
-          "a": {
-            "x": 0.6,
-            "y": 4.55,
-            "z": 2.75
-          }
-        },
-        {
-          "face": "plafond",
-          "de": {
-            "x": 0.6,
-            "y": 4.55,
-            "z": 2.75
-          },
-          "a": {
-            "x": 0.85,
-            "y": 4.55,
-            "z": 2.75
-          }
-        }
-      ]
-    },
-    {
       "id": "ec-ch-06",
       "reference": "CH-L6",
       "circuits": [
@@ -581,22 +429,25 @@
       ]
     },
     {
-      "id": "ec-cp-01",
-      "reference": "CP-1",
-      "nature": "cordage",
+      "id": "ec-ch-02",
+      "reference": "CH-L2",
       "circuits": [
         "c-eclairage"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
       "segments": [
         {
           "face": "plafond",
           "de": {
-            "x": 2.05,
-            "y": 4.55,
+            "x": 2.7,
+            "y": 2.6,
             "z": 2.75
           },
           "a": {
-            "x": 0.85,
+            "x": 2.7,
             "y": 2.9,
             "z": 2.75
           }
@@ -604,22 +455,51 @@
       ]
     },
     {
-      "id": "ec-cp-02",
-      "reference": "CP-2",
-      "nature": "cordage",
+      "id": "ec-ch-07",
+      "reference": "CH-L7",
       "circuits": [
         "c-eclairage"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
       "segments": [
         {
           "face": "plafond",
           "de": {
-            "x": 2.05,
-            "y": 2.9,
+            "x": 2.7,
+            "y": 4.55,
             "z": 2.75
           },
           "a": {
-            "x": 0.85,
+            "x": 2.7,
+            "y": 2.9,
+            "z": 2.75
+          }
+        }
+      ]
+    },
+    {
+      "id": "ec-ch-08",
+      "reference": "CH-L8",
+      "circuits": [
+        "c-eclairage"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.7,
+            "y": 2.6,
+            "z": 2.75
+          },
+          "a": {
+            "x": 2.7,
             "y": 1.55,
             "z": 2.75
           }
@@ -627,22 +507,77 @@
       ]
     },
     {
-      "id": "ec-cp-03",
-      "reference": "CP-3",
-      "nature": "cordage",
+      "id": "ec-ch-09",
+      "reference": "CH-L9",
       "circuits": [
         "c-eclairage"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
       "segments": [
         {
           "face": "plafond",
           "de": {
-            "x": 3.55,
+            "x": 2.7,
             "y": 4.55,
             "z": 2.75
           },
           "a": {
-            "x": 4.75,
+            "x": 2.05,
+            "y": 4.55,
+            "z": 2.75
+          }
+        }
+      ]
+    },
+    {
+      "id": "ec-ch-10",
+      "reference": "CH-L10",
+      "circuits": [
+        "c-eclairage"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.7,
+            "y": 4.55,
+            "z": 2.75
+          },
+          "a": {
+            "x": 3.55,
+            "y": 4.55,
+            "z": 2.75
+          }
+        }
+      ]
+    },
+    {
+      "id": "ec-ch-11",
+      "reference": "CH-L11",
+      "circuits": [
+        "c-eclairage"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.7,
+            "y": 2.9,
+            "z": 2.75
+          },
+          "a": {
+            "x": 2.05,
             "y": 2.9,
             "z": 2.75
           }
@@ -650,22 +585,77 @@
       ]
     },
     {
-      "id": "ec-cp-04",
-      "reference": "CP-4",
-      "nature": "cordage",
+      "id": "ec-ch-12",
+      "reference": "CH-L12",
       "circuits": [
         "c-eclairage"
       ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
       "segments": [
         {
           "face": "plafond",
           "de": {
-            "x": 3.55,
+            "x": 2.7,
             "y": 2.9,
             "z": 2.75
           },
           "a": {
-            "x": 4.75,
+            "x": 3.55,
+            "y": 2.9,
+            "z": 2.75
+          }
+        }
+      ]
+    },
+    {
+      "id": "ec-ch-13",
+      "reference": "CH-L13",
+      "circuits": [
+        "c-eclairage"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.7,
+            "y": 1.55,
+            "z": 2.75
+          },
+          "a": {
+            "x": 2.05,
+            "y": 1.55,
+            "z": 2.75
+          }
+        }
+      ]
+    },
+    {
+      "id": "ec-ch-14",
+      "reference": "CH-L14",
+      "circuits": [
+        "c-eclairage"
+      ],
+      "section": {
+        "forme": "circulaire",
+        "diametre": 0.02
+      },
+      "segments": [
+        {
+          "face": "plafond",
+          "de": {
+            "x": 2.7,
+            "y": 1.55,
+            "z": 2.75
+          },
+          "a": {
+            "x": 3.55,
             "y": 1.55,
             "z": 2.75
           }
@@ -751,12 +741,12 @@
         "ec-cm-02",
         "ec-cm-03",
         "ec-el-03",
-        "ec-bl-01",
         "ec-ch-01",
         "ec-ch-02",
-        "ec-ch-03",
-        "ec-ch-04",
-        "ec-ch-06"
+        "ec-ch-06",
+        "ec-bd-07",
+        "ec-bd-08",
+        "ec-bd-09"
       ],
       "materiel": [
         "Cordeau et crayon de traçage",
@@ -777,7 +767,9 @@
     },
     {
       "composants": [
-        "ec-bl-01"
+        "ec-bd-07",
+        "ec-bd-08",
+        "ec-bd-09"
       ],
       "cheminements": [],
       "traversees": [],
@@ -800,13 +792,15 @@
       "cheminements": [
         "ec-ch-01",
         "ec-ch-02",
-        "ec-ch-03",
-        "ec-ch-04",
         "ec-ch-06",
-        "ec-cp-01",
-        "ec-cp-02",
-        "ec-cp-03",
-        "ec-cp-04"
+        "ec-ch-07",
+        "ec-ch-08",
+        "ec-ch-09",
+        "ec-ch-10",
+        "ec-ch-11",
+        "ec-ch-12",
+        "ec-ch-13",
+        "ec-ch-14"
       ],
       "traversees": [],
       "materiel": [
