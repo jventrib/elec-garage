@@ -140,6 +140,24 @@ export function ECLAIRAGE_AVANT_GOULOTTE() {
   const tv = e.traversees.find((t) => t.id === 'ec-tv-02');
   tv.position = pt(5.6, 2.6, 2.6);
   tv.denivele = null;
+  // La ligne de façade sud a quitté 003 pour la goulotte GL-03 (005) : CH-L1
+  // supprimé, TV-L1 remontée à 2,705 m, CH-L6 prolongée en descente extérieure.
+  // Ces montages rejouent le tracé d'avant les goulottes : ils gardent leur
+  // propre alimentation sud plutôt que de dépendre du tracé actuel.
+  const tv1 = e.traversees.find((t) => t.id === 'ec-tv-01');
+  tv1.position = pt(2.7, 0, 2.22);
+  e.cheminements.find((c) => c.id === 'ec-ch-06').segments = [
+    sg('sud', [2.7, -0.2, 2.22], [2.4, -0.2, 2.22]),
+  ];
+  e.cheminements.push(
+    { id: 'ec-ch-01', reference: 'CH-L1', circuits: ['c-eclairage', 'c-prises'],
+      section: { forme: 'circulaire', diametre: 0.02 }, segments: [
+        sg('est', [5.6, 0.7, 2.6], [5.6, 0, 2.6]),
+        sg('sud', [5.6, 0, 2.6], [5.6, 0, 2.22]),
+        sg('sud', [5.6, 0, 2.22], [5.4, 0, 2.22]),
+        sg('sud', [5.4, 0, 2.22], [2.7, 0, 2.22]),
+      ] },
+  );
   e.etapes = [];
   return e;
 }

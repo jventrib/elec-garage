@@ -337,72 +337,6 @@
   ],
   "cheminements": [
     {
-      "id": "ec-ch-01",
-      "reference": "CH-L1",
-      "circuits": [
-        "c-eclairage",
-        "c-prises"
-      ],
-      "section": {
-        "forme": "circulaire",
-        "diametre": 0.02
-      },
-      "segments": [
-        {
-          "face": "est",
-          "de": {
-            "x": 5.6,
-            "y": 0.7,
-            "z": 2.6
-          },
-          "a": {
-            "x": 5.6,
-            "y": 0,
-            "z": 2.6
-          }
-        },
-        {
-          "face": "sud",
-          "de": {
-            "x": 5.6,
-            "y": 0,
-            "z": 2.6
-          },
-          "a": {
-            "x": 5.6,
-            "y": 0,
-            "z": 2.22
-          }
-        },
-        {
-          "face": "sud",
-          "de": {
-            "x": 5.6,
-            "y": 0,
-            "z": 2.22
-          },
-          "a": {
-            "x": 5.4,
-            "y": 0,
-            "z": 2.22
-          }
-        },
-        {
-          "face": "sud",
-          "de": {
-            "x": 5.4,
-            "y": 0,
-            "z": 2.22
-          },
-          "a": {
-            "x": 2.7,
-            "y": 0,
-            "z": 2.22
-          }
-        }
-      ]
-    },
-    {
       "id": "ec-ch-06",
       "reference": "CH-L6",
       "circuits": [
@@ -413,6 +347,19 @@
         "diametre": 0.02
       },
       "segments": [
+        {
+          "face": "sud",
+          "de": {
+            "x": 2.7,
+            "y": -0.2,
+            "z": 2.705
+          },
+          "a": {
+            "x": 2.7,
+            "y": -0.2,
+            "z": 2.22
+          }
+        },
         {
           "face": "sud",
           "de": {
@@ -671,7 +618,7 @@
       "position": {
         "x": 2.7,
         "y": 0,
-        "z": 2.22
+        "z": 2.705
       },
       "sens": "interieur-vers-exterieur",
       "penteVersExterieur": true,
@@ -741,7 +688,6 @@
         "ec-cm-02",
         "ec-cm-03",
         "ec-el-03",
-        "ec-ch-01",
         "ec-ch-02",
         "ec-ch-06",
         "ec-bd-07",
@@ -790,7 +736,6 @@
     {
       "composants": [],
       "cheminements": [
-        "ec-ch-01",
         "ec-ch-02",
         "ec-ch-06",
         "ec-ch-07",
@@ -818,7 +763,7 @@
       "phase": "cheminement",
       "nature": "pose",
       "sousTension": false,
-      "instruction": "Le tronc est POSÉ PAR LE CIRCUIT DES PRISES et partagé : montée du tableau par la goulotte GL-01, goulotte GL-02 au plafond de la paroi est, descente CH-05 aux commandes en IRL 25, et parcours de plafond CH-07 DROIT VERS L'OUEST jusqu'à BD-05, en IRL 20. Ne rien y ajouter. Ne poser ici que les branches PROPRES à l'éclairage, en IRL 20. AU PLAFOND, TOUT SE JOINT À BL-01, en (2,70 ; 3,25). D'abord 0,65 m vers le nord pour y monter, puis LES DEUX COLONNES DE RÉGLETTES, qui partent de part et d'autre de la même fourche : celle de l'OUEST descend le long de x = 2,30 jusqu'à 4,75 m de profondeur, revient vers le mur ouest à 0,25 m du nu — en x = 0,60, soit 25 cm dégagés de la paroi — et redescend sur le connecteur d'ENTRÉE de la réglette la plus au nord, EL-01e ; 4,05 m au total. Celle de l'EST est sa miroir, en x = 3,10 puis 5,00, et descend sur EL-01f : 4,25 m. LES DEUX COLONNES PASSENT AU NORD DES RÉGLETTES, à 4,75 m : c'est ce qui permet aux CORDAGES de descendre en biais vers le sud sans jamais croiser un conduit. Ailleurs : depuis GL-01, la branche vers la façade sud, qui longe la paroi est puis la paroi sud à 2,22 m ; et la liaison extérieure de 0,30 m entre le point de façade et son détecteur. RIEN À POSER POUR LE POINT DE L'ACCÈS PIÉTON : il sort du fond de GL-02, sans conduit propre.\n\nLES QUATRE CORDAGES CP-1 À CP-4 SE POSENT APRÈS LES COLONNES, ET SANS PERÇAGE. Ce sont des LIENS SOUPLES, pas des tubes : ni section, ni collier, ni coude. Chacun va d'un connecteur à l'autre et se pose à la main, avec deux attaches-câbles au plafond pour le tenir, jamais plus — un cordage tendu travaille et casse au bout. CP-1 part du bout est d'EL-01e pour arriver au bout ouest d'EL-01c, 2,04 m ; CP-2 du bout est d'EL-01c au bout ouest d'EL-01a, 1,81 m ; CP-3 du bout ouest d'EL-01f au bout est d'EL-01d, 2,04 m ; CP-4 du bout ouest d'EL-01d au bout est d'EL-01b, 1,81 m. ILS NE SE CROISENT NI ENTRE EUX NI AVEC LES COLONNES : leur passage au nord, à 4,75 m, en est la raison."
+      "instruction": "Le tronc est POSÉ PAR LE CIRCUIT DES PRISES et partagé : montée du tableau par la goulotte GL-01, goulotte GL-02 au plafond de la paroi est, descente CH-05 aux commandes en IRL 25, et parcours de plafond CH-07 DROIT VERS L'OUEST jusqu'à BD-05, en IRL 20. Ne rien y ajouter. Ne poser ici que les branches PROPRES à l'éclairage, en IRL 20. AU PLAFOND, TOUT SE JOINT À BL-01, en (2,70 ; 3,25). D'abord 0,65 m vers le nord pour y monter, puis LES DEUX COLONNES DE RÉGLETTES, qui partent de part et d'autre de la même fourche : celle de l'OUEST descend le long de x = 2,30 jusqu'à 4,75 m de profondeur, revient vers le mur ouest à 0,25 m du nu — en x = 0,60, soit 25 cm dégagés de la paroi — et redescend sur le connecteur d'ENTRÉE de la réglette la plus au nord, EL-01e ; 4,05 m au total. Celle de l'EST est sa miroir, en x = 3,10 puis 5,00, et descend sur EL-01f : 4,25 m. LES DEUX COLONNES PASSENT AU NORD DES RÉGLETTES, à 4,75 m : c'est ce qui permet aux CORDAGES de descendre en biais vers le sud sans jamais croiser un conduit. Ailleurs : la ligne vers la façade sud est POSÉE PAR L'AUTOMATISATION, en goulotte GL-03 — depuis GL-01, le long de la paroi est puis de la paroi sud à 2,705 m jusqu'à l'aplomb d'EL-02 — puis traverse en TV-L1 et descend en extérieur sur EL-02 ; et la liaison extérieure de 0,30 m entre le point de façade et son détecteur. RIEN À POSER POUR LE POINT DE L'ACCÈS PIÉTON : il sort du fond de GL-02, sans conduit propre.\n\nLES QUATRE CORDAGES CP-1 À CP-4 SE POSENT APRÈS LES COLONNES, ET SANS PERÇAGE. Ce sont des LIENS SOUPLES, pas des tubes : ni section, ni collier, ni coude. Chacun va d'un connecteur à l'autre et se pose à la main, avec deux attaches-câbles au plafond pour le tenir, jamais plus — un cordage tendu travaille et casse au bout. CP-1 part du bout est d'EL-01e pour arriver au bout ouest d'EL-01c, 2,04 m ; CP-2 du bout est d'EL-01c au bout ouest d'EL-01a, 1,81 m ; CP-3 du bout ouest d'EL-01f au bout est d'EL-01d, 2,04 m ; CP-4 du bout ouest d'EL-01d au bout est d'EL-01b, 1,81 m. ILS NE SE CROISENT NI ENTRE EUX NI AVEC LES COLONNES : leur passage au nord, à 4,75 m, en est la raison."
     },
     {
       "composants": [],

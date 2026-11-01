@@ -40,21 +40,6 @@
       "boitier": "bt-moteur"
     },
     {
-      "id": "au-bd-06",
-      "reference": "BD-06",
-      "type": "boite-derivation",
-      "paroi": "sud",
-      "face": "interieur",
-      "position": {
-        "x": 5.4,
-        "y": 0,
-        "z": 2.22
-      },
-      "hauteurAxe": null,
-      "indiceProtection": null,
-      "circuit": "c-eclairage"
-    },
-    {
       "id": "au-cm-04",
       "reference": "CM-04",
       "type": "commande",
@@ -93,6 +78,52 @@
   ],
   "cheminements": [
     {
+      "id": "au-gl-03",
+      "reference": "GL-03",
+      "circuits": [
+        "c-eclairage",
+        "c-prises"
+      ],
+      "section": {
+        "forme": "rectangulaire",
+        "largeur": 0.09,
+        "profondeur": 0.04
+      },
+      "raccordement": "lateral",
+      "modePose": {
+        "nature": "goulotte",
+        "lettreSelection": null
+      },
+      "segments": [
+        {
+          "face": "est",
+          "de": {
+            "x": 5.6,
+            "y": 0.7,
+            "z": 2.705
+          },
+          "a": {
+            "x": 5.6,
+            "y": 0,
+            "z": 2.705
+          }
+        },
+        {
+          "face": "sud",
+          "de": {
+            "x": 5.6,
+            "y": 0,
+            "z": 2.705
+          },
+          "a": {
+            "x": 2.7,
+            "y": 0,
+            "z": 2.705
+          }
+        }
+      ]
+    },
+    {
       "id": "au-ch-a1",
       "reference": "CH-A1",
       "circuits": [
@@ -109,7 +140,7 @@
           "de": {
             "x": 5.4,
             "y": 0,
-            "z": 2.22
+            "z": 2.705
           },
           "a": {
             "x": 5.4,
@@ -143,7 +174,7 @@
       "cheminements": [],
       "traversees": [],
       "fixations": [
-        "au-bd-06",
+        "au-gl-03",
         "au-cm-04",
         "au-ch-a1"
       ],
@@ -160,48 +191,29 @@
       "phase": "percage",
       "nature": "pose",
       "sousTension": false,
-      "instruction": "TRACER PUIS PERCER, avant toute fixation. Tracer BD-06 sur la PAROI SUD, face intérieure, en (5,40 ; 0 ; 2,22), SUR LE PARCOURS DE CH-L1, et le boîtier double de CM-04 et CM-05 AU DROIT DE BD-06, à 1,10 m : la descente CH-A1 est droite, de 1,12 m, et entre par le haut du boîtier. Le boîtier est à 0,20 m du bord de la baie de la sectionnelle. AVANT DE TRACER, CONSTATER LA PLACE QUE LAISSENT LES COULISSES VERTICALES DE LA PORTE à l'est de la baie : le boîtier, la descente et BD-06 ne doivent ni les toucher ni gêner leur démontage. Tracer les colliers de CH-A1. AUCUNE TRAVERSÉE DE PAROI : tout reste intérieur. SONDER AVANT DE PERCER : gaine noyée, canalisation, fer. Un trou pénètre la paroi de 5 à 8 cm."
-    },
-    {
-      "composants": [
-        "au-bd-06"
-      ],
-      "cheminements": [],
-      "traversees": [],
-      "materiel": [
-        "Boîte de dérivation à trois entrées",
-        "Boîtier double en saillie",
-        "Étiquettes « plusieurs circuits »",
-        "Tournevis"
-      ],
-      "dependances": [
-        "au-percage"
-      ],
-      "id": "au-boites",
-      "phase": "boites",
-      "nature": "pose",
-      "sousTension": false,
-      "instruction": "Poser BD-06 sur CH-L1, sur la paroi sud à x = 5,40 : CH-L1 Y ENTRE PAR L'EST, depuis l'angle sud-est, EN RESSORT VERS L'OUEST vers la façade, et CH-A1 en part vers le bas. BD-06 coupe le tube sans en changer le tracé. Poser le boîtier double en saillie, au droit de BD-06, à 1,10 m d'axe. BD-06 PORTE DEUX CIRCUITS — l'éclairage, et la phase et le fil d'ordre du bouton de porte, du circuit des prises — et DOIT être repérée comme telle."
+      "instruction": "TRACER PUIS PERCER, avant toute fixation. Tracer la goulotte GL-03 : elle part de GL-01 en (5,60 ; 0,70 ; 2,705), descend le mur est jusqu'à l'angle sud-est, puis un coude et file sur la paroi sud, face intérieure, à 2,705 m, jusqu'à l'aplomb d'EL-02 en x = 2,70 — 0,70 m à l'est, 2,90 m au sud. Tracer le boîtier double de CM-04 et CM-05 en (5,40 ; 0 ; 1,10) : la descente CH-A1 part DIRECTEMENT DE LA GOULOTTE, droite, de 1,61 m, et entre par le haut du boîtier. Le boîtier est à 0,20 m du bord de la baie de la sectionnelle. AVANT DE TRACER, CONSTATER LA PLACE QUE LAISSENT LES COULISSES VERTICALES DE LA PORTE à l'est de la baie : le boîtier et la descente ne doivent ni les toucher ni gêner leur démontage. Tracer les colliers de CH-A1. AUCUNE TRAVERSÉE DE PAROI : tout reste intérieur. SONDER AVANT DE PERCER : gaine noyée, canalisation, fer. Un trou pénètre la paroi de 5 à 8 cm."
     },
     {
       "composants": [],
       "cheminements": [
+        "au-gl-03",
         "au-ch-a1"
       ],
       "traversees": [],
       "materiel": [
+        "Goulotte 90 x 40 mm à capot démontable, même gamme — 3,60 m pour GL-03 et un coude",
         "Conduit IRL 20",
         "Colliers de fixation",
         "Chevilles adaptées au béton"
       ],
       "dependances": [
-        "au-boites"
+        "au-percage"
       ],
       "id": "au-cheminement",
       "phase": "cheminement",
       "nature": "pose",
       "sousTension": false,
-      "instruction": "Poser la descente CH-A1 en IRL 20, de BD-06 au boîtier double : 1,12 m, droite, sur la paroi sud, entrée PAR LE HAUT. Elle porte les deux circuits. VÉRIFIER QUE CH-05, posée avec le tronc par le circuit des prises, EST EN IRL 25 : elle porte neuf conducteurs."
+      "instruction": "Poser la goulotte GL-03 puis la descente CH-A1 en IRL 20, qui part DIRECTEMENT DE LA GOULOTTE au droit du boîtier double : 1,61 m, droite, sur la paroi sud, entrée PAR LE HAUT. Elle porte les deux circuits. VÉRIFIER QUE CH-05, posée avec le tronc par le circuit des prises, EST EN IRL 25 : elle porte neuf conducteurs."
     },
     {
       "composants": [],
@@ -220,7 +232,7 @@
       "phase": "tirage",
       "nature": "pose",
       "sousTension": false,
-      "instruction": "Tirer, en 1,5 mm² pour l'éclairage et en 2,5 mm² pour le circuit des prises. QUATRE FAISCEAUX À TIRER. (1) La SORTIE DE MC-01 vers le plafonnier : un conducteur, de la goulotte par GL-02 et CH-07 jusqu'à la fourche BL-01. (2) La PAIRE D'ORDRE de CM-01, de MC-01 à BD-04 par les goulottes puis CH-05 : CM-01 NE COUPE PAS LA PHASE : elle adresse un ordre au module. (3) La paire d'ordre de CM-04, de MC-01 par CH-L1 jusqu'à BD-06, puis CH-A1. (4) Le BOUTON DE PORTE CM-05, EN 2,5 mm² — la section du circuit qui le protège. L'ENTRÉE DE MC-02 COMMUTE LA PHASE : le bouton reçoit la PHASE DES PRISES, qui part du tableau par la goulotte, CH-L1 jusqu'à BD-06, puis CH-A1, et UN SEUL FIL D'ORDRE en revient à MC-02 — du boîtier double par CH-A1, BD-06, CH-L1, la goulotte, PUIS TOUT LE TRONC — GL-02, CH-07, CH-08 — jusqu'au boîtier du socle PC-05. NE PAS PRENDRE LA ROUTE DIRECTE PAR LE PLAFOND : elle passe dans le débattement du tablier ouvert. Le PE du circuit des prises monte au boîtier double avec la phase ; AUCUN NEUTRE ne va aux boutons sur module. TIRER EN MÊME TEMPS QUE LE RESTE DU TRONC : CH-05 porte neuf conducteurs, CH-07 sept, CH-L1 huit. Aiguille, lubrifiant, et ne pas forcer sur un conducteur seul."
+      "instruction": "Tirer, en 1,5 mm² pour l'éclairage et en 2,5 mm² pour le circuit des prises. QUATRE FAISCEAUX À TIRER. (1) La SORTIE DE MC-01 vers le plafonnier : un conducteur, de la goulotte par GL-02 et CH-07 jusqu'à la fourche BL-01. (2) La PAIRE D'ORDRE de CM-01, de MC-01 à BD-04 par les goulottes puis CH-05 : CM-01 NE COUPE PAS LA PHASE : elle adresse un ordre au module. (3) La paire d'ordre de CM-04, de MC-01 par les goulottes GL-01 puis GL-03 jusqu'au droit du boîtier double, puis CH-A1. (4) Le BOUTON DE PORTE CM-05, EN 2,5 mm² — la section du circuit qui le protège. L'ENTRÉE DE MC-02 COMMUTE LA PHASE : le bouton reçoit la PHASE DES PRISES, qui part du tableau par les goulottes GL-01 et GL-03, puis CH-A1, et UN SEUL FIL D'ORDRE en revient à MC-02 — du boîtier double par CH-A1, GL-03, PUIS TOUT LE TRONC — GL-02, CH-07, CH-08 — jusqu'au boîtier du socle PC-05. NE PAS PRENDRE LA ROUTE DIRECTE PAR LE PLAFOND : elle passe dans le débattement du tablier ouvert. Le PE du circuit des prises monte au boîtier double avec la phase ; AUCUN NEUTRE ne va aux boutons sur module. TIRER EN MÊME TEMPS QUE LE RESTE DU TRONC : CH-05 porte neuf conducteurs, CH-07 sept. Aiguille, lubrifiant, et ne pas forcer sur un conducteur seul."
     },
     {
       "composants": [],
@@ -238,7 +250,7 @@
       "phase": "connexions",
       "nature": "pose",
       "sousTension": false,
-      "instruction": "Faire les connexions des goulottes SOUS CAPOT, dans OC-01 et OC-02, en bornes à levier WAGO 221 — référence et nombre sur la fiche de chaque boîte. SIX CONDITIONS, toutes vérifiables, et aucune n'est facultative. Le capot se dépose sans destruction et reste déposable après travaux. LES CONNEXIONS SE FONT DANS LA GOULOTTE, en bornes fixées au fond du profilé, SANS ÉPISSURE : si le capot se dépose à la main, les bornes doivent être IP2X conducteurs en place, ce que leur fiche doit dire. Chaque groupe porte un REPÈRE LISIBLE SANS DÉPOSER LE CAPOT. La goulotte ne retient pas l'eau et ne se déverse pas dans le tableau. Elle est intérieure et hors des zones de choc. Son remplissage est justifié sur la fiche produit. LES GOULOTTES PORTENT LES DEUX CIRCUITS, et la ligne de la borne les parcourt EN CÂBLE À ENVELOPPE PROPRE sans y recevoir aucune connexion : les repérer comme telles, de façon lisible sans les ouvrir. DANS BD-06, deux circuits se croisent sans se connecter : l'éclairage y dérive vers le boîtier double, la phase et le fil d'ordre du bouton de porte y TRANSITENT."
+      "instruction": "Faire les connexions des goulottes SOUS CAPOT, dans OC-01 et OC-02, en bornes à levier WAGO 221 — référence et nombre sur la fiche de chaque boîte. SIX CONDITIONS, toutes vérifiables, et aucune n'est facultative. Le capot se dépose sans destruction et reste déposable après travaux. LES CONNEXIONS SE FONT DANS LA GOULOTTE, en bornes fixées au fond du profilé, SANS ÉPISSURE : si le capot se dépose à la main, les bornes doivent être IP2X conducteurs en place, ce que leur fiche doit dire. Chaque groupe porte un REPÈRE LISIBLE SANS DÉPOSER LE CAPOT. La goulotte ne retient pas l'eau et ne se déverse pas dans le tableau. Elle est intérieure et hors des zones de choc. Son remplissage est justifié sur la fiche produit. LES GOULOTTES PORTENT LES DEUX CIRCUITS, et la ligne de la borne les parcourt EN CÂBLE À ENVELOPPE PROPRE sans y recevoir aucune connexion : les repérer comme telles, de façon lisible sans les ouvrir. DANS GL-03, deux circuits cheminent sous le même capot sans s'y connecter : l'éclairage y dérive vers le boîtier double par CH-A1, la phase et le fil d'ordre du bouton de porte y TRANSITENT vers EL-02."
     },
     {
       "composants": [
@@ -313,7 +325,7 @@
       "phase": "levee-consignation",
       "nature": "levee-consignation",
       "sousTension": false,
-      "instruction": "Remettre sous tension. CINQ RÉSERVES À RETENIR. L'ÉCLAIRAGE PEUT S'ALLUMER SANS QUE PERSONNE N'AIT RIEN TOUCHÉ, à l'ouverture de la porte : L'ABSENCE DE LUMIÈRE NE VAUT PAS ABSENCE DE TENSION. Un circuit consigné ne doit jamais pouvoir être remis sous tension par un automatisme ou une minuterie — la consignation coupe EN AMONT des modules. LA GOULOTTE PORTE DEUX CIRCUITS : y consigner l'éclairage ne met pas les prises hors tension, et la ligne de la borne qui la traverse n'est coupée qu'au disjoncteur d'abonné. BD-06 ET LE BOÎTIER DOUBLE PORTENT DEUX CIRCUITS : consigner l'éclairage n'y coupe pas le bouton de porte. LA DÉPOSE DE PC-05 coupe le module de porte, donc l'automatisme. LA PORTE PEUT SE METTRE EN MOUVEMENT SANS PERSONNE SUR PLACE : elle se commande depuis Internet, par l'application du fabricant de MC-02. Toute intervention sur la porte, son rail ou son moteur exige d'EN COUPER L'ALIMENTATION, et avec elle MC-02 : consigner le circuit des prises, ou déposer PC-05. Ne jamais se fier à ce qu'aucune commande ne soit à portée de main."
+      "instruction": "Remettre sous tension. CINQ RÉSERVES À RETENIR. L'ÉCLAIRAGE PEUT S'ALLUMER SANS QUE PERSONNE N'AIT RIEN TOUCHÉ, à l'ouverture de la porte : L'ABSENCE DE LUMIÈRE NE VAUT PAS ABSENCE DE TENSION. Un circuit consigné ne doit jamais pouvoir être remis sous tension par un automatisme ou une minuterie — la consignation coupe EN AMONT des modules. LA GOULOTTE PORTE DEUX CIRCUITS : y consigner l'éclairage ne met pas les prises hors tension, et la ligne de la borne qui la traverse n'est coupée qu'au disjoncteur d'abonné. LE BOÎTIER DOUBLE PORTE DEUX CIRCUITS : consigner l'éclairage n'y coupe pas le bouton de porte. LA DÉPOSE DE PC-05 coupe le module de porte, donc l'automatisme. LA PORTE PEUT SE METTRE EN MOUVEMENT SANS PERSONNE SUR PLACE : elle se commande depuis Internet, par l'application du fabricant de MC-02. Toute intervention sur la porte, son rail ou son moteur exige d'EN COUPER L'ALIMENTATION, et avec elle MC-02 : consigner le circuit des prises, ou déposer PC-05. Ne jamais se fier à ce qu'aucune commande ne soit à portée de main."
     },
     {
       "composants": [],

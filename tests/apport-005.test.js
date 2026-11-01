@@ -80,7 +80,7 @@ test('les trois circuits restent continus depuis le tableau, par la seule contig
   );
 });
 
-test('une goulotte de 1,12 m ne raccourcit aucune longueur dimensionnante', () => {
+test('aucune enceinte ne raccourcit les longueurs dimensionnantes', () => {
   // Le piège que la conception a failli ne pas voir. Une enceinte qui ramenait ses
   // points à son centre aurait raccourci de 0,37 m tout chemin qui la traverse, et
   // faussé deux chutes de tension DÉCLARÉES, dans le sens flatteur.
@@ -98,21 +98,16 @@ test('une goulotte de 1,12 m ne raccourcit aucune longueur dimensionnante', () =
   // de l'œuvre est à 2,80. La fourche est 10 cm à l'ouest du milieu, donc la colonne
   // est part à 3,10 et court 1,90 m jusqu'à 5,00, là où l'ouest part à 2,30 et n'en
   // court que 1,70. EL-01b, le plus éloigné de la chaîne, dimensionne à 17,17 m.
-  assert.equal(par('c-eclairage').reference, 'EL-01b', 'le point dimensionnant est la colonne est');
+  //
+  // Il est passé au NORD-EST avec le tronc en IRL sous trois boîtes (BD-07/08/09) :
+  // plus de fourche ni de cordages, le chemin le plus long mène à EL-01f, à 10,03 m.
+  assert.equal(par('c-eclairage').reference, 'EL-01f', 'le point dimensionnant est la colonne nord-est');
   const proche = (v, attendu, quoi) =>
     assert.ok(Math.abs(v - attendu) < 0.02, `${quoi} : ${v.toFixed(4)} au lieu de ${attendu}`);
-  // EL-01b est la plus longue des six colonnes, à 18,37 m. EL-01a, qui les partageait
-  // presque, en est à 17,17 m : les 20 cm qui les séparent sont l'effet de la
-  // fourche décalée, et non une différence de matériel. EL-02, à l'ouest lui aussi
-  // mais près du tableau, ne les suit pas de loin.
-  //
-  // Ces 18,37 m se lisent 1,20 m AU-DESSUS du 17,17 m que donne l'itinéraire, et ce
-  // n'est pas une imprécision : ici on mesure le point le plus LOIN de la réglette,
-  // là-bas le point où l'itinéraire y entre. Une réglette pontée a deux connecteurs,
-  // distants de son câblage interne — 1,20 m, montés d'usine. La question « jusqu'où
-  // va le réseau » et la question « par où le fil passe » n'ont pas la même réponse,
-  // et les deux chiffres sont justes. C'est le second qui majore la chute de tension.
-  proche(par('c-eclairage').longueur, 18.372, 'EL-01b');
+  // EL-01f est la plus longue des six branches, et EL-02, près du tableau mais
+  // alimenté par la goulotte GL-03 et la descente extérieure, ne la suit pas de loin.
+  // EL-01f est la plus longue des six branches, à 10,03 m.
+  proche(par('c-eclairage').longueur, 10.025, 'EL-01f');
   proche(par('c-borne').longueur, 10.61, 'BR-01');
 
   // Et la chute déclarée de la borne reste celle que le tracé redonne.
@@ -202,15 +197,18 @@ test('le tronc porte ce que la dérivation dit, et le conduit trop chargé est e
     ['CH-05', 9, 0.025],
     ['CH-07', 7, 0.02],
     ['CH-08', 4, 0.02],
-    // Le PE, la phase et le fil d'ordre du circuit des prises montent au bouton de
-    // porte ; la phase y remplace le fil d'aller, et le décompte ne change pas.
-    ['CH-L1', 8, 0.02],
     ['CH-A1', 6, 0.02],
   ]) {
     assert.equal(total(ref), n, `${ref} porte ${n} conducteurs`);
     assert.equal(occ.get(de(ref).id).majore, false, `${ref} est dérivé`);
     assert.equal(de(ref).section.diametre, diametre, `${ref} est en IRL ${diametre * 1000}`);
   }
+  // Le PE, la phase et le fil d'ordre du circuit des prises montent au bouton de
+  // porte ; la phase y remplace le fil d'aller, et le décompte ne change pas.
+  // Depuis la goulotte GL-03, qui a remplacé CH-L1 et BD-06 : huit conducteurs
+  // sous le même capot — sans calibre IRL à vérifier, c'est un profilé.
+  assert.equal(total('GL-03'), 8, 'GL-03 porte 8 conducteurs');
+  assert.equal(occ.get(de('GL-03').id).majore, false, 'GL-03 est dérivée');
 
   // Ce qui décide du calibre restant en IRL 20 : aucun conduit de ce calibre ne
   // porte plus de huit conducteurs. Les CORDAGES n'entrent pas dans ce décompte :
@@ -238,10 +236,10 @@ test('le bouton de porte n’agit sur le moteur que par MC-02, et par tout le tr
   assert.deepEqual(ordres.map((c) => c.role), ['ordre']);
   for (const o of ordres) {
     assert.deepEqual(o.cheminements.map((id) => parRef.get(id)).sort(), [
-      'CH-07', 'CH-08', 'CH-A1', 'CH-L1', 'GL-01', 'GL-02',
+      'CH-07', 'CH-08', 'CH-A1', 'GL-02', 'GL-03',
     ]);
   }
-  // La phase monte au bouton par le plus court — la goulotte, CH-L1, CH-A1 —, et
+  // La phase monte au bouton par le plus court — GL-02, GL-03, CH-A1 —, et
   // aucun neutre ne l'accompagne : le bouton n'en a pas l'usage.
   const idA1 = m.cheminements.find((c) => c.reference === 'CH-A1').id;
   const role = (r) => conducteursDuCircuit(g, m, 'c-prises').find((c) => c.role === r);
@@ -259,7 +257,7 @@ test('le boîtier double porte deux circuits, et les deux boutons y sont déclar
   const etape = m.etapes.find((e) => e.composants.includes('au-cm-04'));
   assert.match(etape.instruction, /DEUX CIRCUITS/);
   assert.match(etape.instruction, /CONSIGNER L'ÉCLAIRAGE N'Y COUPE PAS L'AUTRE BOUTON/);
-  assert.match(m.etapes.find((e) => e.id === 'au-levee').instruction, /BOÎTIER DOUBLE PORTENT DEUX CIRCUITS/);
+  assert.match(m.etapes.find((e) => e.id === 'au-levee').instruction, /BOÎTIER DOUBLE PORTE DEUX CIRCUITS/);
 });
 
 test('la commande à distance de la porte est essayée, et la levée en porte la réserve', () => {
@@ -306,7 +304,7 @@ test('une commande sur module nomme un module qui existe, du même circuit', () 
 
   assert.ok(verifier((a) => (cm01(a).module = 'au-mc-99')).some((x) => /qui n'existe pas/.test(x)));
   assert.ok(
-    verifier((a) => (cm01(a).module = 'ec-bl-01')).some((x) => /n'est pas un module de commande/.test(x)),
+    verifier((a) => (cm01(a).module = 'ec-bd-08')).some((x) => /n'est pas un module de commande/.test(x)),
   );
   assert.ok(verifier((a) => (cm01(a).module = 'au-mc-02')).some((x) => /pas du même circuit/.test(x)));
   // Et l'apport lu sans celui qui déclare le module retombe sur le majorant.
@@ -316,19 +314,20 @@ test('une commande sur module nomme un module qui existe, du même circuit', () 
 
 test('sans commande sur module, la dérivation rend les décomptes d’avant', () => {
   // Contrat de non-régression de l'extension du socle : CM-01 ramenée à son
-  // retour commandé, CH-L1 à son seul circuit, et l'automatisation retirée, les
+  // retour commandé, GL-03 à son seul circuit, et l'automatisation retirée, les
   // décomptes sont ceux que `003` avait arrêtés — huit sur CH-05, six ailleurs.
   const eclairage = ECLAIRAGE();
   const cm01 = eclairage.composants.find((c) => c.id === 'ec-cm-01');
   cm01.commutation = 'retour-commande';
   delete cm01.module;
-  eclairage.cheminements.find((c) => c.reference === 'CH-L1').circuits = ['c-eclairage'];
+  const auto = AUTOMATISATION();
+  auto.cheminements.find((c) => c.reference === 'GL-03').circuits = ['c-eclairage'];
   const prises = PRISES();
   prises.circuits[0].conducteurs = 3;
-  const m = fusionner(SOCLE(), [prises, eclairage, BORNE()]);
+  const m = fusionner(SOCLE(), [prises, eclairage, BORNE(), auto]);
   const occ = occupationParCheminement(m);
   const total = (ref) => occ.get(m.cheminements.find((c) => c.reference === ref).id).total;
   assert.equal(total('CH-05'), 8);
   assert.equal(total('CH-07'), 6, 'CH-07');
-  assert.equal(total('CH-L1'), 3);
+  assert.equal(total('GL-03'), 5);
 });
