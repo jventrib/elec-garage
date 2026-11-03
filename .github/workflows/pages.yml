@@ -1,0 +1,61 @@
+# Publie dist/garage.html sur GitHub Pages à chaque push sur main.
+#
+# Pourquoi ce fichier et pas un commit de dist/ : dist/ est un artefact de
+# construction, volontairement ignoré par git (.gitignore). Le build est donc
+# refait ici, côté GitHub, sur un.runner.
+#
+# Une seule action manuelle, une fois pour toutes : dans Settings → Pages de
+# GitHub, choisir « Source: GitHub Actions » (sinon le premier déploiement est
+# refusé). Ensuite l'URL https://jventrib.github.io/elec-garage/ sert la
+# maquette la plus récente de main, publiquement, gratuitement.
+#
+# Le livrable est copié en index.html : Pages sert l'index à la racine de
+# l'URL, et « garage.html » porterait l'adjectif à chaque lien partagé.
+# La copie ne change rien au contenu — le fichier est autonome et fonctionne
+# aussi en dist/garage.html depuis le disque, inchangé.
+
+name: pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deployer:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+      # Pas de npm test ici, à dessein : quatre échecs préexistants sur main
+      # (éclairage, obstacles non bornés). Ils ne dépendent pas de la
+      # publication, qui n'a besoin que du livrable. Les rétablir dans le
+      # workflow le jour où ils sont corrigés.
+      - run: npm run build
+
+      - name: Copier le livrable en index.html
+        run: mkdir -p dist/site && cp dist/garage.html dist/site/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
